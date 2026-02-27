@@ -1,0 +1,131 @@
+/* Styles responsive pour smartphones */
+
+/* Optimisation globale pour mobile */
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Boutons touch-friendly (minimum 44x44px) */
+button {
+  min-height: 44px;
+  min-width: 44px;
+  font-size: 16px;
+  padding: 12px 20px;
+  touch-action: manipulation;
+}
+
+/* Inputs touch-friendly */
+input, textarea, select {
+  min-height: 44px;
+  font-size: 16px; /* Évite le zoom automatique sur iOS */
+  padding: 12px;
+}
+
+/* Cartes responsive */
+@media (max-width: 768px) {
+  /* Réduire les grids sur mobile */
+  [style*="display: grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  
+  /* Marges réduites */
+  [style*="padding: 16px"],
+  [style*="padding: 20px"] {
+    padding: 12px !important;
+  }
+  
+  /* Formulaires full-width */
+  form {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  form input,
+  form textarea,
+  form select {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  
+  /* Navigation responsive */
+  nav {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  
+  nav a {
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+  }
+  
+  /* Afficher navbar mobile, cacher navbar desktop */
+  .navbar-desktop {
+    display: none !important;
+  }
+  
+  .navbar-mobile {
+    display: flex !important;
+  }
+  
+  /* Titres adaptés */
+  h1 {
+    font-size: 24px !important;
+  }
+  
+  h2 {
+    font-size: 20px !important;
+  }
+  
+  h3 {
+    font-size: 18px !important;
+  }
+  
+  /* Boutons en colonnes sur mobile */
+  div[style*="display: flex"][style*="gap"] button {
+    flex: 1 1 auto;
+    white-space: nowrap;
+  }
+  
+  /* Tables responsive */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Images responsive */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* Smartphones en portrait */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+  
+  /* Boutons empilés verticalement */
+  div[style*="display: flex"][style*="gap: 8"] {
+    flex-direction: column !important;
+    width: 100%;
+  }
+  
+  div[style*="display: flex"][style*="gap: 8"] button {
+    width: 100%;
+  }
+}
+
+/* Amélioration des zones cliquables */
+@media (hover: none) {
+  a, button {
+    -webkit-tap-highlight-color: rgba(0, 123, 255, 0.2);
+  }
+}

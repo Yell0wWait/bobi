@@ -1,0 +1,566 @@
+[
+  {
+    "table_name": "boissons",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons",
+    "column_name": "nom",
+    "data_type": "text",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons",
+    "column_name": "profil",
+    "data_type": "ARRAY",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons",
+    "column_name": "categorie",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons",
+    "column_name": "lien_recette",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons",
+    "column_name": "commentaire",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons",
+    "column_name": "variantes",
+    "data_type": "ARRAY",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons",
+    "column_name": "actif",
+    "data_type": "boolean",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons",
+    "column_name": "recette",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_commandes",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_commandes",
+    "column_name": "nom",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_commandes",
+    "column_name": "categorie",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_commandes",
+    "column_name": "commentaire",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_commandes",
+    "column_name": "profil",
+    "data_type": "ARRAY",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_commandes",
+    "column_name": "actif",
+    "data_type": "boolean",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_completes",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_completes",
+    "column_name": "nom",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_completes",
+    "column_name": "categorie",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_completes",
+    "column_name": "commentaire",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_completes",
+    "column_name": "profil",
+    "data_type": "ARRAY",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_completes",
+    "column_name": "actif",
+    "data_type": "boolean",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_disponibles",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_disponibles",
+    "column_name": "nom",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_disponibles",
+    "column_name": "categorie",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_disponibles",
+    "column_name": "commentaire",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_disponibles",
+    "column_name": "profil",
+    "data_type": "ARRAY",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_disponibles",
+    "column_name": "actif",
+    "data_type": "boolean",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_ingredients",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons_ingredients",
+    "column_name": "boisson_id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_ingredients",
+    "column_name": "ingredient_id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_ingredients",
+    "column_name": "quantite",
+    "data_type": "numeric",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_ingredients",
+    "column_name": "unite",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_ingredients",
+    "column_name": "alternatives",
+    "data_type": "jsonb",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_ingredients",
+    "column_name": "type",
+    "data_type": "text",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons_preparation",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons_preparation",
+    "column_name": "boisson_id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "boissons_preparation",
+    "column_name": "ordre",
+    "data_type": "integer",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons_preparation",
+    "column_name": "description",
+    "data_type": "text",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons_variantes",
+    "column_name": "id",
+    "data_type": "integer",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons_variantes",
+    "column_name": "boisson_id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons_variantes",
+    "column_name": "variante_id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "boissons_variantes",
+    "column_name": "created_at",
+    "data_type": "timestamp without time zone",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "commandes",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "commandes",
+    "column_name": "boisson_id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "commandes",
+    "column_name": "note",
+    "data_type": "integer",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "commandes",
+    "column_name": "commentaire",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "commandes",
+    "column_name": "statut",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "commandes",
+    "column_name": "date_commande",
+    "data_type": "timestamp without time zone",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "commandes",
+    "column_name": "degustateur_secret_token",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "degustateur",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "degustateur",
+    "column_name": "pseudo",
+    "data_type": "text",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "degustateur",
+    "column_name": "secret_token",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "degustateur",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "inventaire",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "inventaire",
+    "column_name": "nom",
+    "data_type": "text",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "inventaire",
+    "column_name": "categorie",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "inventaire",
+    "column_name": "disponible",
+    "data_type": "boolean",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "inventaire",
+    "column_name": "prix",
+    "data_type": "double precision",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "inventaire",
+    "column_name": "marque_pref",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "inventaire",
+    "column_name": "magasin_pref",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "menus",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus",
+    "column_name": "nom",
+    "data_type": "text",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus",
+    "column_name": "description",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "menus",
+    "column_name": "date_debut",
+    "data_type": "date",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus",
+    "column_name": "date_fin",
+    "data_type": "date",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus",
+    "column_name": "actif",
+    "data_type": "boolean",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus",
+    "column_name": "created_at",
+    "data_type": "timestamp without time zone",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus",
+    "column_name": "updated_at",
+    "data_type": "timestamp without time zone",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus_items",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus_items",
+    "column_name": "menu_id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus_items",
+    "column_name": "boisson_id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "menus_items",
+    "column_name": "nourriture_id",
+    "data_type": "uuid",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "menus_items",
+    "column_name": "quantite",
+    "data_type": "integer",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "menus_items",
+    "column_name": "commentaire",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "menus_items",
+    "column_name": "created_at",
+    "data_type": "timestamp without time zone",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "nom",
+    "data_type": "text",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "categorie",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "profil",
+    "data_type": "ARRAY",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "lien_recette",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "commentaire",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "actif",
+    "data_type": "boolean",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "recette",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures_ingredients",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures_ingredients",
+    "column_name": "nourriture_id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures_ingredients",
+    "column_name": "ingredient_id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures_ingredients",
+    "column_name": "quantite",
+    "data_type": "numeric",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures_ingredients",
+    "column_name": "unite",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures_ingredients",
+    "column_name": "type",
+    "data_type": "text",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures_ingredients",
+    "column_name": "alternatives",
+    "data_type": "jsonb",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures_preparation",
+    "column_name": "id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures_preparation",
+    "column_name": "nourriture_id",
+    "data_type": "uuid",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures_preparation",
+    "column_name": "ordre",
+    "data_type": "integer",
+    "is_nullable": "NO"
+  },
+  {
+    "table_name": "nourritures_preparation",
+    "column_name": "description",
+    "data_type": "text",
+    "is_nullable": "NO"
+  }
+]

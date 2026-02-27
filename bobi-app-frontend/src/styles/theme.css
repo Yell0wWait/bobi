@@ -1,0 +1,846 @@
+/* Système de design - Variables CSS globales */
+
+:root {
+  /* Header */
+  --header-height: 72px;
+  --header-bg: #1C1C1C;
+  --header-border: #6B6B6B;
+
+  /* Palette Bobi - Léopard majordome */
+  /* Jaune léopard (accents, taches) */
+  --primary-50: #FEF9E7;
+  --primary-100: #FCF3CF;
+  --primary-200: #F9E79F;
+  --primary-300: #F7DC6F;
+  --primary-400: #F4D03F;
+  --primary-500: #F1C40F;
+  --primary-600: #D4AC0D;
+  --primary-700: #B7950B;
+  --primary-800: #9A7D0A;
+  --primary-900: #7D6608;
+
+  /* Rose (CTA, accents, notifications) */
+  --secondary-50: #FCE4EC;
+  --secondary-100: #F8BBD0;
+  --secondary-200: #F48FB1;
+  --secondary-300: #F06292;
+  --secondary-400: #EC407A;
+  --secondary-500: #E91E63;
+  --secondary-600: #D81B60;
+  --secondary-700: #C2185B;
+  --secondary-800: #AD1457;
+  --secondary-900: #880E4F;
+
+  /* Couleurs d'état */
+  --success: #F1C40F;
+  --warning: #E91E63;
+  --error: #C2185B;
+  --info: #F1C40F;
+
+  /* Couleurs de texte */
+  --text-primary: #1C1C1C;
+  --text-secondary: #6B6B6B;
+  --text-tertiary: #9E9E9E;
+  
+  /* Couleurs de fond */
+  --bg-primary: #FDFDFD;
+  --bg-secondary: #F5F5F5;
+  --bg-tertiary: #EEEEEE;
+  
+  /* Bordures */
+  --border-color: #E0E0E0;
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+
+  /* Ombres */
+  --shadow-sm: 0 1px 2px 0 rgba(107, 107, 107, 0.15);
+  --shadow-md: 0 4px 6px -1px rgba(107, 107, 107, 0.2), 0 2px 4px -1px rgba(107, 107, 107, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(107, 107, 107, 0.25), 0 4px 6px -2px rgba(107, 107, 107, 0.15);
+  --shadow-xl: 0 20px 25px -5px rgba(107, 107, 107, 0.3), 0 10px 10px -5px rgba(107, 107, 107, 0.2);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* Typographie */
+  --font-display: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  --font-size-xs: 0.65rem;
+  --font-size-sm: 0.75rem;
+  --font-size-base: 0.875rem;
+  --font-size-lg: 1rem;
+  --font-size-xl: 1.125rem;
+  --font-size-2xl: 1.35rem;
+  --font-size-3xl: 1.65rem;
+  --font-size-4xl: 2rem;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --header-bg: #0f172a;
+  --header-border: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  
+  --border-color: #374151;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Reset et styles globaux */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  line-height: 1.6;
+  transition: background-color var(--transition-base), color var(--transition-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-top: var(--header-height); /* Espace pour le header fixe */
+}
+
+/* Titres */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+h1 { font-size: var(--font-size-3xl); }
+h2 { font-size: var(--font-size-2xl); }
+h3 { font-size: var(--font-size-xl); }
+
+/* Liens */
+a {
+  color: var(--primary-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary-700);
+}
+
+/* Boutons modernes avec gradients */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: 12px 24px;
+  font-family: var(--font-display);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--border-radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  min-height: 44px;
+  touch-action: manipulation;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--secondary-500) 0%, var(--secondary-600) 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, var(--secondary-600) 0%, var(--secondary-700) 100%);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary-600);
+  color: var(--primary-600);
+}
+
+.btn-outline:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-700);
+  color: var(--primary-700);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Cartes */
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:active {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Inputs et formulaires */
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: var(--font-size-base);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+  min-height: 44px;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background: var(--secondary-100);
+  color: var(--secondary-800);
+}
+
+.badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-info {
+  background: var(--primary-100);
+  color: var(--primary-800);
+}
+
+/* Spinner de chargement */
+.spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--primary-600);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Utilities */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Typographie utilitaire */
+.text-display {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-semibold);
+}
+
+.text-display-bold {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+}
+
+.text-body {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-regular);
+}
+
+.text-body-medium {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+}
+
+.text-micro {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-light);
+}
+
+.text-caption {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+}
+
+/* Styles inline communs - alternatives aux valeurs hardcodées */
+input, textarea, select {
+  font-family: var(--font-body);
+  font-size: var(--font-size-lg);
+}
+
+label {
+  font-family: var(--font-display);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+p {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mt-lg { margin-top: var(--spacing-lg); }
+
+/* Main content container - removes gap after header */
+.main-content {
+  padding-top: 0;
+  padding-bottom: 80px;
+}
+
+.main-content-padded {
+  padding: 1rem;
+  padding-top: 0;
+  padding-bottom: 80px;
+}
+
+/* Search Bar Styles */
+.search-container {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-button {
+  width: 100%;
+  padding: 10px 16px;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--secondary-500);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.search-button:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.search-expanded {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-color);
+  font-size: var(--font-size-base);
+  font-family: var(--font-body);
+  color: var(--secondary-500);
+  background-color: white;
+}
+
+.search-input::placeholder {
+  color: var(--secondary-500);
+}
+
+.search-close-button {
+  padding: 10px 12px;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.search-close-button:hover {
+  background-color: var(--bg-tertiary);
+}
+
+/* Filter Bar Styles */
+.filter-container {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-button {
+  padding: 6px 14px;
+  background-color: var(--secondary-500);
+  color: white;
+  border: 1px solid var(--secondary-500);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-button:hover {
+  background-color: var(--secondary-600);
+  border-color: var(--secondary-600);
+}
+
+.filter-button:not(.active) {
+  background-color: transparent;
+  color: var(--secondary-500);
+  border: 1px solid var(--secondary-500);
+}
+
+.filter-button:not(.active):hover {
+  background-color: transparent;
+  color: var(--secondary-600);
+  border-color: var(--secondary-600);
+}
+
+.filter-dropdown-button {
+  padding: 10px 16px;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.filter-dropdown-button:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.filter-dropdown-button.active {
+  background-color: var(--secondary-500);
+  color: white;
+  border-color: var(--secondary-500);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .search-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-expanded {
+    width: 100%;
+    flex-direction: row;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .filter-container {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .filter-button {
+    flex: 0 1 auto;
+  }
+
+  .filter-dropdown-button {
+    width: 100%;
+  }
+}
+
+/* Floating Action Button (FAB) */
+.floating-button {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--secondary-500);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.floating-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.floating-button svg {
+  color: white;
+}
+
+/* Floating Command Button */
+.floating-command-button {
+  position: fixed;
+  bottom: 160px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--secondary-500);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.floating-command-button:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.floating-command-button:disabled {
+  background-color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
+.floating-command-button svg {
+  color: white;
+}
+
+/* Floating Action Buttons for Save/Delete */
+.floating-action-buttons {
+  position: fixed;
+  bottom: 160px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 999;
+}
+
+.floating-save-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.floating-save-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.floating-save-button:disabled {
+  background-color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
+.floating-save-button svg {
+  color: white;
+}
+
+.floating-delete-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.floating-delete-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.floating-delete-button svg {
+  color: white;
+}
+
+.floating-cancel-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.floating-cancel-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.floating-cancel-button svg {
+  color: white;
+}
+/* Floating Add Button (for Inventaire) */
+.floating-add-button {
+  position: fixed;
+  bottom: 160px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--secondary-500);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.floating-add-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.floating-add-button svg {
+  color: white;
+}
+
+/* Floating Import Button */
+.floating-import-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #9c27b0;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.floating-import-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(156, 39, 176, 0.4);
+}
+
+.floating-import-button svg {
+  color: white;
+}
