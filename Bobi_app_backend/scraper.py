@@ -1,4 +1,5 @@
 import sys
+import os
 import requests
 from bs4 import BeautifulSoup
 from supabase import create_client, Client
@@ -7,8 +8,11 @@ from supabase import create_client, Client
 # CONFIG SUPABASE (intégré directement comme demandé)
 # ============================================================
 
-SUPABASE_URL = "https://qxjpmtqncivzqvskyrgf.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4anBtdHFuY2l2enF2c2t5cmdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwNTExOTYsImV4cCI6MjA4MjYyNzE5Nn0.5sb9ONpFdqpLhUAzgFkepxfEnnFvJrzFY6MxGKKgyZ0"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise RuntimeError("Missing SUPABASE_URL or SUPABASE_ANON_KEY environment variables")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 

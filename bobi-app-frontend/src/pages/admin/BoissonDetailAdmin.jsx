@@ -30,7 +30,6 @@ export default function BoissonDetailAdmin() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(id === "new"); // Mode édition activé par défaut pour "new"
   const [nom, setNom] = useState("");
-  const [photo, setPhoto] = useState("");
   const imageUrl = useBoissonImage(nom);
   const [categorie, setCategorie] = useState("");
   const [commentaire, setCommentaire] = useState("");
@@ -46,7 +45,6 @@ export default function BoissonDetailAdmin() {
   const [commandSuccess, setCommandSuccess] = useState(null);
   const [showBobiSuccess, setShowBobiSuccess] = useState(false);
   const [adminCommandes, setAdminCommandes] = useState([]);
-  const [adminTable, setAdminTable] = useState("");
 
   const adminData = JSON.parse(localStorage.getItem("bobi_admin") || "null");
   const adminId = adminData?.id || null;
@@ -140,7 +138,7 @@ export default function BoissonDetailAdmin() {
         // Charger les commandes avec cette boisson
         const { data: cmdData, error: cmdErr } = await supabase
           .from("commandes")
-          .select("id, boisson_id, date_commande, note, statut")
+          .select("id, boisson_id, degustateur_secret_token, date_commande, note, statut")
           .eq("boisson_id", id)
           .order("date_commande", { ascending: false });
         if (cmdErr) throw cmdErr;
@@ -169,7 +167,7 @@ export default function BoissonDetailAdmin() {
         if (adminId) {
           const { data: adminCmds } = await supabase
             .from("commandes")
-            .select("id, boisson_id, note, commentaire, statut, date_commande")
+            .select("id, boisson_id, degustateur_secret_token, note, commentaire, statut, date_commande")
             .eq("boisson_id", id)
             .order("date_commande", { ascending: false });
           setAdminCommandes((adminCmds || []).filter(c => c.degustateur_secret_token === adminId));
@@ -244,6 +242,7 @@ export default function BoissonDetailAdmin() {
     try {
       const { error } = await supabase.from("commandes").insert({
         boisson_id: id,
+        degustateur_secret_token: adminId,
         statut: "Commandé"
       });
 
@@ -255,7 +254,7 @@ export default function BoissonDetailAdmin() {
       // Recharger les commandes de l'admin
       const { data: updatedCmds } = await supabase
         .from("commandes")
-        .select("id, boisson_id, note, commentaire, statut, date_commande")
+        .select("id, boisson_id, degustateur_secret_token, note, commentaire, statut, date_commande")
         .eq("boisson_id", id)
         .order("date_commande", { ascending: false });
       setAdminCommandes((updatedCmds || []).filter(c => c.degustateur_secret_token === adminId));
@@ -267,26 +266,6 @@ export default function BoissonDetailAdmin() {
       setCommandLoading(false);
     }
   }
-
-  function renderStars(note) {
-    if (!note) return null;
-    const fullStars = Math.floor(note);
-    const hasHalf = note % 1 !== 0;
-    const emptyStars = hasHalf ? Math.floor(5 - note) : 5 - fullStars;
-
-    return (
-      <div style={{ display: "flex", gap: 4 }}>
-        {[...Array(fullStars)].map((_, i) => (
-          <Star key={`full-${i}`} size={16} fill="var(--primary-500)" color="var(--primary-500)" />
-        ))}
-        {hasHalf && <StarHalf key="half" size={16} fill="var(--primary-500)" color="var(--primary-500)" />}
-        {[...Array(emptyStars)].map((_, i) => (
-          <Star key={`empty-${i}`} size={16} color="#d1d5db" />
-        ))}
-      </div>
-    );
-  }
-
 
   // Fonction pour importer depuis une URL
   async function handleImportFromUrl() {
@@ -300,14 +279,23 @@ export default function BoissonDetailAdmin() {
 
     try {
       console.log("📥 Import depuis:", importUrl);
-      
+
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      if (!anonKey) {
+        throw new Error("VITE_SUPABASE_ANON_KEY manquante");
+      }
+      if (!supabaseUrl) {
+        throw new Error("VITE_SUPABASE_URL manquante");
+      }
+
       const response = await fetch(
-        "https://qxjpmtqncivzqvskyrgf.supabase.co/functions/v1/scrape-recipe",
+        `${supabaseUrl}/functions/v1/scrape-recipe`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4anBtdHFuY2l2enF2c2t5cmdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwNTExOTYsImV4cCI6MjA4MjYyNzE5Nn0.5sb9ONpFdqpLhUAzgFkepxfEnnFvJrzFY6MxGKKgyZ0"}`
+            "Authorization": `Bearer ${anonKey}`
           },
           body: JSON.stringify({ url: importUrl })
         }
@@ -351,7 +339,7 @@ export default function BoissonDetailAdmin() {
             }
           }
           if (toInsert.length > 0) {
-            const { data: insertData, error: insertErr } = await supabase.from("boissons_ingredients").insert(toInsert);
+            const { error: insertErr } = await supabase.from("boissons_ingredients").insert(toInsert);
             if (insertErr) {
               throw new Error(`Erreur insertion ingrédients : ${insertErr.message}`);
             }
@@ -373,7 +361,7 @@ export default function BoissonDetailAdmin() {
             description: step.description,
           }));
           if (stepsToInsert.length > 0) {
-            const { data: stepData, error: stepErr } = await supabase.from("boissons_preparation").insert(stepsToInsert);
+            const { error: stepErr } = await supabase.from("boissons_preparation").insert(stepsToInsert);
             if (stepErr) {
               console.error("Erreur insertion étapes :", stepErr);
             }
@@ -432,7 +420,7 @@ export default function BoissonDetailAdmin() {
 
     try {
       if (id === "new") {
-        const { data, error } = await supabase.from("boissons").insert([
+        const { error } = await supabase.from("boissons").insert([
           { nom, categorie, commentaire, lien_recette: lienRecette, recette: nomSiteRecette, profil, actif }
         ]).select().maybeSingle();
         if (error) throw error;
@@ -1673,3 +1661,6 @@ export default function BoissonDetailAdmin() {
     </>
   );
 }
+
+
+

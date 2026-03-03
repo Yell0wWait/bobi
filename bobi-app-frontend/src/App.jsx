@@ -3,6 +3,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar";
 import BobiAnimation from "./components/BobiAnimation";
+import { getCurrentAdmin } from "./services/adminService";
 
 // Pages chargées immédiatement (login)
 import UnifiedLogin from "./pages/UnifiedLogin";
@@ -31,6 +32,34 @@ export default function App() {
   const [admin, setAdmin] = useState(
     JSON.parse(localStorage.getItem("bobi_admin") || "null")
   );
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function restoreAdminSession() {
+      try {
+        const currentAdmin = await getCurrentAdmin();
+        if (!mounted) return;
+
+        if (currentAdmin?.id) {
+          const safeAdmin = { id: currentAdmin.id, email: currentAdmin.email };
+          localStorage.setItem("bobi_admin", JSON.stringify(safeAdmin));
+          setAdmin(safeAdmin);
+        } else {
+          localStorage.removeItem("bobi_admin");
+          setAdmin(null);
+        }
+      } finally {
+        if (mounted) setAuthLoading(false);
+      }
+    }
+
+    restoreAdminSession();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Callback pour login invité
   function handleGuestLogin(guestObj) {
@@ -42,8 +71,9 @@ export default function App() {
   // Callback pour login admin
   function handleAdminLogin(adminObj) {
     if (!adminObj) return;
-    localStorage.setItem("bobi_admin", JSON.stringify(adminObj));
-    setAdmin(adminObj);
+    const safeAdmin = { id: adminObj.id, email: adminObj.email };
+    localStorage.setItem("bobi_admin", JSON.stringify(safeAdmin));
+    setAdmin(safeAdmin);
   }
 
   // Logout invité
@@ -56,6 +86,14 @@ export default function App() {
   function handleAdminLogout() {
     localStorage.removeItem("bobi_admin");
     setAdmin(null);
+  }
+
+  if (authLoading) {
+    return (
+      <ThemeProvider>
+        <BobiAnimation type="loading" />
+      </ThemeProvider>
+    );
   }
 
   // 1. Si admin est connecté → afficher routes ADMIN + INVITÉ

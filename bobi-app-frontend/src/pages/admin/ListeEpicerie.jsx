@@ -95,7 +95,7 @@ export default function ListeEpicerie() {
       const ingredientIds = Array.from(new Set(allIngredients.map(i => i.ingredient_id).filter(Boolean)));
       
       if (ingredientIds.length === 0) {
-        setIngredients([]);
+        setAllIngredients({});
         setLoading(false);
         return;
       }

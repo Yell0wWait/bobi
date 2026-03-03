@@ -11,7 +11,6 @@ export function useBoissonImage(boissonNom) {
   
   useEffect(() => {
     if (!boissonNom) {
-      setImageUrl(null);
       return;
     }
     
@@ -31,7 +30,7 @@ export function useBoissonImage(boissonNom) {
     img.src = jpgUrl;
   }, [boissonNom]);
   
-  return imageUrl;
+  return boissonNom ? imageUrl : null;
 }
 
 /**
@@ -44,7 +43,6 @@ export function useNourritureImage(nourritureNom) {
   
   useEffect(() => {
     if (!nourritureNom) {
-      setImageUrl(null);
       return;
     }
     
@@ -57,5 +55,5 @@ export function useNourritureImage(nourritureNom) {
     img.src = jpgUrl;
   }, [nourritureNom]);
   
-  return imageUrl;
+  return nourritureNom ? imageUrl : null;
 }

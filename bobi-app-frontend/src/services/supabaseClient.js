@@ -1,7 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = "https://qxjpmtqncivzqvskyrgf.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4anBtdHFuY2l2enF2c2t5cmdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwNTExOTYsImV4cCI6MjA4MjYyNzE5Nn0.5sb9ONpFdqpLhUAzgFkepxfEnnFvJrzFY6MxGKKgyZ0";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+	throw new Error(
+		"Missing Supabase env vars: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY"
+	);
+}
 
 const noStoreFetch = (url, options = {}) =>
 	fetch(url, { ...options, cache: "no-store" });
