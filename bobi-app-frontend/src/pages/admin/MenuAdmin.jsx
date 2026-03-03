@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
-import { Edit, Trash2, Plus, Calendar, CheckCircle, XCircle, List, Copy, Wine, Utensils, ThumbsUp, ThumbsDown, Search, X } from 'lucide-react';
+import { Trash2, Plus, Calendar, Copy, Wine, Utensils, ThumbsUp, ThumbsDown, Search, X } from 'lucide-react';
 
 export default function MenuAdmin() {
   const [menus, setMenus] = useState([]);
@@ -110,18 +110,6 @@ export default function MenuAdmin() {
       console.error(err);
       alert(`Erreur lors de la sauvegarde: ${err.message || err}`);
     }
-  }
-
-  async function handleEdit(menu) {
-    setFormData({
-      nom: menu.nom,
-      description: menu.description || "",
-      date_debut: menu.date_debut,
-      date_fin: menu.date_fin,
-      actif: menu.actif,
-    });
-    setEditingId(menu.id);
-    setShowForm(true);
   }
 
   async function handleDelete(id) {

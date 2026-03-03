@@ -224,7 +224,7 @@ export default function BoissonDetailAdmin() {
     load();
     loadInventaire();
     loadAllBoissons();
-  }, [id]);
+  }, [id, adminId, nom]);
 
   async function handleCommander() {
     if (!adminId) {

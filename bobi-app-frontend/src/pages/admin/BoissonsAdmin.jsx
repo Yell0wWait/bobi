@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import BoissonCard from "../../components/BoissonCard";
 import Header from "../../components/Header";
 import { Plus, Search, X } from 'lucide-react';import BobiAnimation from "../../components/BobiAnimation";
 export default function BoissonsAdmin() {
   const [boissons, setBoissons] = useState([]);
-  const [filteredBoissons, setFilteredBoissons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,7 +46,6 @@ export default function BoissonsAdmin() {
         );
         
         setBoissons(boissonsWithIngredients);
-        setFilteredBoissons(boissonsWithIngredients);
         
         // Extraire les catégories uniques
         const cats = [...new Set(data.map(b => b.categorie).filter(Boolean))].sort();
@@ -70,7 +68,7 @@ export default function BoissonsAdmin() {
     }
   }
 
-  useEffect(() => {
+  const filteredBoissons = useMemo(() => {
     let filtered = boissons;
 
     // Filtre par recherche
@@ -99,7 +97,7 @@ export default function BoissonsAdmin() {
       return a.nom.localeCompare(b.nom, 'fr', { sensitivity: 'base' });
     });
 
-    setFilteredBoissons(filtered);
+    return filtered;
   }, [searchTerm, selectedCategories, boissons]);
 
   if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import Header from "../../components/Header";
@@ -29,11 +29,7 @@ export default function IngredientDetailAdmin() {
   const [boissons, setBoissons] = useState([]);
   const [nourritures, setNourritures] = useState([]);
 
-  useEffect(() => {
-    load();
-  }, [id]);
-
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -108,7 +104,11 @@ export default function IngredientDetailAdmin() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   async function handleSave() {
     setError(null);
@@ -132,20 +132,6 @@ export default function IngredientDetailAdmin() {
     } catch (err) {
       console.error(err);
       setError(err.message || "Erreur lors de la sauvegarde");
-    }
-  }
-
-  function handleCancel() {
-    setIsEditing(false);
-    if (ingredient) {
-      setFormData({
-        nom: ingredient.nom || "",
-        categorie: ingredient.categorie || "",
-        prix: ingredient.prix || "",
-        marque_pref: ingredient.marque_pref || "",
-        magasin_pref: ingredient.magasin_pref || "",
-        disponible: ingredient.disponible ?? true
-      });
     }
   }
 

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
-import { RefreshCw, Trash2, Edit, ThumbsUp, ThumbsDown, ChevronDown, ChevronRight, Plus, Search, X, Check } from 'lucide-react';
+import { RefreshCw, Trash2, ThumbsUp, ThumbsDown, ChevronDown, ChevronRight, Plus, Search, X, Check } from 'lucide-react';
 
 export default function Inventaire() {
   const navigate = useNavigate();
@@ -101,18 +101,6 @@ export default function Inventaire() {
       console.error("Erreur complète:", err);
       setError(err.message || "Erreur lors de la suppression de l'ingrédient");
     }
-  }
-
-  function handleEdit(item) {
-    setEditingItem(item);
-    setFormData({ 
-      nom: item.nom, 
-      categorie: item.categorie || "", 
-      disponible: item.disponible,
-      prix: item.prix || "",
-      marque_pref: item.marque_pref || "",
-      magasin_pref: item.magasin_pref || ""
-    });
   }
 
   async function handleSaveEdit() {

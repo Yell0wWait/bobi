@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import NourritureCard from "../../components/NourritureCard";
 import Header from "../../components/Header";
 import { Plus, Search, X } from 'lucide-react';import BobiAnimation from "../../components/BobiAnimation";
 export default function NourritureAdmin() {
   const [nourritures, setNourritures] = useState([]);
-  const [filteredNourritures, setFilteredNourritures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,7 +26,6 @@ export default function NourritureAdmin() {
         setError(error.message);
       } else {
         setNourritures(data);
-        setFilteredNourritures(data);
         
         // Extraire les catégories uniques
         const cats = [...new Set(data.map(n => n.categorie).filter(Boolean))].sort();
@@ -50,7 +48,7 @@ export default function NourritureAdmin() {
     }
   }
 
-  useEffect(() => {
+  const filteredNourritures = useMemo(() => {
     let filtered = nourritures;
 
     // Filtre par recherche
@@ -79,7 +77,7 @@ export default function NourritureAdmin() {
       return a.nom.localeCompare(b.nom, 'fr', { sensitivity: 'base' });
     });
 
-    setFilteredNourritures(filtered);
+    return filtered;
   }, [searchTerm, selectedCategories, nourritures]);
 
   if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;

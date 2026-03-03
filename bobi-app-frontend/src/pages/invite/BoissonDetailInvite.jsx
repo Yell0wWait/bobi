@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import { useBoissonImage } from "../../hooks/useImage";
-import { toPascalCase } from "../../services/imageService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import { ShoppingCart, Star, StarHalf, Wine, ThumbsUp, ThumbsDown } from 'lucide-react';
 
 export default function BoissonDetailInvite() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [boisson, setBoisson] = useState(null);
   const imageUrl = useBoissonImage(boisson?.nom);
   const [commandes, setCommandes] = useState([]);
@@ -96,11 +94,6 @@ export default function BoissonDetailInvite() {
 
     load();
   }, [id, secretToken]);
-
-  const getIngredientName = (ingredientId) => {
-    const ing = ingredients.find(i => i.ingredient_id === ingredientId);
-    return ing?.inventaire?.nom || "Ingrédient";
-  };
 
   const renderStars = (note) => {
     if (note === null || note === undefined) return null;
@@ -353,3 +346,5 @@ export default function BoissonDetailInvite() {
     </>
   );
 }
+
+

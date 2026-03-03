@@ -1,13 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 
 export default function MenuItemsAdmin() {
   const { id: menuId } = useParams();
-  const navigate = useNavigate();
   const [menu, setMenu] = useState(null);
   const [items, setItems] = useState([]);
   const [boissons, setBoissons] = useState([]);
@@ -21,11 +20,7 @@ export default function MenuItemsAdmin() {
     return form.type === "boisson" ? boissons : nourritures;
   }, [form.type, boissons, nourritures]);
 
-  useEffect(() => {
-    load();
-  }, [menuId]);
-
-  async function load() {
+  const load = useCallback(async () => {
     if (!menuId) return;
     setLoading(true);
     setError(null);
@@ -76,7 +71,11 @@ export default function MenuItemsAdmin() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [menuId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   async function addItem(e) {
     e.preventDefault();

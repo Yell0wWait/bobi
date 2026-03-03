@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../services/supabaseClient";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
@@ -11,10 +11,6 @@ export default function ListeEpicerie() {
   const [error, setError] = useState(null);
   const [selectedMenuIds, setSelectedMenuIds] = useState([]);
   const [collapsedCategories, setCollapsedCategories] = useState({});
-
-  useEffect(() => {
-    loadIngredients();
-  }, []);
 
   function toggleMenu(menuId) {
     if (selectedMenuIds.includes(menuId)) {
@@ -31,7 +27,7 @@ export default function ListeEpicerie() {
     }));
   }
 
-  async function loadIngredients() {
+  const loadIngredients = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -46,8 +42,8 @@ export default function ListeEpicerie() {
       setMenus(activeMenus || []);
       
       // Par défaut, sélectionner tous les menus
-      if (selectedMenuIds.length === 0 && activeMenus && activeMenus.length > 0) {
-        setSelectedMenuIds(activeMenus.map(m => m.id));
+      if (activeMenus && activeMenus.length > 0) {
+        setSelectedMenuIds((prev) => (prev.length === 0 ? activeMenus.map(m => m.id) : prev));
       }
 
       if (!activeMenus || activeMenus.length === 0) {
@@ -156,7 +152,11 @@ export default function ListeEpicerie() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    loadIngredients();
+  }, [loadIngredients]);
 
   async function toggleDisponible(ingredientId, currentStatus) {
     try {

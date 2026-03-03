@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
-import { LogOut, Home, ShoppingCart, Wine, UtensilsCrossed, ShoppingBag, Calendar, List, MoreVertical, ChevronDown } from "lucide-react";
+import { LogOut, Home, ShoppingCart, Wine, UtensilsCrossed, ShoppingBag, Calendar, List, ChevronDown } from "lucide-react";
 import { logoutAdmin } from "../services/adminService";
 import { useState } from "react";
 
 export default function Navbar({ userType = "guest", onLogout }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenu, setExpandedMenu] = useState(null);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
 
@@ -421,9 +420,9 @@ export default function Navbar({ userType = "guest", onLogout }) {
       }}>
         {/* Desktop navigation */}
         <div className="navbar-desktop" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-          {guestLinks.map(({ to, icon: Icon, label }) => (
-            <Link key={to} to={to} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'var(--font-weight-medium)', color: 'var(--text-primary)', textDecoration: 'none' }}>
-              <Icon size={18} /> {label}
+          {guestLinks.map((item) => (
+            <Link key={item.to} to={item.to} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'var(--font-weight-medium)', color: 'var(--text-primary)', textDecoration: 'none' }}>
+              <item.icon size={18} /> {item.label}
             </Link>
           ))}
         </div>
@@ -440,10 +439,10 @@ export default function Navbar({ userType = "guest", onLogout }) {
 
         {/* Mobile navigation - icons with labels */}
         <div className="navbar-mobile" style={{ display: 'none', justifyContent: 'space-around', alignItems: 'center', width: '100%', position: 'relative' }}>
-          {guestLinks.map(({ to, icon: Icon, label }) => (
+          {guestLinks.map((item) => (
             <Link 
-              key={to} 
-              to={to} 
+              key={item.to} 
+              to={item.to} 
               style={{ 
                 display: 'flex', 
                 flexDirection: 'column', 
@@ -454,8 +453,8 @@ export default function Navbar({ userType = "guest", onLogout }) {
                 gap: '2px'
               }}
             >
-              <Icon size={22} />
-              <span style={{ fontSize: 'var(--font-size-xs)', whiteSpace: 'nowrap' }}>{label}</span>
+              <item.icon size={22} />
+              <span style={{ fontSize: 'var(--font-size-xs)', whiteSpace: 'nowrap' }}>{item.label}</span>
             </Link>
           ))}
           <button

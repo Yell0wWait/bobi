@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import { ArrowLeft, Calendar, CheckCircle, XCircle, Wine, Utensils, Plus, Trash2, ThumbsUp, ThumbsDown } from 'lucide-react';
-import { getBoissonImageUrl, getBoissonImageUrlPng, getNourritureImageUrl } from '../../services/imageService';
+import { getBoissonImageUrl, getNourritureImageUrl } from '../../services/imageService';
 
 export default function MenuDetailAdmin() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [menu, setMenu] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,12 +22,7 @@ export default function MenuDetailAdmin() {
   const [selectedItemId, setSelectedItemId] = useState('');
   const [quantite, setQuantite] = useState(1);
 
-  useEffect(() => {
-    load();
-    loadAvailableItems();
-  }, [id]);
-
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -70,9 +64,9 @@ export default function MenuDetailAdmin() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
 
-  async function loadAvailableItems() {
+  const loadAvailableItems = useCallback(async () => {
     try {
       // Charger toutes les boissons
       const { data: boissons, error: bErr } = await supabase
@@ -95,7 +89,12 @@ export default function MenuDetailAdmin() {
     } catch (err) {
       console.error(err);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    load();
+    loadAvailableItems();
+  }, [load, loadAvailableItems]);
 
   async function handleAddItem() {
     if (!selectedItemId || !quantite) {

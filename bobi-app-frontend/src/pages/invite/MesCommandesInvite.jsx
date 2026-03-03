@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../services/supabaseClient";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
@@ -24,10 +24,6 @@ export default function MesCommandesInvite({ secretToken }) {
     }
     return true;
   });
-
-  useEffect(() => {
-    load();
-  }, [secretToken]);
 
   function toggleFilter(status) {
     if (activeFilters.includes(status)) {
@@ -101,7 +97,7 @@ export default function MesCommandesInvite({ secretToken }) {
     return <div style={{ display: 'flex', gap: 2 }}>{stars}</div>;
   }
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -146,7 +142,11 @@ export default function MesCommandesInvite({ secretToken }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [secretToken]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;
   if (error) return <p style={{ color: "red" }}>{error}</p>;

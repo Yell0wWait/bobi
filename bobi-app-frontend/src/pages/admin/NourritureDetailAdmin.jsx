@@ -30,8 +30,7 @@ export default function NourritureDetailAdmin() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(id === "new"); // Mode édition activé par défaut pour "new"
   const [nom, setNom] = useState("");
-  const [photo, setPhoto] = useState("");
-  const imageUrl = useNourritureImage(nom);
+    const imageUrl = useNourritureImage(nom);
   const [categorie, setCategorie] = useState("");
   const [commentaire, setCommentaire] = useState("");
   const [lienRecette, setLienRecette] = useState("");
@@ -57,8 +56,7 @@ export default function NourritureDetailAdmin() {
   // Dropdowns pour catégories
   const [uniqueCategories, setUniqueCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
-  const [allNourritures, setAllNourritures] = useState([]);
-
+  
   useEffect(() => {
     let isMounted = true;
 
@@ -131,7 +129,6 @@ export default function NourritureDetailAdmin() {
           .select("id, nom, categorie")
           .order("nom", { ascending: true });
         if (error) throw error;
-        setAllNourritures(data || []);
         
         // Extraire catégories uniques
         const cats = [...new Set(data.map(n => n.categorie).filter(Boolean))];
@@ -181,7 +178,7 @@ export default function NourritureDetailAdmin() {
 
     try {
       if (id === "new") {
-        const { data, error } = await supabase.from("nourritures").insert([
+        const { error } = await supabase.from("nourritures").insert([
           { nom, categorie, commentaire, lien_recette: lienRecette, recette: nomSiteRecette, actif }
         ]).select().maybeSingle();
         if (error) throw error;
@@ -845,3 +842,5 @@ export default function NourritureDetailAdmin() {
     </>
   );
 }
+
+
