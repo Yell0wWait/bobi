@@ -39,8 +39,8 @@
 
   /* Couleurs de texte */
   --text-primary: #1C1C1C;
-  --text-secondary: #6B6B6B;
-  --text-tertiary: #9E9E9E;
+  --text-secondary: #4A4A4A;
+  --text-tertiary: #666666;
   
   /* Couleurs de fond */
   --bg-primary: #FDFDFD;
@@ -99,8 +99,8 @@
   --header-bg: #0f172a;
   --header-border: #1f2937;
   --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-tertiary: #9ca3af;
+  --text-secondary: #C7CDD6;
+  --text-tertiary: #A9B2BF;
   
   --bg-primary: #111827;
   --bg-secondary: #1f2937;
