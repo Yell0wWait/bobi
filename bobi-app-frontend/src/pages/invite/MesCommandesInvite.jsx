@@ -89,7 +89,7 @@ export default function MesCommandesInvite({ secretToken }) {
             key={i} 
             size={16} 
             fill='none' 
-            color='#d1d5db'  
+            color='var(--border-color)'  
           />
         );
       }

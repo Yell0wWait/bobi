@@ -144,7 +144,7 @@ export default function CommandesAdmin() {
             key={i} 
             size={16} 
             fill='none' 
-            color='#d1d5db' 
+            color='var(--border-color)' 
           />
         );
       }
@@ -285,7 +285,7 @@ export default function CommandesAdmin() {
       <div style={{ padding: "1rem", paddingBottom: "80px" }}>
       
       {notificationsEnabled && (
-        <p style={{ padding: "8px 12px", backgroundColor: "#d4edda", color: "#155724", borderRadius: 4, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+        <p style={{ padding: "8px 12px", backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)", borderRadius: 4, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
           <Bell size={16} /> Notifications activées - Vous serez alerté des nouvelles commandes
         </p>
       )}
@@ -385,7 +385,7 @@ export default function CommandesAdmin() {
               <select
                 value={editingCommande.boisson_id}
                 onChange={(e) => setEditingCommande({ ...editingCommande, boisson_id: e.target.value })}
-                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid #ddd" }}
+                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid var(--border-color)" }}
               >
                 <option value="">Sélectionner une boisson</option>
                 {boissons.map(b => (
@@ -399,7 +399,7 @@ export default function CommandesAdmin() {
               <select
                 value={editingCommande.degustateur_secret_token}
                 onChange={(e) => setEditingCommande({ ...editingCommande, degustateur_secret_token: e.target.value })}
-                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid #ddd" }}
+                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid var(--border-color)" }}
               >
                 <option value="">Sélectionner un dégustateur</option>
                 {degustateurs.map(d => (
@@ -414,7 +414,7 @@ export default function CommandesAdmin() {
                 type="date"
                 value={editingCommande.date_commande}
                 onChange={(e) => setEditingCommande({ ...editingCommande, date_commande: e.target.value })}
-                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid #ddd" }}
+                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid var(--border-color)" }}
               />
             </div>
 
@@ -426,7 +426,7 @@ export default function CommandesAdmin() {
                 max="5"
                 value={editingCommande.note}
                 onChange={(e) => setEditingCommande({ ...editingCommande, note: parseInt(e.target.value) || 0 })}
-                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid #ddd" }}
+                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid var(--border-color)" }}
               />
             </div>
 
@@ -435,7 +435,7 @@ export default function CommandesAdmin() {
                 onClick={() => setEditingCommande(null)}
                 style={{
                   padding: "8px 16px",
-                  backgroundColor: "#6c757d",
+                  backgroundColor: "var(--text-secondary)",
                   color: "white",
                   border: "none",
                   borderRadius: 4,
@@ -449,7 +449,7 @@ export default function CommandesAdmin() {
                 onClick={saveEdit}
                 style={{
                   padding: "8px 16px",
-                  backgroundColor: "#28a745",
+                  backgroundColor: "var(--primary-600)",
                   color: "white",
                   border: "none",
                   borderRadius: 4,
@@ -488,7 +488,7 @@ export default function CommandesAdmin() {
                 backgroundColor: "white",
                 borderRadius: 8,
                 boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                border: "1px solid #e5e7eb",
+                border: "1px solid var(--border-color)",
                 position: "relative",
                 cursor: "pointer",
                 transition: "box-shadow 0.2s"
@@ -504,7 +504,7 @@ export default function CommandesAdmin() {
                   flexShrink: 0,
                   borderRadius: 8,
                   overflow: "hidden",
-                  backgroundColor: "#f3f4f6"
+                  backgroundColor: "var(--bg-secondary)"
                 }}>
                   {imageUrl ? (
                     <img 
@@ -535,10 +535,10 @@ export default function CommandesAdmin() {
 
                 {/* Détails */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-semibold)', color: "#111827", marginBottom: 4, whiteSpace: "nowrap", overflow: "visible" }}>
+                  <div style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-primary)", marginBottom: 4, whiteSpace: "nowrap", overflow: "visible" }}>
                     {c.boisson_nom}
                   </div>
-                  <div style={{ fontSize: 'var(--font-size-base)', color: "#6b7280", marginBottom: 4 }}>
+                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-secondary)", marginBottom: 4 }}>
                     {c.guest_pseudo} • {date}
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-start" }}>
@@ -567,7 +567,7 @@ export default function CommandesAdmin() {
                     }}
                     title={c.statut === "Commandé" ? "Marquer comme Servi" : "Marquer comme Commandé"}
                   >
-                    {c.statut === "Commandé" ? <CheckCircle size={20} color="#6b7280" /> : <Clock size={20} color="#6b7280" />}
+                    {c.statut === "Commandé" ? <CheckCircle size={20} color="var(--text-secondary)" /> : <Clock size={20} color="var(--text-secondary)" />}
                   </button>
 
                   {/* Modifier */}
@@ -589,7 +589,7 @@ export default function CommandesAdmin() {
                     }}
                     title="Modifier"
                   >
-                    <Edit size={20} color="#6b7280" />
+                    <Edit size={20} color="var(--text-secondary)" />
                   </button>
 
                   {/* Supprimer */}
@@ -611,7 +611,7 @@ export default function CommandesAdmin() {
                     }}
                     title="Supprimer"
                   >
-                    <Trash2 size={20} color="#6b7280" />
+                    <Trash2 size={20} color="var(--text-secondary)" />
                   </button>
                 </div>
               </div>
@@ -621,14 +621,14 @@ export default function CommandesAdmin() {
                 <div style={{
                   marginTop: 8,
                   padding: 12,
-                  backgroundColor: "#f9fafb",
+                  backgroundColor: "var(--bg-secondary)",
                   borderRadius: 6,
                   borderLeft: "3px solid var(--primary-400)"
                 }}>
-                  <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: "#6b7280", marginBottom: 4 }}>
+                  <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-secondary)", marginBottom: 4 }}>
                     Commentaire:
                   </div>
-                  <div style={{ fontSize: 'var(--font-size-base)', color: "#374151", lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-primary)", lineHeight: 1.5 }}>
                     {c.commentaire}
                   </div>
                 </div>
@@ -639,7 +639,7 @@ export default function CommandesAdmin() {
       </div>
 
       {commandes.length === 0 && (
-        <p style={{ textAlign: "center", color: "#6b7280", marginTop: 40, fontSize: 'var(--font-size-lg)' }}>
+        <p style={{ textAlign: "center", color: "var(--text-secondary)", marginTop: 40, fontSize: 'var(--font-size-lg)' }}>
           Aucune commande avec les filtres sélectionnés
         </p>
       )}
