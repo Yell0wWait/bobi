@@ -38,27 +38,27 @@
   --info: #F1C40F;
 
   /* Couleurs de texte */
-  --text-primary: #1C1C1C;
-  --text-secondary: #4A4A4A;
-  --text-tertiary: #666666;
+  --text-primary: #f9fafb;
+  --text-secondary: #C7CDD6;
+  --text-tertiary: #A9B2BF;
   
   /* Couleurs de fond */
-  --bg-primary: #FDFDFD;
-  --bg-secondary: #F5F5F5;
-  --bg-tertiary: #EEEEEE;
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
   
   /* Bordures */
-  --border-color: #E0E0E0;
+  --border-color: #374151;
   --border-radius-sm: 6px;
   --border-radius-md: 8px;
   --border-radius-lg: 12px;
   --border-radius-xl: 16px;
 
   /* Ombres */
-  --shadow-sm: 0 1px 2px 0 rgba(107, 107, 107, 0.15);
-  --shadow-md: 0 4px 6px -1px rgba(107, 107, 107, 0.2), 0 2px 4px -1px rgba(107, 107, 107, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(107, 107, 107, 0.25), 0 4px 6px -2px rgba(107, 107, 107, 0.15);
-  --shadow-xl: 0 20px 25px -5px rgba(107, 107, 107, 0.3), 0 10px 10px -5px rgba(107, 107, 107, 0.2);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
 
   /* Transitions */
   --transition-fast: 150ms ease-in-out;
@@ -92,26 +92,6 @@
   --font-size-2xl: 1.35rem;
   --font-size-3xl: 1.65rem;
   --font-size-4xl: 2rem;
-}
-
-/* Dark mode */
-[data-theme="dark"] {
-  --header-bg: #0f172a;
-  --header-border: #1f2937;
-  --text-primary: #f9fafb;
-  --text-secondary: #C7CDD6;
-  --text-tertiary: #A9B2BF;
-  
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
-  --bg-tertiary: #374151;
-  
-  --border-color: #374151;
-  
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
 }
 
 /* Reset et styles globaux */
