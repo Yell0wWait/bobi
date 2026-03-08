@@ -224,32 +224,11 @@ export default function MesCommandesInvite({ secretToken }) {
             <div 
               key={c.id} 
               onClick={() => setExpandedCommande(isExpanded ? null : c.id)}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 16,
-                padding: 16,
-                backgroundColor: "white",
-                borderRadius: 8,
-                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                border: "1px solid var(--border-color)",
-                position: "relative",
-                cursor: "pointer",
-                transition: "box-shadow 0.2s"
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)"}
-              onMouseLeave={(e) => e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)"}
+              className="order-card order-card-stack order-card-interactive"
             >
-              <div style={{ display: "flex", gap: 16 }}>
+              <div className="order-card-main">
                 {/* Image médaillon */}
-                <div style={{
-                  width: 80,
-                  height: 80,
-                  flexShrink: 0,
-                  borderRadius: 8,
-                  overflow: "hidden",
-                  backgroundColor: "var(--bg-secondary)"
-                }}>
+                <div className="order-card-media">
                   {imageUrl ? (
                     <img 
                       src={imageUrl} 
@@ -265,27 +244,20 @@ export default function MesCommandesInvite({ secretToken }) {
                       }}
                     />
                   ) : null}
-                  <div style={{
-                    width: "100%",
-                    height: "100%",
-                    background: "linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%)",
-                    display: imageUrl ? "none" : "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}>
+                  <div className="order-card-media-fallback" style={{ display: imageUrl ? "none" : "flex" }}>
                     <Wine size={32} color="var(--primary-400)" />
                   </div>
                 </div>
 
                 {/* Détails */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-primary)", marginBottom: 4, whiteSpace: "nowrap", overflow: "visible" }}>
+                <div className="order-card-details">
+                  <div className="order-card-title" style={{ whiteSpace: "nowrap", overflow: "visible" }}>
                     {c.boisson_nom}
                   </div>
-                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
+                  <div className="order-card-meta">
                     {c.guest_pseudo} • {date}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-start" }}>
+                  <div className="order-card-rating">
                     {renderStars(c.note)}
                   </div>
                 </div>
@@ -293,17 +265,11 @@ export default function MesCommandesInvite({ secretToken }) {
 
               {/* Commentaire (affiché quand expanded) */}
               {isExpanded && c.commentaire && (
-                <div style={{
-                  marginTop: 8,
-                  padding: 12,
-                  backgroundColor: "var(--bg-secondary)",
-                  borderRadius: 6,
-                  borderLeft: "3px solid var(--primary-400)"
-                }}>
-                  <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
+                <div className="order-card-comment">
+                  <div className="order-card-comment-label">
                     Commentaire:
                   </div>
-                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-primary)", lineHeight: 1.5 }}>
+                  <div className="order-card-comment-text">
                     {c.commentaire}
                   </div>
                 </div>

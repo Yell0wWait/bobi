@@ -296,19 +296,11 @@ export default function BoissonDetailInvite() {
                   return (
                     <div 
                       key={c.id} 
-                      style={{
-                        display: "flex",
-                        gap: 16,
-                        padding: 16,
-                        backgroundColor: "white",
-                        borderRadius: 8,
-                        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                        border: "1px solid var(--border-color)"
-                      }}
+                      className="order-card"
                     >
                       {/* Détails */}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 8 }}>
+                      <div className="order-card-details">
+                        <div className="order-card-meta" style={{ marginBottom: 8 }}>
                           {date} • {c.statut}
                         </div>
                         {c.note !== null && c.note !== undefined && (
@@ -317,7 +309,7 @@ export default function BoissonDetailInvite() {
                           </div>
                         )}
                         {c.commentaire && (
-                          <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-primary)" }}>
+                          <div className="order-card-comment-text">
                             {c.commentaire}
                           </div>
                         )}

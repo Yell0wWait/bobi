@@ -1414,26 +1414,10 @@ export default function BoissonDetailAdmin() {
               return (
                 <div 
                   key={c.id} 
-                  style={{
-                    display: "flex",
-                    gap: 16,
-                    padding: 16,
-                    backgroundColor: "white",
-                    borderRadius: 8,
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                    border: "1px solid var(--border-color)",
-                    position: "relative"
-                  }}
+                  className="order-card"
                 >
                   {/* Image médaillon */}
-                  <div style={{
-                    width: 80,
-                    height: 80,
-                    flexShrink: 0,
-                    borderRadius: 8,
-                    overflow: "hidden",
-                    backgroundColor: "var(--bg-secondary)"
-                  }}>
+                  <div className="order-card-media">
                     {imageUrl ? (
                       <img 
                         src={imageUrl} 
@@ -1449,27 +1433,20 @@ export default function BoissonDetailAdmin() {
                         }}
                       />
                     ) : null}
-                    <div style={{
-                      width: "100%",
-                      height: "100%",
-                      background: "linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%)",
-                      display: imageUrl ? "none" : "flex",
-                      alignItems: "center",
-                      justifyContent: "center"
-                    }}>
+                    <div className="order-card-media-fallback" style={{ display: imageUrl ? "none" : "flex" }}>
                       <Wine size={32} color="var(--text-on-light-secondary)" />
                     </div>
                   </div>
 
                   {/* Détails */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-primary)", marginBottom: 4 }}>
+                  <div className="order-card-details">
+                    <div className="order-card-title" style={{ fontSize: "var(--font-size-lg)" }}>
                       {c.guest_pseudo}
                     </div>
-                    <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
+                    <div className="order-card-meta">
                       {date} • {c.statut}
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-start" }}>
+                    <div className="order-card-rating">
                       {renderStars(c.note)}
                     </div>
                   </div>

@@ -255,6 +255,121 @@ a:hover {
   box-shadow: var(--shadow-md);
 }
 
+/* Gabarit unifie pour les cartes de commandes */
+.order-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+}
+
+.order-card-stack {
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.order-card-main {
+  display: flex;
+  gap: 16px;
+}
+
+.order-card-interactive {
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.order-card-interactive:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.order-card-media {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+}
+
+.order-card-media-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-card-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.order-card-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-on-light-primary);
+  margin-bottom: 4px;
+}
+
+.order-card-meta {
+  font-size: var(--font-size-base);
+  color: var(--text-on-light-secondary);
+  margin-bottom: 4px;
+}
+
+.order-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-start;
+}
+
+.order-card-actions {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  gap: 2px;
+}
+
+.order-card-icon-button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-card-comment {
+  margin-top: 8px;
+  padding: 12px;
+  background-color: var(--bg-secondary);
+  border-radius: 6px;
+  border-left: 3px solid var(--primary-400);
+}
+
+.order-card-comment-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-on-light-secondary);
+  margin-bottom: 4px;
+}
+
+.order-card-comment-text {
+  font-size: var(--font-size-base);
+  color: var(--text-on-light-primary);
+  line-height: 1.5;
+}
+
 /* Inputs et formulaires */
 .form-group {
   margin-bottom: var(--spacing-lg);
