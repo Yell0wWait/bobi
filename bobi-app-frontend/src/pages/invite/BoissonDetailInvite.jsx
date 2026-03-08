@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import { useBoissonImage } from "../../hooks/useImage";
+import { toPascalCase } from "../../services/imageService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import { ShoppingCart, Star, StarHalf, Wine, ThumbsUp, ThumbsDown } from 'lucide-react';
@@ -113,6 +114,27 @@ export default function BoissonDetailInvite() {
       </div>
     );
   };
+
+  function getCommandeImageUrl(dateCreated) {
+    if (!boisson?.nom || !dateCreated) return null;
+
+    const pseudo = guestData?.pseudo || adminData?.pseudo || "Invite";
+    let dateStr;
+
+    if (typeof dateCreated === "string" && dateCreated.includes("-")) {
+      dateStr = dateCreated.split("T")[0].replace(/-/g, "");
+    } else {
+      const date = new Date(dateCreated);
+      dateStr = date.toISOString().split("T")[0].replace(/-/g, "");
+    }
+
+    const fileName = `${dateStr}_${toPascalCase(pseudo)}_${toPascalCase(boisson.nom)}.jpg`;
+    const { data } = supabase.storage
+      .from("boissons")
+      .getPublicUrl(`boissons_commandes/${fileName}`);
+
+    return data?.publicUrl || null;
+  }
 
   const handleCommander = async () => {
     if (!secretToken) return;
@@ -292,6 +314,7 @@ export default function BoissonDetailInvite() {
               <div style={{ display: "grid", gap: 16 }}>
                 {commandes.map((c) => {
                   const date = c.date_commande ? new Date(c.date_commande).toLocaleDateString('fr-FR') : '-';
+                  const commandeImageUrl = getCommandeImageUrl(c.date_commande);
                   
                   return (
                     <div 
@@ -299,7 +322,31 @@ export default function BoissonDetailInvite() {
                       className="order-card"
                     >
                       {/* Détails */}
+                      <div className="order-card-media">
+                        {commandeImageUrl ? (
+                          <img
+                            src={commandeImageUrl}
+                            alt={boisson.nom}
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                              e.target.nextElementSibling.style.display = "flex";
+                            }}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover"
+                            }}
+                          />
+                        ) : null}
+                        <div className="order-card-media-fallback" style={{ display: commandeImageUrl ? "none" : "flex" }}>
+                          <Wine size={32} color="var(--primary-400)" />
+                        </div>
+                      </div>
+
                       <div className="order-card-details">
+                        <div className="order-card-title">
+                          {boisson.nom}
+                        </div>
                         <div className="order-card-meta" style={{ marginBottom: 8 }}>
                           {date} • {c.statut}
                         </div>
@@ -309,8 +356,9 @@ export default function BoissonDetailInvite() {
                           </div>
                         )}
                         {c.commentaire && (
-                          <div className="order-card-comment-text">
-                            {c.commentaire}
+                          <div className="order-card-comment">
+                            <div className="order-card-comment-label">Commentaire:</div>
+                            <div className="order-card-comment-text">{c.commentaire}</div>
                           </div>
                         )}
                       </div>

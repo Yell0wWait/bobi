@@ -44,7 +44,6 @@ export default function BoissonDetailAdmin() {
   const [commandLoading, setCommandLoading] = useState(false);
   const [commandSuccess, setCommandSuccess] = useState(null);
   const [showBobiSuccess, setShowBobiSuccess] = useState(false);
-  const [adminCommandes, setAdminCommandes] = useState([]);
 
   const adminData = JSON.parse(localStorage.getItem("bobi_admin") || "null");
   const adminId = adminData?.id || null;
@@ -163,15 +162,6 @@ export default function BoissonDetailAdmin() {
           boisson_nom: nom
         })));
 
-        // Charger les commandes de l'admin pour cette boisson
-        if (adminId) {
-          const { data: adminCmds } = await supabase
-            .from("commandes")
-            .select("id, boisson_id, degustateur_secret_token, note, commentaire, statut, date_commande")
-            .eq("boisson_id", id)
-            .order("date_commande", { ascending: false });
-          setAdminCommandes((adminCmds || []).filter(c => c.degustateur_secret_token === adminId));
-        }
       } catch (err) {
         console.error(err);
         setError(err.message || "Erreur lors du chargement");
@@ -251,13 +241,6 @@ export default function BoissonDetailAdmin() {
       setCommandSuccess("✓ Commande envoyée !");
       setTimeout(() => setCommandSuccess(null), 4000);
 
-      // Recharger les commandes de l'admin
-      const { data: updatedCmds } = await supabase
-        .from("commandes")
-        .select("id, boisson_id, degustateur_secret_token, note, commentaire, statut, date_commande")
-        .eq("boisson_id", id)
-        .order("date_commande", { ascending: false });
-      setAdminCommandes((updatedCmds || []).filter(c => c.degustateur_secret_token === adminId));
     } catch (err) {
       console.error("Erreur:", err);
       setError(err.message);
@@ -1404,7 +1387,7 @@ export default function BoissonDetailAdmin() {
       {/* Section Commandes */}
       {id !== "new" && commandes.length > 0 && (
         <div style={{ marginTop: 40, maxWidth: 800 }}>
-          <h2>Commandes avec cette boisson ({commandes.length})</h2>
+          <h2>Commandes ({commandes.length})</h2>
           
           <div style={{ display: "grid", gap: 16 }}>
             {commandes.map((c) => {
@@ -1449,48 +1432,6 @@ export default function BoissonDetailAdmin() {
                     <div className="order-card-rating">
                       {renderStars(c.note)}
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Section Mes Commandes (Admin) */}
-      {id !== "new" && adminCommandes.length > 0 && (
-        <div style={{ marginTop: 40, maxWidth: 800 }}>
-          <h2>Mes commandes en tant qu'admin ({adminCommandes.length})</h2>
-          
-          <div style={{ display: "grid", gap: 16 }}>
-            {adminCommandes.map((c) => {
-              const date = c.date_commande ? new Date(c.date_commande).toLocaleDateString('fr-FR') : '-';
-              
-              return (
-                <div 
-                  key={c.id} 
-                  style={{
-                    padding: 16,
-                    backgroundColor: "#f0fdf4",
-                    borderRadius: 8,
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                    border: "1px solid #86efac",
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-                    <div>
-                      <div style={{ fontSize: 'var(--font-size-base)', color: "#6b7280", marginBottom: 4 }}>
-                        {date} • {c.statut}
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        {renderStars(c.note)}
-                      </div>
-                    </div>
-                    {c.table && (
-                      <div style={{ fontSize: 'var(--font-size-xs)', backgroundColor: "white", padding: "4px 8px", borderRadius: 4, color: "#6b7280" }}>
-                        Table: {c.table}
-                      </div>
-                    )}
                   </div>
                 </div>
               );
