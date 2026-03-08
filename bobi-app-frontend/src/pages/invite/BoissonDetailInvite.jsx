@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import { useBoissonImage } from "../../hooks/useImage";
@@ -14,6 +14,7 @@ export default function BoissonDetailInvite() {
   const [commandes, setCommandes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [variantes, setVariantes] = useState([]);
+  const [expandedCommande, setExpandedCommande] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -43,7 +44,7 @@ export default function BoissonDetailInvite() {
         }
         setBoisson(b);
 
-        // Charger les ingrédients
+        // Charger les ingrÃ©dients
         const { data: ingData, error: ingErr } = await supabase
           .from("boissons_ingredients")
           .select(`
@@ -83,7 +84,19 @@ export default function BoissonDetailInvite() {
             .eq("degustateur_secret_token", secretToken)
             .order("date_commande", { ascending: false });
           if (cmdErr) throw cmdErr;
-          setCommandes(cmdData || []);
+
+          let guestPseudo = guestData?.pseudo || adminData?.pseudo || null;
+          const { data: guest } = await supabase
+            .from("degustateur")
+            .select("pseudo")
+            .eq("secret_token", secretToken)
+            .single();
+          if (guest?.pseudo) guestPseudo = guest.pseudo;
+
+          setCommandes((cmdData || []).map((c) => ({
+            ...c,
+            guest_pseudo: guestPseudo || c.degustateur_secret_token || "-",
+          })));
         }
       } catch (err) {
         console.error("Erreur lors du chargement:", err);
@@ -94,7 +107,7 @@ export default function BoissonDetailInvite() {
     }
 
     load();
-  }, [id, secretToken]);
+  }, [id, secretToken, guestData?.pseudo, adminData?.pseudo]);
 
   const renderStars = (note) => {
     if (note === null || note === undefined) return null;
@@ -115,10 +128,10 @@ export default function BoissonDetailInvite() {
     );
   };
 
-  function getCommandeImageUrl(dateCreated) {
-    if (!boisson?.nom || !dateCreated) return null;
+  function getCommandeImageUrl(commande, dateCreated) {
+    if (!commande?.guest_pseudo || !boisson?.nom || !dateCreated) return null;
 
-    const pseudo = guestData?.pseudo || adminData?.pseudo || "Invite";
+    const pseudo = commande.guest_pseudo;
     let dateStr;
 
     if (typeof dateCreated === "string" && dateCreated.includes("-")) {
@@ -146,13 +159,13 @@ export default function BoissonDetailInvite() {
       const { error } = await supabase.from("commandes").insert({
         boisson_id: id,
         degustateur_secret_token: secretToken,
-        statut: "Commandé",
+        statut: "CommandÃ©",
       });
 
       if (error) throw error;
 
       setShowBobiSuccess(true);
-      setSuccess("✓ Commande envoyée !");
+      setSuccess("âœ“ Commande envoyÃ©e !");
       setTimeout(() => {
         setSuccess(null);
         setShowBobiSuccess(false);
@@ -165,7 +178,11 @@ export default function BoissonDetailInvite() {
         .eq("boisson_id", id)
         .eq("degustateur_secret_token", secretToken)
         .order("date_commande", { ascending: false });
-      setCommandes(updatedCommandes || []);
+      const fallbackPseudo = commandes[0]?.guest_pseudo || guestData?.pseudo || adminData?.pseudo || null;
+      setCommandes((updatedCommandes || []).map((c) => ({
+        ...c,
+        guest_pseudo: fallbackPseudo || c.degustateur_secret_token || "-",
+      })));
     } catch (err) {
       console.error("Erreur:", err);
       setError(err.message);
@@ -175,7 +192,7 @@ export default function BoissonDetailInvite() {
     }
   };
 
-  if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;
+  if (loading) return <BobiAnimation type="loading" message="Bobi vÃ©rifie les stocks..." duration={0} />;
   if (!boisson) return <p style={{ padding: 16 }}>Boisson introuvable.</p>;
 
   return (
@@ -183,7 +200,7 @@ export default function BoissonDetailInvite() {
       {showBobiSuccess && (
         <BobiAnimation 
           type="success" 
-          message="Excellent choix ! Bobi prépare votre cocktail..." 
+          message="Excellent choix ! Bobi prÃ©pare votre cocktail..." 
           duration={4000}
           onComplete={() => setShowBobiSuccess(false)}
         />
@@ -194,7 +211,7 @@ export default function BoissonDetailInvite() {
         {success && <p style={{ color: "green", marginBottom: 16 }}>{success}</p>}
 
         <div style={{ maxWidth: 800 }}>
-          {/* Image centrée */}
+          {/* Image centrÃ©e */}
           <div style={{ marginBottom: 30, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <div style={{ maxWidth: 400, width: "100%" }}>
               {imageUrl ? (
@@ -207,7 +224,7 @@ export default function BoissonDetailInvite() {
             </div>
           </div>
 
-          {/* Catégorie et statut */}
+          {/* CatÃ©gorie et statut */}
           <div style={{ marginBottom: 20 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 15, marginBottom: 10 }}>
               {boisson.categorie && (
@@ -244,17 +261,17 @@ export default function BoissonDetailInvite() {
             </div>
           )}
 
-          {/* Section Ingrédients */}
+          {/* Section IngrÃ©dients */}
           {ingredients.length > 0 && (
             <div style={{ marginTop: 40 }}>
-              <h2>Ingrédients</h2>
+              <h2>IngrÃ©dients</h2>
               <ul style={{ listStyle: "none", padding: 0, marginBottom: 20 }}>
                 {ingredients.map(ing => (
                   <li key={ing.id} style={{ marginBottom: 8, padding: "6px 0" }}>
                     <span>
                       {ing.quantite && `${ing.quantite} `}
                       {ing.unite && `${ing.unite} `}
-                      <strong>{ing.inventaire?.nom || 'Ingrédient'}</strong>
+                      <strong>{ing.inventaire?.nom || 'IngrÃ©dient'}</strong>
                     </span>
                   </li>
                 ))}
@@ -312,56 +329,60 @@ export default function BoissonDetailInvite() {
             <div style={{ marginTop: 40 }}>
               <h2>Vos commandes ({commandes.length})</h2>
               <div style={{ display: "grid", gap: 16 }}>
-                {commandes.map((c) => {
+                                {commandes.map((c) => {
                   const date = c.date_commande ? new Date(c.date_commande).toLocaleDateString('fr-FR') : '-';
-                  const commandeImageUrl = getCommandeImageUrl(c.date_commande);
+                  const commandeImageUrl = getCommandeImageUrl(c, c.date_commande);
+                  const isExpanded = expandedCommande === c.id;
                   
                   return (
                     <div 
                       key={c.id} 
-                      className="order-card"
+                      onClick={() => setExpandedCommande(isExpanded ? null : c.id)}
+                      className="order-card order-card-stack order-card-interactive"
                     >
-                      {/* Détails */}
-                      <div className="order-card-media">
-                        {commandeImageUrl ? (
-                          <img
-                            src={commandeImageUrl}
-                            alt={boisson.nom}
-                            onError={(e) => {
-                              e.target.style.display = "none";
-                              e.target.nextElementSibling.style.display = "flex";
-                            }}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover"
-                            }}
-                          />
-                        ) : null}
-                        <div className="order-card-media-fallback" style={{ display: commandeImageUrl ? "none" : "flex" }}>
-                          <Wine size={32} color="var(--primary-400)" />
+                      <div className="order-card-main">
+                        <div className="order-card-media">
+                          {commandeImageUrl ? (
+                            <img
+                              src={commandeImageUrl}
+                              alt={boisson.nom}
+                              onError={(e) => {
+                                e.target.style.display = "none";
+                                e.target.nextElementSibling.style.display = "flex";
+                              }}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover"
+                              }}
+                            />
+                          ) : null}
+                          <div className="order-card-media-fallback" style={{ display: commandeImageUrl ? "none" : "flex" }}>
+                            <Wine size={32} color="var(--primary-400)" />
+                          </div>
+                        </div>
+
+                        <div className="order-card-details">
+                          <div className="order-card-title">
+                            {boisson.nom}
+                          </div>
+                          <div className="order-card-meta" style={{ marginBottom: 8 }}>
+                            {date} • {c.statut}
+                          </div>
+                          {c.note !== null && c.note !== undefined && (
+                            <div className="order-card-rating" style={{ marginBottom: 8 }}>
+                              {renderStars(c.note)}
+                            </div>
+                          )}
                         </div>
                       </div>
 
-                      <div className="order-card-details">
-                        <div className="order-card-title">
-                          {boisson.nom}
+                      {isExpanded && c.commentaire && (
+                        <div className="order-card-comment">
+                          <div className="order-card-comment-label">Commentaire:</div>
+                          <div className="order-card-comment-text">{c.commentaire}</div>
                         </div>
-                        <div className="order-card-meta" style={{ marginBottom: 8 }}>
-                          {date} • {c.statut}
-                        </div>
-                        {c.note !== null && c.note !== undefined && (
-                          <div style={{ marginBottom: 8 }}>
-                            {renderStars(c.note)}
-                          </div>
-                        )}
-                        {c.commentaire && (
-                          <div className="order-card-comment">
-                            <div className="order-card-comment-label">Commentaire:</div>
-                            <div className="order-card-comment-text">{c.commentaire}</div>
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
                   );
                 })}
@@ -386,5 +407,7 @@ export default function BoissonDetailInvite() {
     </>
   );
 }
+
+
 
 
