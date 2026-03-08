@@ -114,7 +114,7 @@ export default function CommandesAdmin() {
   }
 
   function renderStars(note) {
-    if (!note) return <span style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-size-base)' }}>Pas encore noté</span>;
+    if (!note) return <span style={{ color: 'var(--text-on-light-secondary)', fontSize: 'var(--font-size-base)' }}>Pas encore noté</span>;
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(note)) {
@@ -535,10 +535,10 @@ export default function CommandesAdmin() {
 
                 {/* Détails */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-primary)", marginBottom: 4, whiteSpace: "nowrap", overflow: "visible" }}>
+                  <div style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-primary)", marginBottom: 4, whiteSpace: "nowrap", overflow: "visible" }}>
                     {c.boisson_nom}
                   </div>
-                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-secondary)", marginBottom: 4 }}>
+                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
                     {c.guest_pseudo} • {date}
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-start" }}>
@@ -567,7 +567,7 @@ export default function CommandesAdmin() {
                     }}
                     title={c.statut === "Commandé" ? "Marquer comme Servi" : "Marquer comme Commandé"}
                   >
-                    {c.statut === "Commandé" ? <CheckCircle size={20} color="var(--text-secondary)" /> : <Clock size={20} color="var(--text-secondary)" />}
+                    {c.statut === "Commandé" ? <CheckCircle size={20} color="var(--text-on-light-secondary)" /> : <Clock size={20} color="var(--text-on-light-secondary)" />}
                   </button>
 
                   {/* Modifier */}
@@ -589,7 +589,7 @@ export default function CommandesAdmin() {
                     }}
                     title="Modifier"
                   >
-                    <Edit size={20} color="var(--text-secondary)" />
+                    <Edit size={20} color="var(--text-on-light-secondary)" />
                   </button>
 
                   {/* Supprimer */}
@@ -611,7 +611,7 @@ export default function CommandesAdmin() {
                     }}
                     title="Supprimer"
                   >
-                    <Trash2 size={20} color="var(--text-secondary)" />
+                    <Trash2 size={20} color="var(--text-on-light-secondary)" />
                   </button>
                 </div>
               </div>
@@ -625,10 +625,10 @@ export default function CommandesAdmin() {
                   borderRadius: 6,
                   borderLeft: "3px solid var(--primary-400)"
                 }}>
-                  <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-secondary)", marginBottom: 4 }}>
+                  <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
                     Commentaire:
                   </div>
-                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-primary)", lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-primary)", lineHeight: 1.5 }}>
                     {c.commentaire}
                   </div>
                 </div>

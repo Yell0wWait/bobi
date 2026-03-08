@@ -62,7 +62,7 @@ export default function MesCommandesInvite({ secretToken }) {
   }
 
   function renderStars(note) {
-    if (!note) return <span style={{ color: 'var(--text-primary)', fontSize: 'var(--font-size-base)' }}>Pas encore noté</span>;
+    if (!note) return <span style={{ color: 'var(--text-on-light-secondary)', fontSize: 'var(--font-size-base)' }}>Pas encore noté</span>;
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(note)) {
@@ -279,10 +279,10 @@ export default function MesCommandesInvite({ secretToken }) {
 
                 {/* Détails */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-primary)", marginBottom: 4, whiteSpace: "nowrap", overflow: "visible" }}>
+                  <div style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-primary)", marginBottom: 4, whiteSpace: "nowrap", overflow: "visible" }}>
                     {c.boisson_nom}
                   </div>
-                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-primary)", marginBottom: 4 }}>
+                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
                     {c.guest_pseudo} • {date}
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-start" }}>
@@ -300,10 +300,10 @@ export default function MesCommandesInvite({ secretToken }) {
                   borderRadius: 6,
                   borderLeft: "3px solid var(--primary-400)"
                 }}>
-                  <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-secondary)", marginBottom: 4 }}>
+                  <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
                     Commentaire:
                   </div>
-                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-primary)", lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-primary)", lineHeight: 1.5 }}>
                     {c.commentaire}
                   </div>
                 </div>

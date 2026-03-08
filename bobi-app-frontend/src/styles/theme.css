@@ -41,6 +41,11 @@
   --text-primary: #f9fafb;
   --text-secondary: #C7CDD6;
   --text-tertiary: #A9B2BF;
+
+  /* Texte sur fonds clairs/pâles */
+  --text-on-light-primary: #1C1C1C;
+  --text-on-light-secondary: #4A4A4A;
+  --text-on-light-tertiary: #666666;
   
   /* Couleurs de fond */
   --bg-primary: #111827;
