@@ -700,7 +700,7 @@ export default function BoissonDetailAdmin() {
   }
 
   function renderStars(note) {
-    if (!note) return <span style={{ color: '#888', fontSize: 'var(--font-size-base)' }}>Pas encore noté</span>;
+    if (!note) return <span style={{ color: 'var(--text-on-light-secondary)', fontSize: 'var(--font-size-base)' }}>Pas encore noté</span>;
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(note)) {
@@ -709,8 +709,8 @@ export default function BoissonDetailAdmin() {
           <Star
             key={i}
             size={16}
-            fill="#fbbf24"
-            color="#fbbf24"
+            fill="var(--secondary-500)"
+            color="var(--secondary-500)"
           />
         );
       } else if (i === Math.ceil(note) && note % 1 !== 0) {
@@ -719,8 +719,8 @@ export default function BoissonDetailAdmin() {
           <StarHalf
             key={i}
             size={16}
-            fill="#fbbf24"
-            color="#fbbf24"
+            fill="var(--secondary-500)"
+            color="var(--secondary-500)"
           />
         );
       } else {
@@ -730,7 +730,7 @@ export default function BoissonDetailAdmin() {
             key={i}
             size={16}
             fill="none"
-            color="#d1d5db"
+            color="var(--border-color)"
           />
         );
       }
@@ -1421,7 +1421,7 @@ export default function BoissonDetailAdmin() {
                     backgroundColor: "white",
                     borderRadius: 8,
                     boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                    border: "1px solid #e5e7eb",
+                    border: "1px solid var(--border-color)",
                     position: "relative"
                   }}
                 >
@@ -1432,7 +1432,7 @@ export default function BoissonDetailAdmin() {
                     flexShrink: 0,
                     borderRadius: 8,
                     overflow: "hidden",
-                    backgroundColor: "#f3f4f6"
+                    backgroundColor: "var(--bg-secondary)"
                   }}>
                     {imageUrl ? (
                       <img 
@@ -1457,16 +1457,16 @@ export default function BoissonDetailAdmin() {
                       alignItems: "center",
                       justifyContent: "center"
                     }}>
-                      <Wine size={32} color="#6b7280" />
+                      <Wine size={32} color="var(--text-on-light-secondary)" />
                     </div>
                   </div>
 
                   {/* Détails */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: "#111827", marginBottom: 4 }}>
+                    <div style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-primary)", marginBottom: 4 }}>
                       {c.guest_pseudo}
                     </div>
-                    <div style={{ fontSize: 'var(--font-size-base)', color: "#6b7280", marginBottom: 4 }}>
+                    <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
                       {date} • {c.statut}
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-start" }}>

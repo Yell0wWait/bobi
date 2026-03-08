@@ -104,11 +104,11 @@ export default function BoissonDetailInvite() {
     return (
       <div style={{ display: "flex", gap: 4 }}>
         {[...Array(fullStars)].map((_, i) => (
-          <Star key={`full-${i}`} size={16} fill="var(--primary-500)" color="var(--primary-500)" />
+          <Star key={`full-${i}`} size={16} fill="var(--secondary-500)" color="var(--secondary-500)" />
         ))}
-        {hasHalf && <StarHalf key="half" size={16} fill="var(--primary-500)" color="var(--primary-500)" />}
+        {hasHalf && <StarHalf key="half" size={16} fill="var(--secondary-500)" color="var(--secondary-500)" />}
         {[...Array(emptyStars)].map((_, i) => (
-          <Star key={`empty-${i}`} size={16} color="#d1d5db" />
+          <Star key={`empty-${i}`} size={16} color="var(--border-color)" />
         ))}
       </div>
     );
@@ -308,7 +308,7 @@ export default function BoissonDetailInvite() {
                     >
                       {/* Détails */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-secondary)", marginBottom: 8 }}>
+                        <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 8 }}>
                           {date} • {c.statut}
                         </div>
                         {c.note !== null && c.note !== undefined && (
@@ -317,7 +317,7 @@ export default function BoissonDetailInvite() {
                           </div>
                         )}
                         {c.commentaire && (
-                          <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-primary)" }}>
+                          <div style={{ fontSize: 'var(--font-size-base)', color: "var(--text-on-light-primary)" }}>
                             {c.commentaire}
                           </div>
                         )}
