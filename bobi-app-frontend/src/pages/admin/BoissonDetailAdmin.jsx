@@ -755,7 +755,11 @@ export default function BoissonDetailAdmin() {
           <div style={{ display: "flex", alignItems: "center", gap: 15, marginBottom: 10 }}>
             <h1 style={{ margin: 0 }}>{id === "new" ? "Ajouter une boisson" : nom || "Boisson"}</h1>
             {id !== "new" && !isEditing && (
-              <div style={{ fontSize: 'var(--font-size-base)', padding: "4px 10px", backgroundColor: actif ? "#e8f5e9" : "#ffebee", color: actif ? "#2e7d32" : "#c62828", borderRadius: 5, fontWeight: 'var(--font-weight-medium)', display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div
+                className={`availability-indicator ${actif ? "availability-indicator-active" : "availability-indicator-inactive"}`}
+                title={actif ? "Disponible" : "Indisponible"}
+                aria-label={actif ? "Disponible" : "Indisponible"}
+              >
                 {actif ? <ThumbsUp size={14} /> : <ThumbsDown size={14} />}
               </div>
             )}

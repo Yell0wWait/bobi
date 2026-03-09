@@ -232,7 +232,11 @@ export default function BoissonDetailInvite() {
                   {boisson.categorie}
                 </div>
               )}
-              <div style={{ fontSize: 'var(--font-size-base)', padding: "4px 10px", backgroundColor: boisson.actif ? "var(--primary-50)" : "var(--secondary-50)", color: boisson.actif ? "var(--success)" : "var(--error)", borderRadius: 5, fontWeight: 'var(--font-weight-medium)', display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div
+                className={`availability-indicator ${boisson.actif ? "availability-indicator-active" : "availability-indicator-inactive"}`}
+                title={boisson.actif ? "Disponible" : "Indisponible"}
+                aria-label={boisson.actif ? "Disponible" : "Indisponible"}
+              >
                 {boisson.actif ? <ThumbsUp size={14} /> : <ThumbsDown size={14} />}
               </div>
             </div>

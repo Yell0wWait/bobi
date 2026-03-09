@@ -446,6 +446,27 @@ a:hover {
   color: var(--primary-800);
 }
 
+/* Indicateur de disponibilité (pouce) */
+.availability-indicator {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.availability-indicator-active {
+  background-color: var(--primary-100);
+  color: var(--primary-800);
+}
+
+.availability-indicator-inactive {
+  background-color: var(--secondary-100);
+  color: var(--secondary-800);
+}
+
 /* Spinner de chargement */
 .spinner {
   display: inline-block;
