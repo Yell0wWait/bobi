@@ -41,6 +41,9 @@ export default function NourritureDetailAdmin() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
   const [showBobiSuccess, setShowBobiSuccess] = useState(false);
+  const isCreateMode = id === "new";
+  const currentModeLabel = isCreateMode ? "Mode ajout" : isEditing ? "Mode édition" : "Mode consultation";
+  const currentModeClass = isCreateMode ? "mode-chip-create" : isEditing ? "mode-chip-edit" : "mode-chip-view";
 
   // Ingrédients
   const [ingredients, setIngredients] = useState([]);
@@ -435,6 +438,7 @@ export default function NourritureDetailAdmin() {
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 15, marginBottom: 10 }}>
             <h1 style={{ margin: 0 }}>{id === "new" ? "Ajouter une nourriture" : nom || "Nourriture"}</h1>
+            <span className={`mode-chip ${currentModeClass}`}>{currentModeLabel}</span>
             {id !== "new" && !isEditing && (
               <div
                 className={`availability-indicator ${actif ? "availability-indicator-active" : "availability-indicator-inactive"}`}
@@ -469,15 +473,14 @@ export default function NourritureDetailAdmin() {
         <button 
           type="button" 
           onClick={() => setIsEditing(!isEditing)} 
-          className="floating-button no-print"
-          style={{ backgroundColor: isEditing ? "#6c757d" : "var(--secondary-500)" }}
+          className={`floating-button no-print ${isEditing ? "mode-toggle-button-cancel" : "mode-toggle-button-edit"}`}
           title={isEditing ? "Annuler" : "Modifier"}
         >
           {isEditing ? <X size={24} /> : <Edit size={24} />}
         </button>
       )}
 
-      <div style={{ maxWidth: 800 }}>
+      <div className={`mode-panel ${isCreateMode ? "mode-panel-create" : isEditing ? "mode-panel-edit" : ""}`} style={{ maxWidth: 800 }}>
         {/* Image centrée */}
         <div style={{ marginBottom: 30, display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ maxWidth: 400, width: "100%" }}>
@@ -568,7 +571,12 @@ export default function NourritureDetailAdmin() {
             {/* Boutons flottants en mode édition */}
             {isEditing && (
               <div className="floating-action-buttons">
-                <button onClick={handleSave} disabled={loading} className="floating-save-button" title={loading ? "Enregistrement..." : "Enregistrer"}>
+                <button
+                  onClick={handleSave}
+                  disabled={loading}
+                  className={`floating-save-button ${isCreateMode ? "mode-save-button-create" : "mode-save-button-edit"}`}
+                  title={loading ? "Enregistrement..." : isCreateMode ? "Créer" : "Enregistrer"}
+                >
                   <Save size={20} />
                 </button>
                 {id !== "new" && (

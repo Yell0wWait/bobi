@@ -14,6 +14,8 @@ export default function IngredientDetailAdmin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const currentModeLabel = isEditing ? "Mode édition" : "Mode consultation";
+  const currentModeClass = isEditing ? "mode-chip-edit" : "mode-chip-view";
   
   // Form data
   const [formData, setFormData] = useState({
@@ -168,13 +170,19 @@ export default function IngredientDetailAdmin() {
 
 
       {/* Informations de l'ingrédient */}
-      <div style={{
+      <div
+        className={`mode-panel ${isEditing ? "mode-panel-edit" : ""}`}
+        style={{
         backgroundColor: "white",
         borderRadius: 8,
         padding: 20,
         marginBottom: 24,
         boxShadow: "0 1px 3px rgba(0,0,0,0.1)"
-      }}>
+      }}
+      >
+        <div style={{ marginBottom: 12 }}>
+          <span className={`mode-chip ${currentModeClass}`}>{currentModeLabel}</span>
+        </div>
         <h1 style={{ 
           fontSize: "var(--font-size-2xl)", 
           fontWeight: 600, 
@@ -459,8 +467,7 @@ export default function IngredientDetailAdmin() {
       {/* Bouton flottant principal Edit/Annuler */}
       <button
         onClick={() => setIsEditing(!isEditing)}
-        className="floating-button"
-        style={{ backgroundColor: isEditing ? "#6c757d" : "var(--secondary-500)" }}
+        className={`floating-button ${isEditing ? "mode-toggle-button-cancel" : "mode-toggle-button-edit"}`}
         title={isEditing ? "Annuler" : "Modifier"}
       >
         {isEditing ? <X size={24} /> : <Edit size={24} />}
@@ -471,7 +478,7 @@ export default function IngredientDetailAdmin() {
         <div className="floating-action-buttons">
           <button
             onClick={handleSave}
-            className="floating-save-button"
+            className="floating-save-button mode-save-button-edit"
             title="Enregistrer"
           >
             <Save size={20} />
