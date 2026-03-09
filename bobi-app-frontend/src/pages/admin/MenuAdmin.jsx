@@ -194,6 +194,39 @@ export default function MenuAdmin() {
     return matchesSearch && matchesFilter;
   });
 
+  const menuFormLabelStyle = {
+    display: "block",
+    marginBottom: 6,
+    fontFamily: 'var(--font-display)',
+    fontWeight: 'var(--font-weight-semibold)',
+    color: 'var(--text-on-light-secondary)',
+    fontSize: 'var(--font-size-base)'
+  };
+
+  const menuFormInputStyle = {
+    width: "100%",
+    padding: "10px 12px",
+    border: "1px solid var(--secondary-200)",
+    borderRadius: 8,
+    fontSize: 'var(--font-size-base)',
+    backgroundColor: "white",
+    color: "var(--text-on-light-primary)",
+    outline: "none"
+  };
+
+  const menuFormModeChipStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    padding: "4px 10px",
+    borderRadius: 999,
+    border: "1px solid var(--secondary-200)",
+    backgroundColor: "var(--secondary-50)",
+    color: "var(--secondary-800)",
+    fontFamily: "var(--font-display)",
+    fontWeight: "var(--font-weight-semibold)",
+    fontSize: "var(--font-size-sm)"
+  };
+
   if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
@@ -427,81 +460,65 @@ export default function MenuAdmin() {
             transform: "translate(-50%, -50%)",
             backgroundColor: "white",
             padding: 24,
-            borderRadius: 8,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            borderRadius: 14,
+            border: "1px solid var(--secondary-200)",
+            boxShadow: "0 16px 40px rgba(0,0,0,0.28)",
             zIndex: 1001,
             width: "90%",
             maxWidth: 500,
             maxHeight: "90vh",
             overflowY: "auto"
           }}>
-            <h2 style={{ marginTop: 0, marginBottom: 20 }}>
-              {editingId ? "Modifier le menu" : "Nouveau menu"}
-            </h2>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, gap: 12 }}>
+              <h2 style={{ margin: 0, color: "var(--text-on-light-primary)" }}>
+                {editingId ? "Modifier le menu" : "Ajouter un menu"}
+              </h2>
+              <span style={menuFormModeChipStyle}>
+                {editingId ? "Mode édition" : "Mode ajout"}
+              </span>
+            </div>
             
             <form onSubmit={handleSave}>
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", marginBottom: 4, fontFamily: 'var(--font-display)', fontWeight: "var(--font-weight-bold)" }}>Nom *</label>
+                <label style={menuFormLabelStyle}>Nom *</label>
                 <input
                   type="text"
                   value={formData.nom}
                   onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: "1px solid #ddd",
-                    borderRadius: 4,
-                    fontSize: 15
-                  }}
+                  style={menuFormInputStyle}
                 />
               </div>
 
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Description</label>
+                <label style={menuFormLabelStyle}>Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
                   style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: "1px solid #ddd",
-                    borderRadius: 4,
-                    fontSize: 15,
+                    ...menuFormInputStyle,
                     resize: "vertical"
                   }}
                 />
               </div>
 
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Date début *</label>
+                <label style={menuFormLabelStyle}>Date début *</label>
                 <input
                   type="date"
                   value={formData.date_debut}
                   onChange={(e) => setFormData({ ...formData, date_debut: e.target.value })}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: "1px solid #ddd",
-                    borderRadius: 4,
-                    fontSize: 15
-                  }}
+                  style={menuFormInputStyle}
                 />
               </div>
 
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Date fin *</label>
+                <label style={menuFormLabelStyle}>Date fin *</label>
                 <input
                   type="date"
                   value={formData.date_fin}
                   onChange={(e) => setFormData({ ...formData, date_fin: e.target.value })}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: "1px solid #ddd",
-                    borderRadius: 4,
-                    fontSize: 15
-                  }}
+                  style={menuFormInputStyle}
                 />
               </div>
 
@@ -512,7 +529,10 @@ export default function MenuAdmin() {
                   onChange={(e) => setFormData({ ...formData, actif: e.target.checked })}
                   style={{ width: 18, height: 18, cursor: "pointer" }}
                 />
-                <label style={{ fontWeight: "bold", cursor: "pointer" }} onClick={() => setFormData({ ...formData, actif: !formData.actif })}>
+                <label
+                  style={{ fontFamily: 'var(--font-display)', fontWeight: 'var(--font-weight-semibold)', color: "var(--text-on-light-secondary)", cursor: "pointer" }}
+                  onClick={() => setFormData({ ...formData, actif: !formData.actif })}
+                >
                   Actif
                 </label>
               </div>
@@ -522,12 +542,14 @@ export default function MenuAdmin() {
                   type="button"
                   onClick={resetForm}
                   style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#f0f0f0",
-                    border: "none",
-                    borderRadius: 4,
+                    padding: "10px 16px",
+                    backgroundColor: "white",
+                    border: "1px solid var(--secondary-300)",
+                    color: "var(--secondary-700)",
+                    borderRadius: 8,
                     cursor: "pointer",
-                    fontSize: 15
+                    fontSize: 'var(--font-size-base)',
+                    fontWeight: 'var(--font-weight-semibold)'
                   }}
                 >
                   Annuler
@@ -535,13 +557,14 @@ export default function MenuAdmin() {
                 <button
                   type="submit"
                   style={{
-                    padding: "8px 16px",
-                    backgroundColor: "var(--primary-600)",
+                    padding: "10px 16px",
+                    backgroundColor: "var(--secondary-500)",
                     color: "white",
                     border: "none",
-                    borderRadius: 4,
+                    borderRadius: 8,
                     cursor: "pointer",
-                    fontSize: 15
+                    fontSize: 'var(--font-size-base)',
+                    fontWeight: 'var(--font-weight-semibold)'
                   }}
                 >
                   {editingId ? "Mettre à jour" : "Créer"}
