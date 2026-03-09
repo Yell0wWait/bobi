@@ -446,7 +446,7 @@ export default function NourritureDetailAdmin() {
             )}
           </div>
           {!isEditing && categorie && (
-            <div style={{ fontSize: 'var(--font-size-lg)', padding: "6px 12px", backgroundColor: "#e3f2fd", color: "#1976d2", borderRadius: 5, display: "inline-block" }}>{categorie}</div>
+            <div className="type-indicator type-indicator-standard">{categorie}</div>
           )}
         </div>
       </div>
@@ -846,5 +846,6 @@ export default function NourritureDetailAdmin() {
     </>
   );
 }
+
 
 

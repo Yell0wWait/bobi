@@ -1,4 +1,4 @@
-ï»¿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import { useBoissonImage } from "../../hooks/useImage";
@@ -28,7 +28,7 @@ if (typeof document !== 'undefined') {
 export default function BoissonDetailAdmin() {
   const { id } = useParams(); // 'new' or id
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(id === "new"); // Mode Ã©dition activÃ© par dÃ©faut pour "new"
+  const [isEditing, setIsEditing] = useState(id === "new"); // Mode édition activé par défaut pour "new"
   const [nom, setNom] = useState("");
   const imageUrl = useBoissonImage(nom);
   const [categorie, setCategorie] = useState("");
@@ -48,13 +48,13 @@ export default function BoissonDetailAdmin() {
   const adminData = JSON.parse(localStorage.getItem("bobi_admin") || "null");
   const adminId = adminData?.id || null;
 
-  // IngrÃ©dients
+  // Ingrédients
   const [ingredients, setIngredients] = useState([]);
   const [inventaire, setInventaire] = useState([]);
   const [newIngredient, setNewIngredient] = useState({ ingredient_id: "", quantite: "", unite: "" });
   const [editingIngredient, setEditingIngredient] = useState(null);
 
-  // PrÃ©paration
+  // Préparation
   const [preparations, setPreparations] = useState([]);
   const [newPreparation, setNewPreparation] = useState({ ordre: "", description: "" });
   const [editingPreparation, setEditingPreparation] = useState(null);
@@ -64,7 +64,7 @@ export default function BoissonDetailAdmin() {
   const [allBoissons, setAllBoissons] = useState([]);
   const [selectedVariante, setSelectedVariante] = useState("");
 
-  // Dropdowns pour catÃ©gories et profils
+  // Dropdowns pour catégories et profils
   const [uniqueCategories, setUniqueCategories] = useState([]);
   const [uniqueProfils, setUniqueProfils] = useState([]);
   const [newCategory, setNewCategory] = useState("");
@@ -102,7 +102,7 @@ export default function BoissonDetailAdmin() {
         setProfil(data.profil || []);
         setActif(data.actif ?? true);
 
-        // Charger les ingrÃ©dients
+        // Charger les ingrédients
         const { data: ingData, error: ingErr } = await supabase
           .from("boissons_ingredients")
           .select("id, ingredient_id, quantite, unite")
@@ -111,7 +111,7 @@ export default function BoissonDetailAdmin() {
         if (ingErr) throw ingErr;
         setIngredients(ingData || []);
 
-        // Charger les Ã©tapes de prÃ©paration
+        // Charger les étapes de préparation
         const { data: prepData, error: prepErr } = await supabase
           .from("boissons_preparation")
           .select("id, ordre, description")
@@ -144,7 +144,7 @@ export default function BoissonDetailAdmin() {
         if (cmdErr) throw cmdErr;
 
         const cmds = cmdData || [];
-        // Si des commandes existent, rÃ©cupÃ©rer les pseudonymes des dÃ©gustateurs
+        // Si des commandes existent, récupérer les pseudonymes des dégustateurs
         let guestMap = {};
         const tokens = Array.from(new Set(cmds.map(c => c.degustateur_secret_token).filter(Boolean)));
         if (tokens.length > 0) {
@@ -193,7 +193,7 @@ export default function BoissonDetailAdmin() {
         if (error) throw error;
         setAllBoissons(data || []);
         
-        // Extraire catÃ©gories uniques
+        // Extraire catégories uniques
         const cats = [...new Set(data.map(b => b.categorie).filter(Boolean))];
         setUniqueCategories(cats.sort());
         
@@ -219,7 +219,7 @@ export default function BoissonDetailAdmin() {
 
   async function handleCommander() {
     if (!adminId) {
-      setError("Vous devez Ãªtre connectÃ© pour commander");
+      setError("Vous devez être connecté pour commander");
       return;
     }
 
@@ -234,12 +234,12 @@ export default function BoissonDetailAdmin() {
       const { error } = await supabase.from("commandes").insert({
         boisson_id: id,
         degustateur_secret_token: adminId,
-        statut: "CommandÃ©"
+        statut: "Commandé"
       });
 
       if (error) throw error;
 
-      setCommandSuccess("âœ“ Commande envoyÃ©e !");
+      setCommandSuccess("? Commande envoyée !");
       setTimeout(() => setCommandSuccess(null), 4000);
 
     } catch (err) {
@@ -285,10 +285,10 @@ export default function BoissonDetailAdmin() {
         }
       );
 
-      console.log("RÃ©ponse reÃ§ue, status:", response.status);
+      console.log("Réponse reçue, status:", response.status);
       
       const result = await response.json();
-      console.log("DonnÃ©es:", result);
+      console.log("Données:", result);
 
       if (result.success && result.data) {
         // Fill ingredients when the drink already exists
@@ -296,20 +296,20 @@ export default function BoissonDetailAdmin() {
         if (id !== "new" && result.data.ingredients) {
           const toInsert = [];
           for (const ing of result.data.ingredients) {
-            // Parsing amÃ©liorÃ© : extraire nom, quantitÃ©, unitÃ©
+            // Parsing amélioré : extraire nom, quantité, unité
             // Exemple d'ing.nom : "60 ml (2 oz) de vodka"
             let nom = ing.nom;
             let quantite = null;
             let unite = null;
-            // Regex pour extraire quantitÃ©/unitÃ©/nom
-            const regex = /^(\d+\s*ml|\d+\s*oz|\d+\s*cl|\d+\s*L|\d+\s*g|\d+\s*mg|\d+\s*cuillÃ¨re|\d+\s*tranche|\d+\s*\w+)?\s*(?:de|d'|du)?\s*(.*)$/i;
+            // Regex pour extraire quantité/unité/nom
+            const regex = /^(\d+\s*ml|\d+\s*oz|\d+\s*cl|\d+\s*L|\d+\s*g|\d+\s*mg|\d+\s*cuillère|\d+\s*tranche|\d+\s*\w+)?\s*(?:de|d'|du)?\s*(.*)$/i;
             const match = nom.match(regex);
             if (match) {
               quantite = match[1] ? match[1].replace(/[^\d.,]/g, '').replace(',', '.') : null;
               unite = match[1] ? match[1].replace(/\d+\s*/, '').trim() : null;
               nom = match[2] ? match[2].trim() : nom;
             }
-            // Chercher l'ingrÃ©dient dans l'inventaire sur le nom seul
+            // Chercher l'ingrédient dans l'inventaire sur le nom seul
             const invItem = inventaire.find(i => i.nom.toLowerCase() === nom.toLowerCase());
             if (invItem) {
               toInsert.push({
@@ -325,10 +325,10 @@ export default function BoissonDetailAdmin() {
           if (toInsert.length > 0) {
             const { error: insertErr } = await supabase.from("boissons_ingredients").insert(toInsert);
             if (insertErr) {
-              throw new Error(`Erreur insertion ingrÃ©dients : ${insertErr.message}`);
+              throw new Error(`Erreur insertion ingrédients : ${insertErr.message}`);
             }
           }
-          // Recharger les ingrÃ©dients
+          // Recharger les ingrédients
           const { data: ingData, error: ingFetchErr } = await supabase
             .from("boissons_ingredients")
             .select(`ingredient_id, quantite, unite, inventaire:ingredient_id(nom)`)
@@ -347,10 +347,10 @@ export default function BoissonDetailAdmin() {
           if (stepsToInsert.length > 0) {
             const { error: stepErr } = await supabase.from("boissons_preparation").insert(stepsToInsert);
             if (stepErr) {
-              console.error("Erreur insertion Ã©tapes :", stepErr);
+              console.error("Erreur insertion étapes :", stepErr);
             }
           }
-          // Recharger les prÃ©parations
+          // Recharger les préparations
           const { data: prepData, error: prepErr } = await supabase
             .from("boissons_preparation")
             .select("id, ordre, description")
@@ -360,13 +360,13 @@ export default function BoissonDetailAdmin() {
           setPreparations(prepData || []);
         }
 
-        // Afficher le message d'import partiel si ingrÃ©dients manquants
+        // Afficher le message d'import partiel si ingrédients manquants
         if (missing.length > 0) {
-          setImportError(`Import partiel : ingrÃ©dients non trouvÃ©s dans l'inventaire: ${missing.join(", ")}`);
+          setImportError(`Import partiel : ingrédients non trouvés dans l'inventaire: ${missing.join(", ")}`);
         } else {
           setImportError(null);
         }
-        // Afficher succÃ¨s si au moins les Ã©tapes ou ingrÃ©dients ont Ã©tÃ© importÃ©s
+        // Afficher succès si au moins les étapes ou ingrédients ont été importés
         if ((result.data.steps && result.data.steps.length > 0) || (result.data.ingredients && result.data.ingredients.length > 0)) {
           setShowImportModal(false);
           setImportUrl("");
@@ -375,14 +375,14 @@ export default function BoissonDetailAdmin() {
         }
       }
     } catch (err) {
-      console.error("âŒ Erreur import:", err);
+      console.error("? Erreur import:", err);
       
-      // Message d'erreur plus dÃ©taillÃ©
+      // Message d'erreur plus détaillé
       let errorMessage = err.message;
       if (err.message === "Failed to fetch") {
-        errorMessage = "Impossible de contacter le service d'import. VÃ©rifiez que l'Edge Function est bien dÃ©ployÃ©e sur Supabase.";
+        errorMessage = "Impossible de contacter le service d'import. Vérifiez que l'Edge Function est bien déployée sur Supabase.";
       } else if (err.message.includes("CORS")) {
-        errorMessage = "Erreur CORS. Le site cible bloque probablement les requÃªtes automatisÃ©es.";
+        errorMessage = "Erreur CORS. Le site cible bloque probablement les requêtes automatisées.";
       }
       
       setImportError(errorMessage);
@@ -419,7 +419,7 @@ export default function BoissonDetailAdmin() {
           .maybeSingle();
         if (error) throw error;
         if (data) {
-          // RafraÃ®chit l'Ã©tat local pour reflÃ©ter la valeur DB
+          // Rafraîchit l'état local pour refléter la valeur DB
           setNom(data.nom || "");
           setCategorie(data.categorie || "");
           setCommentaire(data.commentaire || "");
@@ -432,7 +432,7 @@ export default function BoissonDetailAdmin() {
           setShowBobiSuccess(true);
           setTimeout(() => setShowBobiSuccess(false), 4000);
         }
-        // Sortir du mode ?dition aprÃ¨s sauvegarde
+        // Sortir du mode ?dition après sauvegarde
         setIsEditing(false);
       }
     } catch (err) {
@@ -471,8 +471,8 @@ export default function BoissonDetailAdmin() {
 
       if (upErr) throw upErr;
 
-      // Pas besoin de sauvegarder l'URL en base - le systÃ¨me automatique la trouvera
-      alert(`Image uploadÃ©e avec succÃ¨s : ${fileName}`);
+      // Pas besoin de sauvegarder l'URL en base - le système automatique la trouvera
+      alert(`Image uploadée avec succès : ${fileName}`);
     } catch (err) {
       console.error(err);
       setUploadError(err.message || "Erreur lors de l'upload");
@@ -493,14 +493,14 @@ export default function BoissonDetailAdmin() {
     }
   }
 
-  // Gestion des ingrÃ©dients
+  // Gestion des ingrédients
   async function addIngredient() {
     if (!newIngredient.ingredient_id) {
-      alert("SÃ©lectionne un ingrÃ©dient");
+      alert("Sélectionne un ingrédient");
       return;
     }
     if (id === "new") {
-      alert("Enregistre d'abord la boisson avant d'ajouter des ingrÃ©dients");
+      alert("Enregistre d'abord la boisson avant d'ajouter des ingrédients");
       return;
     }
     try {
@@ -521,7 +521,7 @@ export default function BoissonDetailAdmin() {
   async function updateIngredient(ingId) {
     if (!editingIngredient) return;
     if (!editingIngredient.ingredient_id) {
-      alert("SÃ©lectionne un ingrÃ©dient");
+      alert("Sélectionne un ingrédient");
       return;
     }
     try {
@@ -538,12 +538,12 @@ export default function BoissonDetailAdmin() {
       setEditingIngredient(null);
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de la mise Ã  jour : " + err.message);
+      alert("Erreur lors de la mise à jour : " + err.message);
     }
   }
 
   async function removeIngredient(ingId) {
-    if (!confirm("Supprimer cet ingrÃ©dient ?")) return;
+    if (!confirm("Supprimer cet ingrédient ?")) return;
     try {
       const { error } = await supabase.from("boissons_ingredients").delete().eq("id", ingId);
       if (error) throw error;
@@ -554,14 +554,14 @@ export default function BoissonDetailAdmin() {
     }
   }
 
-  // Gestion des Ã©tapes de prÃ©paration
+  // Gestion des étapes de préparation
   async function addPreparation() {
     if (!newPreparation.ordre || !newPreparation.description) {
       alert("Remplis l'ordre et la description");
       return;
     }
     if (id === "new") {
-      alert("Enregistre d'abord la boisson avant d'ajouter des Ã©tapes");
+      alert("Enregistre d'abord la boisson avant d'ajouter des étapes");
       return;
     }
     try {
@@ -594,12 +594,12 @@ export default function BoissonDetailAdmin() {
       setEditingPreparation(null);
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de la mise Ã  jour : " + err.message);
+      alert("Erreur lors de la mise à jour : " + err.message);
     }
   }
 
   async function removePreparation(prepId) {
-    if (!confirm("Supprimer cette Ã©tape ?")) return;
+    if (!confirm("Supprimer cette étape ?")) return;
     try {
       const { error } = await supabase.from("boissons_preparation").delete().eq("id", prepId);
       if (error) throw error;
@@ -684,7 +684,7 @@ export default function BoissonDetailAdmin() {
   }
 
   function renderStars(note) {
-    if (!note) return <span style={{ color: 'var(--text-on-light-secondary)', fontSize: 'var(--font-size-base)' }}>Pas encore notÃ©</span>;
+    if (!note) return <span style={{ color: 'var(--text-on-light-secondary)', fontSize: 'var(--font-size-base)' }}>Pas encore noté</span>;
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(note)) {
@@ -722,14 +722,14 @@ export default function BoissonDetailAdmin() {
     return <div style={{ display: 'flex', gap: 2 }}>{stars}</div>;
   }
 
-  const pageTitle = id === "new" ? "Nouvelle boisson" : nom || "DÃ©tail boisson";
+  const pageTitle = id === "new" ? "Nouvelle boisson" : nom || "Détail boisson";
 
   return (
     <>
       {showBobiSuccess && (
         <BobiAnimation 
           type="success" 
-          message="Boisson mise Ã  jour avec succÃ¨s !" 
+          message="Boisson mise à jour avec succès !" 
           duration={4000}
           onComplete={() => setShowBobiSuccess(false)}
         />
@@ -765,7 +765,7 @@ export default function BoissonDetailAdmin() {
             )}
           </div>
           {!isEditing && categorie && (
-            <div style={{ fontSize: 'var(--font-size-lg)', padding: "6px 12px", backgroundColor: "#e3f2fd", color: "#1976d2", borderRadius: 5, display: "inline-block" }}>{categorie}</div>
+            <div className="type-indicator type-indicator-standard">{categorie}</div>
           )}
         </div>
       </div>
@@ -811,7 +811,7 @@ export default function BoissonDetailAdmin() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div style={{ maxWidth: 800 }}>
-        {/* Image centrÃ©e */}
+        {/* Image centrée */}
         <div style={{ marginBottom: 30, display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ maxWidth: 400, width: "100%" }}>
             {imageUrl ? (
@@ -842,7 +842,7 @@ export default function BoissonDetailAdmin() {
 
           {isEditing && (
             <div style={{ marginBottom: 20 }}>
-              <label style={{ display: "block", fontWeight: 'var(--font-weight-bold)', marginBottom: 5, color: "#666", fontSize: 'var(--font-size-base)' }}>CatÃ©gorie</label>
+              <label style={{ display: "block", fontWeight: 'var(--font-weight-bold)', marginBottom: 5, color: "#666", fontSize: 'var(--font-size-base)' }}>Catégorie</label>
               {newCategory ? (
                 <div style={{ display: "flex", gap: 8 }}>
                   <input
@@ -854,7 +854,7 @@ export default function BoissonDetailAdmin() {
                         setCategorie(newCategory.trim());
                       }
                     }}
-                    placeholder="Nouvelle catÃ©gorie"
+                    placeholder="Nouvelle catégorie"
                     style={{ flex: 1, padding: 10, fontSize: 'var(--font-size-lg)', borderRadius: 5, border: "1px solid #ddd" }}
                   />
                   <button
@@ -879,11 +879,11 @@ export default function BoissonDetailAdmin() {
                   }}
                   style={{ width: "100%", padding: 10, fontSize: 'var(--font-size-lg)', borderRadius: 5, border: "1px solid #ddd" }}
                 >
-                  <option value="">-- SÃ©lectionner --</option>
+                  <option value="">-- Sélectionner --</option>
                   {uniqueCategories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
-                  <option value="__new__">+ Nouvelle catÃ©gorie</option>
+                  <option value="__new__">+ Nouvelle catégorie</option>
                 </select>
               )}
             </div>
@@ -935,7 +935,7 @@ export default function BoissonDetailAdmin() {
                             }}
                             title="Retirer"
                           >
-                            âž•
+                            ?
                           </button>
                         </span>
                       )
@@ -1025,7 +1025,7 @@ export default function BoissonDetailAdmin() {
           </div>
       </div>
 
-      {/* Section IngrÃ©dients */}
+      {/* Section Ingrédients */}
       {id !== "new" && (
         <div style={{ marginTop: 40, maxWidth: 800 }}>
           {/* Pastilles de profil */}
@@ -1050,10 +1050,10 @@ export default function BoissonDetailAdmin() {
               ))}
             </div>
           )}
-          <h2>IngrÃ©dients</h2>
+          <h2>Ingrédients</h2>
           
           {ingredients.length === 0 ? (
-            <p style={{ fontStyle: "italic", color: "#888" }}>Aucun ingrÃ©dient dÃ©fini.</p>
+            <p style={{ fontStyle: "italic", color: "#888" }}>Aucun ingrédient défini.</p>
           ) : (
             <ul style={{ listStyle: "none", padding: 0, marginBottom: 20 }}>
               {ingredients.map(ing => {
@@ -1065,7 +1065,7 @@ export default function BoissonDetailAdmin() {
                         <input
                           type="number"
                           step="0.01"
-                          placeholder="QtÃ©"
+                          placeholder="Qté"
                           value={editingIngredient.quantite}
                           onChange={(e) => setEditingIngredient({ ...editingIngredient, quantite: e.target.value })}
                           style={{ width: 80, padding: 6, boxSizing: "border-box" }}
@@ -1095,7 +1095,7 @@ export default function BoissonDetailAdmin() {
                         </span>
                         {isEditing && (
                           <div style={{ display: "flex", gap: 5 }}>
-                            <button onClick={() => setEditingIngredient(ing)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Ã‰diter">
+                            <button onClick={() => setEditingIngredient(ing)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Éditer">
                               <Edit size={14} />
                             </button>
                             <button onClick={() => removeIngredient(ing.id)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Supprimer">
@@ -1113,16 +1113,16 @@ export default function BoissonDetailAdmin() {
 
           {isEditing && (
             <div style={{ padding: 15, backgroundColor: "#f9f9f9", borderRadius: 8 }}>
-              <h3 style={{ marginTop: 0 }}>Ajouter un ingrÃ©dient</h3>
+              <h3 style={{ marginTop: 0 }}>Ajouter un ingrédient</h3>
               <div style={{ display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap" }}>
                 <div style={{ flex: 1, minWidth: 200 }}>
-                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>IngrÃ©dient</label>
+                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Ingrédient</label>
                   <select
                     value={newIngredient.ingredient_id}
                     onChange={(e) => setNewIngredient({ ...newIngredient, ingredient_id: e.target.value })}
                     style={{ width: "100%", padding: 8 }}
                   >
-                    <option value="">-- SÃ©lectionner --</option>
+                    <option value="">-- Sélectionner --</option>
                     {inventaire.map(inv => (
                       <option key={inv.id} value={inv.id}>
                         {inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}
@@ -1150,13 +1150,13 @@ export default function BoissonDetailAdmin() {
                   />
                 </div>
                 <button onClick={addIngredient} style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer" }}>
-                  âž•
+                  ?
                 </button>
               </div>
             </div>
           )}
 
-          {/* Boutons flottants pour ?dition d'ingrÃ©dient */}
+          {/* Boutons flottants pour ?dition d'ingrédient */}
           {editingIngredient && (
             <div style={{ display: "flex", gap: 12, position: "fixed", bottom: 20, right: 20, zIndex: 1000 }}>
               <button
@@ -1178,13 +1178,13 @@ export default function BoissonDetailAdmin() {
         </div>
       )}
 
-      {/* Section PrÃ©paration */}
+      {/* Section Préparation */}
       {id !== "new" && (
         <div style={{ marginTop: 40, maxWidth: 800 }}>
-          <h2>PrÃ©paration</h2>
+          <h2>Préparation</h2>
           
           {preparations.length === 0 ? (
-            <p style={{ fontStyle: "italic", color: "#888" }}>Aucune Ã©tape dÃ©finie.</p>
+            <p style={{ fontStyle: "italic", color: "#888" }}>Aucune étape définie.</p>
           ) : (
             <ol style={{ paddingLeft: 20, marginBottom: 20 }}>
               {preparations.map(prep => {
@@ -1216,7 +1216,7 @@ export default function BoissonDetailAdmin() {
                         <span style={{ flex: 1 }}>{prep.description}</span>
                         {isEditing && (
                           <div>
-                            <button onClick={() => setEditingPreparation(prep)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", marginLeft: 8, display: "inline-flex", alignItems: "center", justifyContent: "center" }} title="Ã‰diter">
+                            <button onClick={() => setEditingPreparation(prep)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", marginLeft: 8, display: "inline-flex", alignItems: "center", justifyContent: "center" }} title="Éditer">
                               <Edit size={14} />
                             </button>
                             <button onClick={() => removePreparation(prep.id)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", marginLeft: 4, display: "inline-flex", alignItems: "center", justifyContent: "center" }} title="Supprimer">
@@ -1234,7 +1234,7 @@ export default function BoissonDetailAdmin() {
 
           {isEditing && (
             <div style={{ padding: 15, backgroundColor: "#f9f9f9", borderRadius: 8 }}>
-              <h3 style={{ marginTop: 0 }}>Ajouter une Ã©tape</h3>
+              <h3 style={{ marginTop: 0 }}>Ajouter une étape</h3>
               <div style={{ display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap" }}>
                 <div style={{ width: 80 }}>
                   <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Ordre</label>
@@ -1255,7 +1255,7 @@ export default function BoissonDetailAdmin() {
                   />
                 </div>
                 <button onClick={addPreparation} style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer" }}>
-                  âž•
+                  ?
                 </button>
               </div>
             </div>
@@ -1329,7 +1329,7 @@ export default function BoissonDetailAdmin() {
           <h2>Variantes</h2>
           
           {variantes.length === 0 ? (
-            <p style={{ fontStyle: "italic", color: "#888" }}>Aucune variante dÃ©finie.</p>
+            <p style={{ fontStyle: "italic", color: "#888" }}>Aucune variante définie.</p>
           ) : (
             <ul style={{ marginBottom: 16, paddingLeft: 0, listStyleType: "none" }}>
               {variantes.map((v) => (
@@ -1370,7 +1370,7 @@ export default function BoissonDetailAdmin() {
                     onChange={(e) => setSelectedVariante(e.target.value)}
                     style={{ width: "100%", padding: 8 }}
                   >
-                    <option value="">-- SÃ©lectionner --</option>
+                    <option value="">-- Sélectionner --</option>
                     {allBoissons
                       .filter(b => b.id !== id && !variantes.some(v => v.variante?.id === b.id))
                       .map(b => (
@@ -1381,7 +1381,7 @@ export default function BoissonDetailAdmin() {
                   </select>
                 </div>
                 <button onClick={addVariante} style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer" }}>
-                  âž•
+                  ?
                 </button>
               </div>
             </div>
@@ -1433,7 +1433,7 @@ export default function BoissonDetailAdmin() {
                         {c.guest_pseudo}
                       </div>
                       <div className="order-card-meta">
-                        {date} â€¢ {c.statut}
+                        {date} • {c.statut}
                       </div>
                       <div className="order-card-rating">
                         {renderStars(c.note)}
@@ -1454,7 +1454,7 @@ export default function BoissonDetailAdmin() {
         </div>
       )}
 
-      {/* Bouton Commander Flottant - masquÃ© en mode ?dition */}
+      {/* Bouton Commander Flottant - masqué en mode ?dition */}
       {!isEditing && (
         <button
           onClick={handleCommander}
@@ -1466,7 +1466,7 @@ export default function BoissonDetailAdmin() {
         </button>
       )}
 
-      {/* Messages de succÃ¨s et erreur */}
+      {/* Messages de succès et erreur */}
       {commandSuccess && (
         <div
           style={{
@@ -1516,7 +1516,7 @@ export default function BoissonDetailAdmin() {
             </h3>
             
             <p style={{ marginBottom: '16px', color: '#666', fontSize: '0.9rem' }}>
-              Entrez une URL de recette (IBA World ou SAQ) pour importer automatiquement les ingrÃ©dients et Ã©tapes de prÃ©paration.
+              Entrez une URL de recette (IBA World ou SAQ) pour importer automatiquement les ingrédients et étapes de préparation.
             </p>
 
             <input
@@ -1593,6 +1593,7 @@ export default function BoissonDetailAdmin() {
     </>
   );
 }
+
 
 
 

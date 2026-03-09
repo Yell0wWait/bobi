@@ -67,17 +67,14 @@ export default function NourritureCard({ nourriture, onClick }) {
             onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
           />
           {nourriture.categorie && (
-            <div style={{
+            <div
+              className="type-indicator type-indicator-compact"
+              style={{
               position: 'absolute',
               top: 'var(--spacing-sm)',
-              left: 'var(--spacing-sm)',
-              padding: '3px 8px',
-              background: 'rgba(59, 130, 246, 0.9)',
-              color: 'white',
-              borderRadius: 'var(--border-radius-sm)',
-              fontSize: 'var(--font-size-sm)',
-              fontWeight: 'var(--font-weight-medium)'
-            }}>
+              left: 'var(--spacing-sm)'
+            }}
+            >
               {nourriture.categorie}
             </div>
           )}

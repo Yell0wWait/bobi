@@ -228,7 +228,7 @@ export default function BoissonDetailInvite() {
           <div style={{ marginBottom: 20 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 15, marginBottom: 10 }}>
               {boisson.categorie && (
-                <div style={{ fontSize: 'var(--font-size-lg)', padding: "6px 12px", backgroundColor: "var(--primary-100)", color: "var(--primary-700)", borderRadius: 5, display: "inline-block" }}>
+                <div className="type-indicator type-indicator-standard">
                   {boisson.categorie}
                 </div>
               )}

@@ -71,17 +71,14 @@ export default function BoissonCard({ boisson, onClick }) {
             onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
           />
           {boisson.categorie && (
-            <div style={{
+            <div
+              className="type-indicator type-indicator-compact"
+              style={{
               position: 'absolute',
               top: 'var(--spacing-sm)',
-              left: 'var(--spacing-sm)',
-              padding: '3px 8px',
-              background: '#1976d2',
-              color: 'white',
-              borderRadius: 'var(--border-radius-sm)',
-              fontSize: 'var(--font-size-sm)',
-              fontWeight: 'var(--font-weight-medium)'
-            }}>
+              left: 'var(--spacing-sm)'
+            }}
+            >
               {boisson.categorie}
             </div>
           )}
