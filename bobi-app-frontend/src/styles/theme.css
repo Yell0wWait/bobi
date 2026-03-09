@@ -334,12 +334,26 @@ a:hover {
   justify-content: flex-start;
 }
 
+.order-card-rating-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .order-card-actions {
   position: absolute;
-  bottom: 8px;
+  bottom: 0;
   right: 0;
   display: flex;
   gap: 2px;
+}
+
+.order-card-actions-inline {
+  position: static;
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
 }
 
 .order-card-icon-button {
