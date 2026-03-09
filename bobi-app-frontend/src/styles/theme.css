@@ -352,21 +352,21 @@ a:hover {
 .order-card-comment {
   margin-top: 8px;
   padding: 12px;
-  background-color: var(--bg-secondary);
+  background-color: var(--secondary-50);
   border-radius: 6px;
-  border-left: 3px solid var(--primary-400);
+  border-left: 3px solid var(--secondary-400);
 }
 
 .order-card-comment-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  color: var(--text-on-light-secondary);
+  color: var(--secondary-800);
   margin-bottom: 4px;
 }
 
 .order-card-comment-text {
   font-size: var(--font-size-base);
-  color: var(--text-on-light-primary);
+  color: var(--secondary-900);
   line-height: 1.5;
 }
 
