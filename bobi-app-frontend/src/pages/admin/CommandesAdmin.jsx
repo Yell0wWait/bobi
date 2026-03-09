@@ -482,7 +482,7 @@ export default function CommandesAdmin() {
               }}
               className="order-card order-card-stack order-card-interactive"
             >
-              <div className="order-card-main order-card-main-with-actions">
+              <div className="order-card-main">
                 {/* Image médaillon */}
                 <div className="order-card-media">
                   {imageUrl ? (
@@ -510,51 +510,53 @@ export default function CommandesAdmin() {
                   <div className="order-card-title" style={{ whiteSpace: "nowrap", overflow: "visible" }}>
                     {c.boisson_nom}
                   </div>
-                  <div className="order-card-meta">
+                  <div className="order-card-meta" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                     {c.guest_pseudo}{" \u2022 "}{date}
                   </div>
-                  <div className="order-card-rating">
-                    {renderStars(c.note)}
+                  <div className="order-card-rating-row">
+                    <div className="order-card-rating">
+                      {renderStars(c.note)}
+                    </div>
+
+                    {/* Boutons d'actions */}
+                    <div className="order-card-actions-inline">
+                      {/* Changer statut */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          changeStatut(c.id, c.statut === "Servi" ? "Command\u00e9" : "Servi");
+                        }}
+                        className="order-card-icon-button"
+                        title={c.statut === "Servi" ? "Marquer comme Command\u00e9" : "Marquer comme Servi"}
+                      >
+                        {c.statut === "Servi" ? <Clock size={20} color="var(--text-on-light-secondary)" /> : <CheckCircle size={20} color="var(--text-on-light-secondary)" />}
+                      </button>
+
+                      {/* Modifier */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditModal(c);
+                        }}
+                        className="order-card-icon-button"
+                        title="Modifier"
+                      >
+                        <Edit size={20} color="var(--text-on-light-secondary)" />
+                      </button>
+
+                      {/* Supprimer */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(c.id);
+                        }}
+                        className="order-card-icon-button"
+                        title="Supprimer"
+                      >
+                        <Trash2 size={20} color="var(--text-on-light-secondary)" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                {/* Boutons d'actions */}
-                <div className="order-card-actions">
-                  {/* Changer statut */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      changeStatut(c.id, c.statut === "Commandé" ? "Servi" : "Commandé");
-                    }}
-                    className="order-card-icon-button"
-                    title={c.statut === "Commandé" ? "Marquer comme Servi" : "Marquer comme Commandé"}
-                  >
-                    {c.statut === "Commandé" ? <CheckCircle size={20} color="var(--text-on-light-secondary)" /> : <Clock size={20} color="var(--text-on-light-secondary)" />}
-                  </button>
-
-                  {/* Modifier */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openEditModal(c);
-                    }}
-                    className="order-card-icon-button"
-                    title="Modifier"
-                  >
-                    <Edit size={20} color="var(--text-on-light-secondary)" />
-                  </button>
-
-                  {/* Supprimer */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(c.id);
-                    }}
-                    className="order-card-icon-button"
-                    title="Supprimer"
-                  >
-                    <Trash2 size={20} color="var(--text-on-light-secondary)" />
-                  </button>
                 </div>
               </div>
 
@@ -583,4 +585,3 @@ export default function CommandesAdmin() {
     </>
   );
 }
-
