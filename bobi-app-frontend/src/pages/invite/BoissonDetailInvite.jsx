@@ -44,7 +44,7 @@ export default function BoissonDetailInvite() {
         }
         setBoisson(b);
 
-        // Charger les ingr?dients
+        // Charger les ingrédients
         const { data: ingData, error: ingErr } = await supabase
           .from("boissons_ingredients")
           .select(`
@@ -159,13 +159,13 @@ export default function BoissonDetailInvite() {
       const { error } = await supabase.from("commandes").insert({
         boisson_id: id,
         degustateur_secret_token: secretToken,
-        statut: "Command?",
+        statut: "Commandé",
       });
 
       if (error) throw error;
 
       setShowBobiSuccess(true);
-      setSuccess("? Commande envoy?e !");
+      setSuccess("✓ Commande envoyée !");
       setTimeout(() => {
         setSuccess(null);
         setShowBobiSuccess(false);
@@ -192,7 +192,7 @@ export default function BoissonDetailInvite() {
     }
   };
 
-  if (loading) return <BobiAnimation type="loading" message="Bobi v?rifie les stocks..." duration={0} />;
+  if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;
   if (!boisson) return <p style={{ padding: 16 }}>Boisson introuvable.</p>;
 
   return (
@@ -200,7 +200,7 @@ export default function BoissonDetailInvite() {
       {showBobiSuccess && (
         <BobiAnimation 
           type="success" 
-          message="Excellent choix ! Bobi pr?pare votre cocktail..." 
+          message="Excellent choix ! Bobi prépare votre cocktail..." 
           duration={4000}
           onComplete={() => setShowBobiSuccess(false)}
         />
@@ -211,7 +211,7 @@ export default function BoissonDetailInvite() {
         {success && <p style={{ color: "green", marginBottom: 16 }}>{success}</p>}
 
         <div style={{ maxWidth: 800 }}>
-          {/* Image centr?e */}
+          {/* Image centrée */}
           <div style={{ marginBottom: 30, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <div style={{ maxWidth: 400, width: "100%" }}>
               {imageUrl ? (
@@ -224,7 +224,7 @@ export default function BoissonDetailInvite() {
             </div>
           </div>
 
-          {/* Cat?gorie et statut */}
+          {/* Catégorie et statut */}
           <div style={{ marginBottom: 20 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 15, marginBottom: 10 }}>
               {boisson.categorie && (
@@ -261,17 +261,17 @@ export default function BoissonDetailInvite() {
             </div>
           )}
 
-          {/* Section Ingr?dients */}
+          {/* Section Ingrédients */}
           {ingredients.length > 0 && (
             <div style={{ marginTop: 40 }}>
-              <h2>Ingr?dients</h2>
+              <h2>Ingrédients</h2>
               <ul style={{ listStyle: "none", padding: 0, marginBottom: 20 }}>
                 {ingredients.map(ing => (
                   <li key={ing.id} style={{ marginBottom: 8, padding: "6px 0" }}>
                     <span>
                       {ing.quantite && `${ing.quantite} `}
                       {ing.unite && `${ing.unite} `}
-                      <strong>{ing.inventaire?.nom || 'Ingr?dient'}</strong>
+                      <strong>{ing.inventaire?.nom || 'Ingrédient'}</strong>
                     </span>
                   </li>
                 ))}
