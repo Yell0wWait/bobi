@@ -482,7 +482,7 @@ export default function CommandesAdmin() {
               }}
               className="order-card order-card-stack order-card-interactive"
             >
-              <div className="order-card-main">
+              <div className="order-card-main order-card-main-with-actions">
                 {/* Image médaillon */}
                 <div className="order-card-media">
                   {imageUrl ? (

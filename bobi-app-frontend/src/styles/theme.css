@@ -277,6 +277,11 @@ a:hover {
   gap: 16px;
 }
 
+.order-card-main-with-actions {
+  position: relative;
+  padding-right: 96px;
+}
+
 .order-card-interactive {
   cursor: pointer;
   transition: box-shadow 0.2s;
@@ -332,7 +337,7 @@ a:hover {
 .order-card-actions {
   position: absolute;
   bottom: 8px;
-  right: 8px;
+  right: 0;
   display: flex;
   gap: 2px;
 }
