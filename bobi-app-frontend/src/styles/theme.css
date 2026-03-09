@@ -805,53 +805,6 @@ p {
   }
 }
 
-/* Mode system: consultation / édition / ajout */
-.mode-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-
-.mode-chip-view {
-  background-color: var(--bg-secondary);
-  border-color: var(--border-color);
-  color: var(--text-secondary);
-}
-
-.mode-chip-edit {
-  background-color: var(--secondary-100);
-  border-color: var(--secondary-300);
-  color: var(--secondary-800);
-}
-
-.mode-chip-create {
-  background-color: var(--primary-100);
-  border-color: var(--primary-300);
-  color: var(--primary-800);
-}
-
-.mode-panel {
-  border-radius: var(--border-radius-md);
-  border: 1px solid transparent;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.mode-panel-edit {
-  border-color: var(--secondary-300);
-  box-shadow: 0 0 0 1px var(--secondary-100);
-}
-
-.mode-panel-create {
-  border-color: var(--primary-300);
-  box-shadow: 0 0 0 1px var(--primary-100);
-}
-
 /* Floating Action Button (FAB) */
 .floating-button {
   position: fixed;
@@ -879,14 +832,6 @@ p {
 
 .floating-button svg {
   color: white;
-}
-
-.mode-toggle-button-edit {
-  background-color: var(--secondary-500);
-}
-
-.mode-toggle-button-cancel {
-  background-color: var(--bg-tertiary);
 }
 
 /* Floating Command Button */
@@ -961,14 +906,6 @@ p {
 
 .floating-save-button svg {
   color: white;
-}
-
-.mode-save-button-edit {
-  background-color: var(--secondary-600);
-}
-
-.mode-save-button-create {
-  background-color: var(--primary-600);
 }
 
 .floating-delete-button {

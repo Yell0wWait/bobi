@@ -44,9 +44,6 @@ export default function BoissonDetailAdmin() {
   const [commandLoading, setCommandLoading] = useState(false);
   const [commandSuccess, setCommandSuccess] = useState(null);
   const [showBobiSuccess, setShowBobiSuccess] = useState(false);
-  const isCreateMode = id === "new";
-  const currentModeLabel = isCreateMode ? "Mode ajout" : isEditing ? "Mode édition" : "Mode consultation";
-  const currentModeClass = isCreateMode ? "mode-chip-create" : isEditing ? "mode-chip-edit" : "mode-chip-view";
 
   const adminData = JSON.parse(localStorage.getItem("bobi_admin") || "null");
   const adminId = adminData?.id || null;
@@ -757,7 +754,6 @@ export default function BoissonDetailAdmin() {
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 15, marginBottom: 10 }}>
             <h1 style={{ margin: 0 }}>{id === "new" ? "Ajouter une boisson" : nom || "Boisson"}</h1>
-            <span className={`mode-chip ${currentModeClass}`}>{currentModeLabel}</span>
             {id !== "new" && !isEditing && (
               <div
                 className={`availability-indicator ${actif ? "availability-indicator-active" : "availability-indicator-inactive"}`}
@@ -805,7 +801,8 @@ export default function BoissonDetailAdmin() {
         <button 
           type="button" 
           onClick={() => setIsEditing(!isEditing)} 
-          className={`floating-button no-print ${isEditing ? "mode-toggle-button-cancel" : "mode-toggle-button-edit"}`}
+          className="floating-button no-print"
+          style={{ backgroundColor: isEditing ? "#6c757d" : "var(--secondary-500)" }}
           title={isEditing ? "Annuler" : "Modifier"}
         >
           {isEditing ? <X size={24} /> : <Edit size={24} />}
@@ -813,7 +810,7 @@ export default function BoissonDetailAdmin() {
       )}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div className={`mode-panel ${isCreateMode ? "mode-panel-create" : isEditing ? "mode-panel-edit" : ""}`} style={{ maxWidth: 800 }}>
+      <div style={{ maxWidth: 800 }}>
         {/* Image centrée */}
         <div style={{ marginBottom: 30, display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ maxWidth: 400, width: "100%" }}>
@@ -1015,12 +1012,7 @@ export default function BoissonDetailAdmin() {
                     <Download size={20} />
                   </button>
                 )}
-                <button
-                  onClick={handleSave}
-                  disabled={loading}
-                  className={`floating-save-button ${isCreateMode ? "mode-save-button-create" : "mode-save-button-edit"}`}
-                  title={loading ? "Enregistrement..." : isCreateMode ? "Créer" : "Enregistrer"}
-                >
+                <button onClick={handleSave} disabled={loading} className="floating-save-button" title={loading ? "Enregistrement..." : "Enregistrer"}>
                   <Save size={20} />
                 </button>
                 {id !== "new" && (
