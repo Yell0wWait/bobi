@@ -511,7 +511,7 @@ export default function CommandesAdmin() {
                     {c.boisson_nom}
                   </div>
                   <div className="order-card-meta">
-                    {c.guest_pseudo} • {date}
+                    {c.guest_pseudo}{" \u2022 "}{date}
                   </div>
                   <div className="order-card-rating">
                     {renderStars(c.note)}
@@ -583,3 +583,4 @@ export default function CommandesAdmin() {
     </>
   );
 }
+

@@ -275,11 +275,12 @@ a:hover {
 .order-card-main {
   display: flex;
   gap: 16px;
+  align-items: flex-start;
 }
 
 .order-card-main-with-actions {
-  position: relative;
-  padding-right: 96px;
+  align-items: flex-end;
+  padding-right: 0;
 }
 
 .order-card-interactive {
@@ -342,11 +343,12 @@ a:hover {
 }
 
 .order-card-actions {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  position: static;
   display: flex;
   gap: 2px;
+  margin-left: auto;
+  align-self: flex-end;
+  flex-shrink: 0;
 }
 
 .order-card-actions-inline {

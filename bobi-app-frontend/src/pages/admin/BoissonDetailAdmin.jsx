@@ -239,7 +239,7 @@ export default function BoissonDetailAdmin() {
 
       if (error) throw error;
 
-      setCommandSuccess("? Commande envoyée !");
+      setCommandSuccess("Commande envoyée !");
       setTimeout(() => setCommandSuccess(null), 4000);
 
     } catch (err) {
@@ -375,7 +375,7 @@ export default function BoissonDetailAdmin() {
         }
       }
     } catch (err) {
-      console.error("? Erreur import:", err);
+      console.error("Erreur import:", err);
       
       // Message d'erreur plus détaillé
       let errorMessage = err.message;
@@ -432,7 +432,7 @@ export default function BoissonDetailAdmin() {
           setShowBobiSuccess(true);
           setTimeout(() => setShowBobiSuccess(false), 4000);
         }
-        // Sortir du mode ?dition après sauvegarde
+        // Sortir du mode édition après sauvegarde
         setIsEditing(false);
       }
     } catch (err) {
@@ -935,7 +935,7 @@ export default function BoissonDetailAdmin() {
                             }}
                             title="Retirer"
                           >
-                            ?
+                            +
                           </button>
                         </span>
                       )
@@ -1000,7 +1000,7 @@ export default function BoissonDetailAdmin() {
               </div>
             )}
 
-            {/* Boutons flottants en mode ?dition */}
+            {/* Boutons flottants en mode édition */}
             {isEditing && (
               <div className="floating-action-buttons">
                 {id !== "new" && (
@@ -1071,7 +1071,7 @@ export default function BoissonDetailAdmin() {
                           style={{ width: 80, padding: 6, boxSizing: "border-box" }}
                         />
                         <input
-                          placeholder="Unit?"
+                          placeholder="Unité"
                           value={editingIngredient.unite}
                           onChange={(e) => setEditingIngredient({ ...editingIngredient, unite: e.target.value })}
                           style={{ width: 80, padding: 6, boxSizing: "border-box" }}
@@ -1131,7 +1131,7 @@ export default function BoissonDetailAdmin() {
                   </select>
                 </div>
                 <div style={{ width: 100 }}>
-                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Quantit?</label>
+                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Quantité</label>
                   <input
                     type="number"
                     step="0.01"
@@ -1141,7 +1141,7 @@ export default function BoissonDetailAdmin() {
                   />
                 </div>
                 <div style={{ width: 100 }}>
-                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Unit?</label>
+                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Unité</label>
                   <input
                     value={newIngredient.unite}
                     onChange={(e) => setNewIngredient({ ...newIngredient, unite: e.target.value })}
@@ -1150,13 +1150,13 @@ export default function BoissonDetailAdmin() {
                   />
                 </div>
                 <button onClick={addIngredient} style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer" }}>
-                  ?
+                  +
                 </button>
               </div>
             </div>
           )}
 
-          {/* Boutons flottants pour ?dition d'ingrédient */}
+          {/* Boutons flottants pour édition d'ingrédient */}
           {editingIngredient && (
             <div style={{ display: "flex", gap: 12, position: "fixed", bottom: 20, right: 20, zIndex: 1000 }}>
               <button
@@ -1255,7 +1255,7 @@ export default function BoissonDetailAdmin() {
                   />
                 </div>
                 <button onClick={addPreparation} style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer" }}>
-                  ?
+                  +
                 </button>
               </div>
             </div>
@@ -1381,7 +1381,7 @@ export default function BoissonDetailAdmin() {
                   </select>
                 </div>
                 <button onClick={addVariante} style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer" }}>
-                  ?
+                  +
                 </button>
               </div>
             </div>
@@ -1433,7 +1433,7 @@ export default function BoissonDetailAdmin() {
                         {c.guest_pseudo}
                       </div>
                       <div className="order-card-meta">
-                        {date} • {c.statut}
+                        {date}{" \u2022 "}{c.statut}
                       </div>
                       <div className="order-card-rating">
                         {renderStars(c.note)}
@@ -1454,7 +1454,7 @@ export default function BoissonDetailAdmin() {
         </div>
       )}
 
-      {/* Bouton Commander Flottant - masqué en mode ?dition */}
+      {/* Bouton Commander Flottant - masqué en mode édition */}
       {!isEditing && (
         <button
           onClick={handleCommander}
@@ -1593,6 +1593,7 @@ export default function BoissonDetailAdmin() {
     </>
   );
 }
+
 
 
 
