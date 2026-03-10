@@ -266,7 +266,7 @@
   {
     "table_name": "commandes",
     "column_name": "note",
-    "data_type": "integer",
+    "data_type": "real",
     "is_nullable": "YES"
   },
   {
@@ -356,6 +356,12 @@
   {
     "table_name": "inventaire",
     "column_name": "magasin_pref",
+    "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "inventaire",
+    "column_name": "sous_categorie",
     "data_type": "text",
     "is_nullable": "YES"
   },
@@ -469,7 +475,7 @@
   },
   {
     "table_name": "nourritures",
-    "column_name": "profil",
+    "column_name": "tags",
     "data_type": "ARRAY",
     "is_nullable": "YES"
   },
@@ -495,6 +501,12 @@
     "table_name": "nourritures",
     "column_name": "recette",
     "data_type": "text",
+    "is_nullable": "YES"
+  },
+  {
+    "table_name": "nourritures",
+    "column_name": "origine",
+    "data_type": "ARRAY",
     "is_nullable": "YES"
   },
   {
@@ -531,7 +543,7 @@
     "table_name": "nourritures_ingredients",
     "column_name": "type",
     "data_type": "text",
-    "is_nullable": "NO"
+    "is_nullable": "YES"
   },
   {
     "table_name": "nourritures_ingredients",

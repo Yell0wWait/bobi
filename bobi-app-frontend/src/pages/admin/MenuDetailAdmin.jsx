@@ -72,7 +72,6 @@ export default function MenuDetailAdmin() {
       const { data: boissons, error: bErr } = await supabase
         .from("boissons")
         .select("id, nom, categorie")
-        .eq("actif", true)
         .order("nom");
 
       if (bErr) throw bErr;
@@ -176,7 +175,7 @@ export default function MenuDetailAdmin() {
       <Header title={menu.nom || "Détail menu"} showBackButton={true} />
       <div style={{ paddingBottom: 80, maxWidth: "100%", boxSizing: "border-box", overflowX: "hidden" }}>
         {/* Badge Actif */}
-        <div style={{ padding: "16px", borderBottom: "1px solid #e5e7eb" }}>
+        <div style={{ padding: "16px", borderBottom: "1px solid var(--border-color)" }}>
           <div
             style={{
               display: "inline-flex",
@@ -235,12 +234,14 @@ export default function MenuDetailAdmin() {
                 key={item.id}
                 style={{
                   backgroundColor: "white",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 8,
                   padding: 12,
                   boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                   display: "flex",
                   gap: 12,
-                  alignItems: "center"
+                  alignItems: "center",
+                  color: "var(--text-on-light-primary)"
                 }}
               >
                 {/* Image */}
@@ -265,7 +266,7 @@ export default function MenuDetailAdmin() {
                     {item.nom}
                   </div>
                   {item.categorie && (
-                    <div style={{ fontSize: 13, color: "#6b7280" }}>
+                    <div style={{ fontSize: 13, color: "var(--text-on-light-secondary)" }}>
                       {item.categorie}
                     </div>
                   )}
@@ -288,7 +289,7 @@ export default function MenuDetailAdmin() {
                   }}
                   title="Retirer"
                 >
-                  <Trash2 size={18} color="#6b7280" />
+                  <Trash2 size={18} color="var(--text-on-light-tertiary)" />
                 </button>
               </div>
             ))}
@@ -309,12 +310,14 @@ export default function MenuDetailAdmin() {
                 key={item.id}
                 style={{
                   backgroundColor: "white",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 8,
                   padding: 12,
                   boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                   display: "flex",
                   gap: 12,
-                  alignItems: "center"
+                  alignItems: "center",
+                  color: "var(--text-on-light-primary)"
                 }}
               >
                 {/* Image */}
@@ -339,7 +342,7 @@ export default function MenuDetailAdmin() {
                     {item.nom}
                   </div>
                   {item.categorie && (
-                    <div style={{ fontSize: 13, color: "#6b7280" }}>
+                    <div style={{ fontSize: 13, color: "var(--text-on-light-secondary)" }}>
                       {item.categorie}
                     </div>
                   )}
@@ -362,7 +365,7 @@ export default function MenuDetailAdmin() {
                   }}
                   title="Retirer"
                 >
-                  <Trash2 size={18} color="#6b7280" />
+                  <Trash2 size={18} color="var(--text-on-light-tertiary)" />
                 </button>
               </div>
             ))}
@@ -399,26 +402,27 @@ export default function MenuDetailAdmin() {
             transform: "translate(-50%, -50%)",
             backgroundColor: "white",
             padding: 24,
-            borderRadius: 8,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            borderRadius: 12,
+            border: "1px solid var(--secondary-200)",
+            boxShadow: "0 16px 40px rgba(0,0,0,0.28)",
             zIndex: 1001,
             width: "90%",
             maxWidth: 400
           }}>
-            <h2 style={{ marginTop: 0, marginBottom: 20 }}>Ajouter un item</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 20, color: "var(--text-on-light-primary)" }}>Ajouter un item</h2>
             
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Type</label>
+              <label style={{ display: "block", marginBottom: 4, fontFamily: 'var(--font-display)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-on-light-secondary)' }}>Type</label>
               <div style={{ display: "flex", gap: 8 }}>
                 <button
                   onClick={() => { setAddType('boisson'); setSelectedItemId(''); }}
                   style={{
                     flex: 1,
                     padding: "8px 12px",
-                    backgroundColor: addType === 'boisson' ? "var(--primary-600)" : "var(--bg-secondary)",
-                    color: addType === 'boisson' ? "white" : "var(--text-primary)",
-                    border: "none",
-                    borderRadius: 4,
+                    backgroundColor: addType === 'boisson' ? "var(--secondary-500)" : "var(--secondary-100)",
+                    color: addType === 'boisson' ? "white" : "var(--text-on-light-secondary)",
+                    border: "1px solid var(--secondary-200)",
+                    borderRadius: 6,
                     cursor: "pointer",
                     fontSize: 'var(--font-size-base)'
                   }}
@@ -430,10 +434,10 @@ export default function MenuDetailAdmin() {
                   style={{
                     flex: 1,
                     padding: "8px 12px",
-                    backgroundColor: addType === 'nourriture' ? "var(--primary-600)" : "var(--bg-secondary)",
-                    color: addType === 'nourriture' ? "white" : "var(--text-primary)",
-                    border: "none",
-                    borderRadius: 4,
+                    backgroundColor: addType === 'nourriture' ? "var(--secondary-500)" : "var(--secondary-100)",
+                    color: addType === 'nourriture' ? "white" : "var(--text-on-light-secondary)",
+                    border: "1px solid var(--secondary-200)",
+                    borderRadius: 6,
                     cursor: "pointer",
                     fontSize: 'var(--font-size-base)'
                   }}
@@ -444,7 +448,7 @@ export default function MenuDetailAdmin() {
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>
+              <label style={{ display: "block", marginBottom: 4, fontFamily: 'var(--font-display)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-on-light-secondary)' }}>
                 {addType === 'boisson' ? 'Boisson' : 'Nourriture'}
               </label>
               <select
@@ -453,9 +457,12 @@ export default function MenuDetailAdmin() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
-                  borderRadius: 4,
-                  fontSize: 'var(--font-size-lg)'
+                  border: "1px solid var(--secondary-200)",
+                  borderRadius: 8,
+                  fontSize: 'var(--font-size-lg)',
+                  backgroundColor: "white",
+                  color: "var(--text-on-light-primary)",
+                  outline: "none"
                 }}
               >
                 <option value="">-- Sélectionner --</option>
@@ -468,7 +475,7 @@ export default function MenuDetailAdmin() {
             </div>
 
             <div style={{ marginBottom: 20 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Quantité</label>
+              <label style={{ display: "block", marginBottom: 4, fontFamily: 'var(--font-display)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-on-light-secondary)' }}>Quantité</label>
               <input
                 type="number"
                 min="1"
@@ -477,9 +484,12 @@ export default function MenuDetailAdmin() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
-                  borderRadius: 4,
-                  fontSize: 'var(--font-size-lg)'
+                  border: "1px solid var(--secondary-200)",
+                  borderRadius: 8,
+                  fontSize: 'var(--font-size-lg)',
+                  backgroundColor: "white",
+                  color: "var(--text-on-light-primary)",
+                  outline: "none"
                 }}
               />
             </div>
@@ -489,11 +499,13 @@ export default function MenuDetailAdmin() {
                 onClick={() => setShowAddForm(false)}
                 style={{
                   padding: "8px 16px",
-                  backgroundColor: "var(--bg-secondary)",
-                  border: "none",
-                  borderRadius: 4,
+                  backgroundColor: "white",
+                  border: "1px solid var(--secondary-300)",
+                  color: "var(--secondary-700)",
+                  borderRadius: 8,
                   cursor: "pointer",
-                  fontSize: 15
+                  fontSize: 'var(--font-size-base)',
+                  fontWeight: 'var(--font-weight-semibold)'
                 }}
               >
                 Annuler
@@ -502,12 +514,13 @@ export default function MenuDetailAdmin() {
                 onClick={handleAddItem}
                 style={{
                   padding: "8px 16px",
-                  backgroundColor: "var(--primary-600)",
+                  backgroundColor: "var(--secondary-500)",
                   color: "white",
                   border: "none",
-                  borderRadius: 4,
+                  borderRadius: 8,
                   cursor: "pointer",
-                  fontSize: 15
+                  fontSize: 'var(--font-size-base)',
+                  fontWeight: 'var(--font-weight-semibold)'
                 }}
               >
                 Ajouter
@@ -520,3 +533,4 @@ export default function MenuDetailAdmin() {
     </>
   );
 }
+

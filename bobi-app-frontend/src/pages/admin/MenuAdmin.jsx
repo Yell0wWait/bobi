@@ -309,6 +309,7 @@ export default function MenuAdmin() {
                 onClick={() => navigate(`/admin/menus/${m.id}`)}
                 style={{
                   backgroundColor: "transparent",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 8,
                   padding: 16,
                   boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
