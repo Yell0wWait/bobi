@@ -170,17 +170,19 @@ export default function IngredientDetailAdmin() {
       {/* Informations de l'ingrédient */}
       <div style={{
         backgroundColor: "white",
+        border: "1px solid var(--border-color)",
         borderRadius: 8,
         padding: 20,
         marginBottom: 24,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.1)"
+        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+        color: "var(--text-on-light-primary)"
       }}>
         <h1 style={{ 
           fontSize: "var(--font-size-2xl)", 
           fontWeight: 600, 
           marginTop: 0, 
           marginBottom: 16,
-          color: "var(--text-primary)"
+          color: "var(--text-on-light-primary)"
         }}>
           {isEditing ? (
             <input
@@ -190,10 +192,13 @@ export default function IngredientDetailAdmin() {
               style={{
                 width: "100%",
                 padding: "8px 12px",
-                border: "1px solid #ddd",
+                border: "1px solid var(--secondary-200)",
                 borderRadius: 6,
                 fontSize: "var(--font-size-2xl)",
-                fontWeight: 'var(--font-weight-semibold)'
+                fontWeight: 'var(--font-weight-semibold)',
+                backgroundColor: "white",
+                color: "var(--text-on-light-primary)",
+                outline: "none"
               }}
             />
           ) : (
@@ -204,7 +209,7 @@ export default function IngredientDetailAdmin() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
           {/* Catégorie */}
           <div>
-            <label style={{ display: "block", fontSize: 'var(--font-size-base)', color: "var(--text-secondary)", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
               Catégorie
             </label>
             {isEditing ? (
@@ -215,19 +220,22 @@ export default function IngredientDetailAdmin() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--secondary-200)",
                   borderRadius: 6,
-                  fontSize: 15
+                  fontSize: 'var(--font-size-base)',
+                  backgroundColor: "white",
+                  color: "var(--text-on-light-primary)",
+                  outline: "none"
                 }}
               />
             ) : (
-              <div style={{ fontSize: 'var(--font-size-lg)' }}>{ingredient.categorie || "-"}</div>
+              <div style={{ fontSize: 'var(--font-size-lg)', color: "var(--text-on-light-primary)" }}>{ingredient.categorie || "-"}</div>
             )}
           </div>
 
           {/* Prix */}
           <div>
-            <label style={{ display: "block", fontSize: 14, color: "#6b7280", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
               Prix
             </label>
             {isEditing ? (
@@ -239,43 +247,49 @@ export default function IngredientDetailAdmin() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--secondary-200)",
                   borderRadius: 6,
-                  fontSize: 15
+                  fontSize: 'var(--font-size-base)',
+                  backgroundColor: "white",
+                  color: "var(--text-on-light-primary)",
+                  outline: "none"
                 }}
               />
             ) : (
-              <div style={{ fontSize: 'var(--font-size-lg)' }}>{ingredient.prix || "-"}</div>
+              <div style={{ fontSize: 'var(--font-size-lg)', color: "var(--text-on-light-primary)" }}>{ingredient.prix || "-"}</div>
             )}
           </div>
 
           {/* Marque préférée */}
           <div>
-            <label style={{ display: "block", fontSize: 14, color: "#6b7280", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
               Marque préférée
             </label>
             {isEditing ? (
               <input
                 type="text"
-                value={formData.marque_preferee}
-                onChange={(e) => setFormData({ ...formData, marque_preferee: e.target.value })}
+                value={formData.marque_pref}
+                onChange={(e) => setFormData({ ...formData, marque_pref: e.target.value })}
                 placeholder="Ex: Heinz"
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--secondary-200)",
                   borderRadius: 6,
-                  fontSize: 15
+                  fontSize: 'var(--font-size-base)',
+                  backgroundColor: "white",
+                  color: "var(--text-on-light-primary)",
+                  outline: "none"
                 }}
               />
             ) : (
-              <div style={{ fontSize: 'var(--font-size-lg)' }}>{ingredient.marque_preferee || "-"}</div>
+              <div style={{ fontSize: 'var(--font-size-lg)', color: "var(--text-on-light-primary)" }}>{ingredient.marque_pref || "-"}</div>
             )}
           </div>
 
           {/* Magasin préféré */}
           <div>
-            <label style={{ display: "block", fontSize: 14, color: "#6b7280", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
               Magasin préféré (optionnel)
             </label>
             {isEditing ? (
@@ -287,19 +301,22 @@ export default function IngredientDetailAdmin() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--secondary-200)",
                   borderRadius: 6,
-                  fontSize: 15
+                  fontSize: 'var(--font-size-base)',
+                  backgroundColor: "white",
+                  color: "var(--text-on-light-primary)",
+                  outline: "none"
                 }}
               />
             ) : (
-              <div style={{ fontSize: 'var(--font-size-lg)' }}>{ingredient.magasin_pref || "-"}</div>
+              <div style={{ fontSize: 'var(--font-size-lg)', color: "var(--text-on-light-primary)" }}>{ingredient.magasin_pref || "-"}</div>
             )}
           </div>
 
           {/* Disponibilité */}
           <div>
-            <label style={{ display: "block", fontSize: 14, color: "#6b7280", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
               Disponibilité
             </label>
             {isEditing ? (
@@ -310,13 +327,13 @@ export default function IngredientDetailAdmin() {
                   onChange={(e) => setFormData({ ...formData, disponible: e.target.checked })}
                   style={{ width: 18, height: 18, cursor: "pointer" }}
                 />
-                <span style={{ fontSize: 'var(--font-size-lg)' }}>Disponible</span>
+                <span style={{ fontSize: 'var(--font-size-lg)', color: "var(--text-on-light-primary)" }}>Disponible</span>
               </label>
             ) : (
               <div style={{ 
-                fontSize: 15, 
-                color: ingredient.disponible ? "var(--primary-600)" : "var(--error)",
-                fontWeight: 500
+                fontSize: 'var(--font-size-base)', 
+                color: ingredient.disponible ? "var(--secondary-600)" : "var(--error)",
+                fontWeight: 'var(--font-weight-semibold)'
               }}>
                 {ingredient.disponible ? "Disponible" : "Indisponible"}
               </div>
@@ -348,9 +365,11 @@ export default function IngredientDetailAdmin() {
                 onClick={() => navigate(`/admin/boissons/${b.id}`)}
                 style={{
                   backgroundColor: "white",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 8,
                   padding: 16,
                   boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                  color: "var(--text-on-light-primary)",
                   cursor: "pointer",
                   transition: "box-shadow 0.2s",
                   display: "flex",
@@ -372,7 +391,7 @@ export default function IngredientDetailAdmin() {
                 />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 'var(--font-weight-semibold)', fontSize: 'var(--font-size-lg)', marginBottom: 4 }}>{b.nom}</div>
-                  <div style={{ fontSize: 'var(--font-size-sm)', color: "#6b7280", marginBottom: 4 }}>{b.categorie}</div>
+                  <div style={{ fontSize: 'var(--font-size-sm)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>{b.categorie}</div>
                   <div style={{ fontSize: 'var(--font-size-sm)', color: "var(--primary-600)" }}>
                     {b.quantite} {b.unite}
                   </div>
@@ -406,9 +425,11 @@ export default function IngredientDetailAdmin() {
                 onClick={() => navigate(`/admin/nourriture/${n.id}`)}
                 style={{
                   backgroundColor: "white",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 8,
                   padding: 16,
                   boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                  color: "var(--text-on-light-primary)",
                   cursor: "pointer",
                   transition: "box-shadow 0.2s",
                   display: "flex",
@@ -430,7 +451,7 @@ export default function IngredientDetailAdmin() {
                 />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 'var(--font-weight-semibold)', fontSize: 'var(--font-size-lg)', marginBottom: 4 }}>{n.nom}</div>
-                  <div style={{ fontSize: 'var(--font-size-sm)', color: "#6b7280", marginBottom: 4 }}>{n.categorie}</div>
+                  <div style={{ fontSize: 'var(--font-size-sm)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>{n.categorie}</div>
                   <div style={{ fontSize: 'var(--font-size-sm)', color: "var(--primary-600)" }}>
                     {n.quantite} {n.unite}
                   </div>
@@ -460,7 +481,7 @@ export default function IngredientDetailAdmin() {
       <button
         onClick={() => setIsEditing(!isEditing)}
         className="floating-button"
-        style={{ backgroundColor: isEditing ? "#6c757d" : "var(--secondary-500)" }}
+        style={{ backgroundColor: isEditing ? "var(--bg-secondary)" : "var(--secondary-500)" }}
         title={isEditing ? "Annuler" : "Modifier"}
       >
         {isEditing ? <X size={24} /> : <Edit size={24} />}
@@ -488,3 +509,10 @@ export default function IngredientDetailAdmin() {
     </>
   );
 }
+
+
+
+
+
+
+
