@@ -32,6 +32,10 @@ export default function NourritureDetailAdmin() {
   const [nom, setNom] = useState("");
     const imageUrl = useNourritureImage(nom);
   const [categorie, setCategorie] = useState("");
+  const [tags, setTags] = useState([]);
+  const [origines, setOrigines] = useState([]);
+  const [newTag, setNewTag] = useState("");
+  const [newOrigine, setNewOrigine] = useState("");
   const [commentaire, setCommentaire] = useState("");
   const [lienRecette, setLienRecette] = useState("");
   const [nomSiteRecette, setNomSiteRecette] = useState("");
@@ -85,7 +89,7 @@ export default function NourritureDetailAdmin() {
       setLoading(true);
       try {
         // Charger la nourriture
-        const { data, error } = await supabase.from("nourritures").select("id, nom, categorie, commentaire, lien_recette, recette, actif").eq("id", id).maybeSingle();
+        const { data, error } = await supabase.from("nourritures").select("id, nom, categorie, tags, origine, commentaire, lien_recette, recette, actif").eq("id", id).maybeSingle();
         if (error) throw error;
         if (!data) {
           setError("Nourriture introuvable");
@@ -94,6 +98,8 @@ export default function NourritureDetailAdmin() {
         }
         setNom(data.nom || "");
         setCategorie(data.categorie || "");
+        setTags(Array.isArray(data.tags) ? data.tags : []);
+        setOrigines(Array.isArray(data.origine) ? data.origine : []);
         setCommentaire(data.commentaire || "");
         setLienRecette(data.lien_recette || "");
         setNomSiteRecette(data.recette || "");
@@ -165,6 +171,10 @@ export default function NourritureDetailAdmin() {
     };
   }, [id]);
 
+  const sanitizeArray = (values) => (
+    Array.isArray(values) ? values.map((v) => String(v || "").trim()).filter(Boolean) : []
+  );
+
   async function handleSave() {
     setError(null);
     setLoading(true);
@@ -176,10 +186,13 @@ export default function NourritureDetailAdmin() {
       return;
     }
 
+    const cleanTags = sanitizeArray(tags);
+    const cleanOrigines = sanitizeArray(origines);
+
     try {
       if (id === "new") {
         const { error } = await supabase.from("nourritures").insert([
-          { nom, categorie, commentaire, lien_recette: lienRecette, recette: nomSiteRecette, actif }
+          { nom, categorie, tags: cleanTags, origine: cleanOrigines, commentaire, lien_recette: lienRecette, recette: nomSiteRecette, actif }
         ]).select().maybeSingle();
         if (error) throw error;
         // Retour à la page précédente après création
@@ -187,7 +200,7 @@ export default function NourritureDetailAdmin() {
       } else {
         const { data, error } = await supabase
           .from("nourritures")
-          .update({ nom, categorie, commentaire, lien_recette: lienRecette, recette: nomSiteRecette, actif })
+          .update({ nom, categorie, tags: cleanTags, origine: cleanOrigines, commentaire, lien_recette: lienRecette, recette: nomSiteRecette, actif })
           .eq("id", id)
           .select()
           .maybeSingle();
@@ -196,6 +209,8 @@ export default function NourritureDetailAdmin() {
           // Rafraîchit l'état local pour refléter la valeur DB
           setNom(data.nom || "");
           setCategorie(data.categorie || "");
+          setTags(Array.isArray(data.tags) ? data.tags : cleanTags);
+          setOrigines(Array.isArray(data.origine) ? data.origine : cleanOrigines);
           setCommentaire(data.commentaire || "");
           setLienRecette(data.lien_recette || "");
           setNomSiteRecette(data.recette || "");
@@ -448,6 +463,44 @@ export default function NourritureDetailAdmin() {
           {!isEditing && categorie && (
             <div className="type-indicator type-indicator-standard">{categorie}</div>
           )}
+          {!isEditing && (tags.length > 0 || origines.length > 0) && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: 8 }}>
+              {tags.map((item, idx) => (
+                item && (
+                  <span
+                    key={`tag-${idx}`}
+                    style={{
+                      padding: '4px 12px',
+                      background: 'var(--primary-100)',
+                      color: 'var(--primary-700)',
+                      borderRadius: 'var(--border-radius-sm)',
+                      fontSize: '0.85rem',
+                      fontWeight: 'var(--font-weight-medium)'
+                    }}
+                  >
+                    {item}
+                  </span>
+                )
+              ))}
+              {origines.map((item, idx) => (
+                item && (
+                  <span
+                    key={`origine-${idx}`}
+                    style={{
+                      padding: '4px 12px',
+                      background: 'var(--secondary-50)',
+                      color: 'var(--secondary-700)',
+                      borderRadius: 'var(--border-radius-sm)',
+                      fontSize: '0.85rem',
+                      fontWeight: 'var(--font-weight-medium)'
+                    }}
+                  >
+                    {item}
+                  </span>
+                )
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -565,6 +618,141 @@ export default function NourritureDetailAdmin() {
               </div>
             )}
 
+            {isEditing && (
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: "block", fontWeight: 'var(--font-weight-bold)', marginBottom: 5, color: "#666", fontSize: 'var(--font-size-base)' }}>Tags</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: 10 }}>
+                  {tags.length > 0 ? (
+                    tags.map((item, idx) => (
+                      item && (
+                        <span
+                          key={`tag-edit-${idx}`}
+                          style={{
+                            padding: '4px 12px',
+                            background: 'var(--primary-100)',
+                            color: 'var(--primary-700)',
+                            borderRadius: 'var(--border-radius-sm)',
+                            fontSize: 'var(--font-size-base)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 6
+                          }}
+                        >
+                          {item}
+                          <button
+                            onClick={() => setTags(tags.filter((_, i) => i !== idx))}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: 'var(--primary-700)',
+                              cursor: 'pointer',
+                              padding: 0,
+                              fontSize: 'var(--font-size-lg)',
+                              lineHeight: 1
+                            }}
+                            title="Retirer"
+                          >
+                            +
+                          </button>
+                        </span>
+                      )
+                    ))
+                  ) : (
+                    <span style={{ fontStyle: 'italic', color: '#999', fontSize: 'var(--font-size-base)' }}>Aucun tag</span>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <input
+                    type="text"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    placeholder="Nouveau tag"
+                    style={{ flex: 1, padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 5, border: "1px solid #ddd" }}
+                  />
+                  <button
+                    onClick={() => {
+                      const next = newTag.trim();
+                      if (next && !tags.includes(next)) {
+                        setTags([...tags, next]);
+                      }
+                      setNewTag("");
+                    }}
+                    style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 5, cursor: "pointer" }}
+                  >
+                    Ajouter
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {isEditing && (
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ display: "block", fontWeight: 'var(--font-weight-bold)', marginBottom: 5, color: "#666", fontSize: 'var(--font-size-base)' }}>Origines</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: 10 }}>
+                  {origines.length > 0 ? (
+                    origines.map((item, idx) => (
+                      item && (
+                        <span
+                          key={`origine-edit-${idx}`}
+                          style={{
+                            padding: '4px 12px',
+                            background: 'var(--secondary-50)',
+                            color: 'var(--secondary-700)',
+                            borderRadius: 'var(--border-radius-sm)',
+                            fontSize: 'var(--font-size-base)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 6
+                          }}
+                        >
+                          {item}
+                          <button
+                            onClick={() => setOrigines(origines.filter((_, i) => i !== idx))}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: 'var(--secondary-700)',
+                              cursor: 'pointer',
+                              padding: 0,
+                              fontSize: 'var(--font-size-lg)',
+                              lineHeight: 1
+                            }}
+                            title="Retirer"
+                          >
+                            +
+                          </button>
+                        </span>
+                      )
+                    ))
+                  ) : (
+                    <span style={{ fontStyle: 'italic', color: '#999', fontSize: 'var(--font-size-base)' }}>Aucune origine</span>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <input
+                    type="text"
+                    value={newOrigine}
+                    onChange={(e) => setNewOrigine(e.target.value)}
+                    placeholder="Nouvelle origine"
+                    style={{ flex: 1, padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 5, border: "1px solid #ddd" }}
+                  />
+                  <button
+                    onClick={() => {
+                      const next = newOrigine.trim();
+                      if (next && !origines.includes(next)) {
+                        setOrigines([...origines, next]);
+                      }
+                      setNewOrigine("");
+                    }}
+                    style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 5, cursor: "pointer" }}
+                  >
+                    Ajouter
+                  </button>
+                </div>
+              </div>
+            )}
             {/* Boutons flottants en mode édition */}
             {isEditing && (
               <div className="floating-action-buttons">
@@ -846,6 +1034,12 @@ export default function NourritureDetailAdmin() {
     </>
   );
 }
+
+
+
+
+
+
 
 
 

@@ -105,44 +105,49 @@ export default function NourritureCard({ nourriture, onClick }) {
           {nourriture.nom}
         </h3>
 
-        {nourriture.profil && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: 'var(--spacing-sm)' }}>
-            {Array.isArray(nourriture.profil) ? (
-              nourriture.profil.map((item, idx) => (
-                item && (
-                  <span 
-                    key={idx} 
-                    style={{
-                      padding: '2px 8px',
-                      background: 'var(--primary-100)',
-                      color: 'var(--primary-700)',
-                      borderRadius: 'var(--border-radius-sm)',
-                      fontSize: '0.75rem',
-                      fontWeight: 500
-                    }}
-                  >
-                    {item}
-                  </span>
-                )
-              ))
-            ) : (
-              Object.entries(nourriture.profil).map(([key, value]) => (
-                value && (
-                  <span 
-                    key={key} 
-                    style={{
-                      padding: '2px 8px',
-                      background: 'var(--primary-100)',
-                      color: 'var(--primary-700)',
-                      borderRadius: 'var(--border-radius-sm)',
-                      fontSize: 'var(--font-size-sm)',
-                      fontWeight: 'var(--font-weight-medium)'
-                    }}
-                  >
-                    {key}: {value}
-                  </span>
-                )
-              ))
+        {(Array.isArray(nourriture.tags) || Array.isArray(nourriture.origine)) && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: 'var(--spacing-sm)' }}>
+            {Array.isArray(nourriture.tags) && nourriture.tags.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {nourriture.tags.map((item, idx) => (
+                  item && (
+                    <span
+                      key={`tag-${idx}`}
+                      style={{
+                        padding: '2px 8px',
+                        background: 'var(--primary-100)',
+                        color: 'var(--primary-700)',
+                        borderRadius: 'var(--border-radius-sm)',
+                        fontSize: '0.75rem',
+                        fontWeight: 500
+                      }}
+                    >
+                      {item}
+                    </span>
+                  )
+                ))}
+              </div>
+            )}
+            {Array.isArray(nourriture.origine) && nourriture.origine.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {nourriture.origine.map((item, idx) => (
+                  item && (
+                    <span
+                      key={`origine-${idx}`}
+                      style={{
+                        padding: '2px 8px',
+                        background: 'var(--secondary-50)',
+                        color: 'var(--secondary-700)',
+                        borderRadius: 'var(--border-radius-sm)',
+                        fontSize: '0.75rem',
+                        fontWeight: 500
+                      }}
+                    >
+                      {item}
+                    </span>
+                  )
+                ))}
+              </div>
             )}
           </div>
         )}

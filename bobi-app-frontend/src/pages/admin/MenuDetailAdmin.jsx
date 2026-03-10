@@ -80,7 +80,7 @@ export default function MenuDetailAdmin() {
 
       // Charger toutes les nourritures
       const { data: nourritures, error: nErr } = await supabase
-        .from("nourriture")
+        .from("nourritures")
         .select("id, nom, categorie")
         .order("nom");
 

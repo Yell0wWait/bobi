@@ -18,7 +18,7 @@ export default function NourritureAdmin() {
     async function fetchNourritures() {
       const { data, error } = await supabase
         .from("nourritures")
-        .select("id, nom, categorie, commentaire, profil, actif")
+        .select("id, nom, categorie, commentaire, tags, origine, actif")
         .order("nom", { ascending: true });
 
       if (error) {
@@ -55,7 +55,9 @@ export default function NourritureAdmin() {
     if (searchTerm) {
       filtered = filtered.filter(n =>
         n.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (n.commentaire && n.commentaire.toLowerCase().includes(searchTerm.toLowerCase()))
+        (n.commentaire && n.commentaire.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (Array.isArray(n.tags) && n.tags.join(" ").toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (Array.isArray(n.origine) && n.origine.join(" ").toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
