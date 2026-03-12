@@ -57,9 +57,14 @@ export default function NourritureDetailAdmin() {
   const [newPreparation, setNewPreparation] = useState({ ordre: "", description: "" });
   const [editingPreparation, setEditingPreparation] = useState(null);
 
+  // Variantes
+  const [variantes, setVariantes] = useState([]);
+  const [selectedVariante, setSelectedVariante] = useState("");
+
   // Dropdowns pour catégories
   const [uniqueCategories, setUniqueCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
+  const [allNourritures, setAllNourritures] = useState([]);
   
   useEffect(() => {
     let isMounted = true;
@@ -84,6 +89,23 @@ export default function NourritureDetailAdmin() {
       if (isMounted) setPreparations(prepData || []);
     }
 
+    async function fetchVariantes() {
+      const { data: varData, error: varErr } = await supabase
+        .from("nourritures_variantes")
+        .select(`
+          id,
+          variante:variante_id(
+            id,
+            nom,
+            categorie,
+            actif
+          )
+        `)
+        .eq("nourritures_id", id);
+      if (varErr) throw varErr;
+      if (isMounted) setVariantes(varData || []);
+    }
+
     async function load() {
       if (!id || id === "new") return;
       setLoading(true);
@@ -106,7 +128,7 @@ export default function NourritureDetailAdmin() {
         setActif(data.actif ?? true);
 
         // Charger les ingrédients et étapes de préparation
-        await Promise.all([fetchIngredients(), fetchPreparations()]);
+        await Promise.all([fetchIngredients(), fetchPreparations(), fetchVariantes()]);
       } catch (err) {
         console.error(err);
         setError(err.message || "Erreur lors du chargement");
@@ -135,7 +157,7 @@ export default function NourritureDetailAdmin() {
           .select("id, nom, categorie")
           .order("nom", { ascending: true });
         if (error) throw error;
-        
+        setAllNourritures(data || []);
         // Extraire catégories uniques
         const cats = [...new Set(data.map(n => n.categorie).filter(Boolean))];
         setUniqueCategories(cats.sort());
@@ -407,6 +429,46 @@ export default function NourritureDetailAdmin() {
       const { error } = await supabase.from("nourritures_preparation").delete().eq("id", prepId);
       if (error) throw error;
       setPreparations(preparations.filter(p => p.id !== prepId));
+    } catch (err) {
+      console.error(err);
+      alert("Erreur lors de la suppression : " + err.message);
+    }
+  }
+
+  async function addVariante() {
+    if (!selectedVariante || !id) return;
+    try {
+      const { error } = await supabase
+        .from("nourritures_variantes")
+        .insert([{ nourritures_id: id, variante_id: selectedVariante }]);
+      if (error) throw error;
+
+      const { data: varData } = await supabase
+        .from("nourritures_variantes")
+        .select(`
+          id,
+          variante:variante_id(
+            id,
+            nom,
+            categorie,
+            actif
+          )
+        `)
+        .eq("nourritures_id", id);
+      setVariantes(varData || []);
+      setSelectedVariante("");
+    } catch (err) {
+      console.error(err);
+      alert("Erreur lors de l'ajout : " + err.message);
+    }
+  }
+
+  async function removeVariante(varianteId) {
+    if (!confirm("Supprimer cette variante ?")) return;
+    try {
+      const { error } = await supabase.from("nourritures_variantes").delete().eq("id", varianteId);
+      if (error) throw error;
+      setVariantes(variantes.filter(v => v.id !== varianteId));
     } catch (err) {
       console.error(err);
       alert("Erreur lors de la suppression : " + err.message);
@@ -769,6 +831,71 @@ export default function NourritureDetailAdmin() {
           </div>
       </div>
 
+      {/* Section Variantes */}
+      {id !== "new" && (
+        <div style={{ marginTop: 40, maxWidth: 800 }}>
+          <h2>Variantes</h2>
+          
+          {variantes.length === 0 ? (
+            <p style={{ fontStyle: "italic", color: "#888" }}>Aucune variante définie.</p>
+          ) : (
+            <ul style={{ marginBottom: 16, paddingLeft: 0, listStyleType: "none" }}>
+              {variantes.map((v) => (
+                <li key={v.id} style={{ marginBottom: 8 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <a
+                      href={`/admin/nourriture/${v.variante?.id}`}
+                      style={{
+                        color: v.variante?.actif ? "var(--secondary-500)" : "var(--text-tertiary)",
+                        textDecoration: "none",
+                        fontStyle: v.variante?.actif ? "normal" : "italic"
+                      }}
+                      onMouseEnter={(e) => e.target.style.textDecoration = "underline"}
+                      onMouseLeave={(e) => e.target.style.textDecoration = "none"}
+                    >
+                      {v.variante?.nom}
+                      {v.variante?.categorie && <span style={{ color: "var(--text-secondary)", fontSize: 'var(--font-size-base)' }}> ({v.variante.categorie})</span>}
+                    </a>
+                    {isEditing && (
+                      <button onClick={() => removeVariante(v.id)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", flexShrink: 0, marginLeft: 8, display: "flex", alignItems: "center", justifyContent: "center" }} title="Supprimer">
+                        <Trash2 size={14} />
+                      </button>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {isEditing && (
+            <div style={{ padding: 15, backgroundColor: "#f9f9f9", borderRadius: 8 }}>
+              <h3 style={{ marginTop: 0 }}>Ajouter une variante</h3>
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap" }}>
+                <div style={{ flex: 1, minWidth: 300 }}>
+                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Nourriture variante</label>
+                  <select
+                    value={selectedVariante}
+                    onChange={(e) => setSelectedVariante(e.target.value)}
+                    style={{ width: "100%", padding: 8 }}
+                  >
+                    <option value="">-- Sélectionner --</option>
+                    {allNourritures
+                      .filter(n => n.id !== id && !variantes.some(v => v.variante?.id === n.id))
+                      .map(n => (
+                        <option key={n.id} value={n.id}>
+                          {n.nom} {n.categorie ? `(${n.categorie})` : ""}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <button onClick={addVariante} style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer" }}>
+                  +
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       {/* Section Ingrédients */}
       {id !== "new" && (
         <div style={{ marginTop: 40, maxWidth: 800 }}>
@@ -1034,6 +1161,31 @@ export default function NourritureDetailAdmin() {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
