@@ -101,7 +101,7 @@ export default function NourritureDetailAdmin() {
             actif
           )
         `)
-        .eq("nourritures_id", id);
+        .eq("nourriture_id", id);
       if (varErr) throw varErr;
       if (isMounted) setVariantes(varData || []);
     }
@@ -440,7 +440,7 @@ export default function NourritureDetailAdmin() {
     try {
       const { error } = await supabase
         .from("nourritures_variantes")
-        .insert([{ nourritures_id: id, variante_id: selectedVariante }]);
+        .insert([{ nourriture_id: id, variante_id: selectedVariante }]);
       if (error) throw error;
 
       const { data: varData } = await supabase
@@ -454,7 +454,7 @@ export default function NourritureDetailAdmin() {
             actif
           )
         `)
-        .eq("nourritures_id", id);
+        .eq("nourriture_id", id);
       setVariantes(varData || []);
       setSelectedVariante("");
     } catch (err) {
