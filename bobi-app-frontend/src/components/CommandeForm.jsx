@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../services/supabaseClient";
+import { toLocalTimestamp } from "../services/dateService";
 
 export default function CommandeForm({ boissonId }) {
   const [degustateur, setDegustateur] = useState("");
@@ -10,7 +11,14 @@ export default function CommandeForm({ boissonId }) {
     e.preventDefault();
     const { data, error } = await supabase
       .from("commandes")
-      .insert([{ boisson_id: boissonId, Degustateur: degustateur, Note: note, Commentaire: commentaire, Statut: "Commandé" }]);
+      .insert([{
+        boisson_id: boissonId,
+        Degustateur: degustateur,
+        Note: note,
+        Commentaire: commentaire,
+        Statut: "Commandé",
+        date_commande: toLocalTimestamp()
+      }]);
     
     if (error) console.log("Erreur:", error);
     else console.log("Commande passée:", data);
@@ -25,3 +33,4 @@ export default function CommandeForm({ boissonId }) {
     </form>
   );
 }
+

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import { useBoissonImage } from "../../hooks/useImage";
 import { toPascalCase } from "../../services/imageService";
+import { toLocalDateYYYYMMDD, toLocalTimestamp } from "../../services/dateService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import { Edit, X, Save, Trash2, Plus, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Check, ShoppingCart, Download } from 'lucide-react';
@@ -234,7 +235,8 @@ export default function BoissonDetailAdmin() {
       const { error } = await supabase.from("commandes").insert({
         boisson_id: id,
         degustateur_secret_token: adminId,
-        statut: "Commandé"
+        statut: "Commandé",
+        date_commande: toLocalTimestamp(),
       });
 
       if (error) throw error;
@@ -658,13 +660,8 @@ export default function BoissonDetailAdmin() {
   function getCommandeImageUrl(commande, dateCreated) {
     if (!commande.boisson_nom || !commande.guest_pseudo || !dateCreated) return null;
     
-    let dateStr;
-    if (typeof dateCreated === 'string' && dateCreated.includes('-')) {
-      dateStr = dateCreated.split('T')[0].replace(/-/g, '');
-    } else {
-      const date = new Date(dateCreated);
-      dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
-    }
+    const dateStr = toLocalDateYYYYMMDD(dateCreated);
+    if (!dateStr) return null;
     
     const toPascalCaseLocal = (text) => {
       const normalized = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');

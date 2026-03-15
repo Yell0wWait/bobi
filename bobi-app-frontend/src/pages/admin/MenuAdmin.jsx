@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
+import { toLocalTimestamp } from "../../services/dateService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import { Trash2, Plus, Calendar, Copy, Wine, Utensils, ThumbsUp, ThumbsDown, Search, X } from 'lucide-react';
@@ -83,11 +84,11 @@ export default function MenuAdmin() {
       if (editingId) {
         const { error } = await supabase
           .from("menus")
-          .update({ ...formData, updated_at: new Date().toISOString() })
+          .update({ ...formData, updated_at: toLocalTimestamp() })
           .eq("id", editingId);
         if (error) throw error;
       } else {
-        const now = new Date().toISOString();
+        const now = toLocalTimestamp();
         const payload = {
           ...formData,
           created_at: now,

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import { useBoissonImage } from "../../hooks/useImage";
 import { toPascalCase } from "../../services/imageService";
+import { toLocalDateYYYYMMDD, toLocalTimestamp } from "../../services/dateService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import { ShoppingCart, Star, StarHalf, Wine, ThumbsUp, ThumbsDown } from 'lucide-react';
@@ -132,14 +133,8 @@ export default function BoissonDetailInvite() {
     if (!commande?.guest_pseudo || !boisson?.nom || !dateCreated) return null;
 
     const pseudo = commande.guest_pseudo;
-    let dateStr;
-
-    if (typeof dateCreated === "string" && dateCreated.includes("-")) {
-      dateStr = dateCreated.split("T")[0].replace(/-/g, "");
-    } else {
-      const date = new Date(dateCreated);
-      dateStr = date.toISOString().split("T")[0].replace(/-/g, "");
-    }
+    const dateStr = toLocalDateYYYYMMDD(dateCreated);
+    if (!dateStr) return null;
 
     const fileName = `${dateStr}_${toPascalCase(pseudo)}_${toPascalCase(boisson.nom)}.jpg`;
     const { data } = supabase.storage
@@ -160,6 +155,7 @@ export default function BoissonDetailInvite() {
         boisson_id: id,
         degustateur_secret_token: secretToken,
         statut: "Commandé",
+        date_commande: toLocalTimestamp(),
       });
 
       if (error) throw error;

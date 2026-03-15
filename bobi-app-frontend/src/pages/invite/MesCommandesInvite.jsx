@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../services/supabaseClient";
+import { toLocalDateYYYYMMDD } from "../../services/dateService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import { Star, StarHalf, CheckCircle, Clock, Wine, RefreshCw, Search, X } from 'lucide-react';
@@ -36,13 +37,8 @@ export default function MesCommandesInvite({ secretToken }) {
   function getCommandeImageUrl(commande, dateCreated) {
     if (!commande.boisson_nom || !commande.guest_pseudo || !dateCreated) return null;
     
-    let dateStr;
-    if (typeof dateCreated === 'string' && dateCreated.includes('-')) {
-      dateStr = dateCreated.split('T')[0].replace(/-/g, '');
-    } else {
-      const date = new Date(dateCreated);
-      dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
-    }
+    const dateStr = toLocalDateYYYYMMDD(dateCreated);
+    if (!dateStr) return null;
     
     const toPascalCase = (text) => {
       const normalized = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');

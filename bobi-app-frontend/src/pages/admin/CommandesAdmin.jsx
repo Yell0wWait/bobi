@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../services/supabaseClient";
 import { notificationService } from "../../services/notificationService";
+import { toLocalDateInputValue, toLocalDateYYYYMMDD } from "../../services/dateService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import { Star, StarHalf, Trash2, Edit, CheckCircle, Clock, Wine, RefreshCw, Search, X, Bell } from 'lucide-react';
@@ -73,17 +74,9 @@ export default function CommandesAdmin() {
     
     // Format: YYYYMMDD_degustateur_boisson.jpg
     // Extraire la date directement sans conversion UTC pour éviter les décalages de fuseau horaire
-    let dateStr;
-    if (typeof dateCreated === 'string' && dateCreated.includes('-')) {
-      // Si c'est déjà au format YYYY-MM-DD ou YYYY-MM-DD HH:MM:SS
-      dateStr = dateCreated.split('T')[0].replace(/-/g, ''); // YYYYMMDD
-    } else {
-      // Fallback sur l'ancienne méthode
-      const date = new Date(dateCreated);
-      dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
-    }
-    
-    // Normaliser en PascalCase (première lettre de chaque mot en majuscule, sans espaces ni accents)
+    const dateStr = toLocalDateYYYYMMDD(dateCreated);
+    if (!dateStr) return null;
+
     const toPascalCase = (text) => {
       const normalized = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       return normalized
@@ -239,7 +232,7 @@ export default function CommandesAdmin() {
       id: commande.id,
       boisson_id: commande.boisson_id,
       // degustateur_secret_token: commande.degustateur_secret_token, // colonne supprimée
-      date_commande: commande.date_commande ? new Date(commande.date_commande).toISOString().split('T')[0] : '',
+      date_commande: toLocalDateInputValue(commande.date_commande),
       note: commande.note || 0
     });
   }
@@ -585,3 +578,5 @@ export default function CommandesAdmin() {
     </>
   );
 }
+
+
