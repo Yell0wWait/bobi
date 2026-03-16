@@ -103,7 +103,7 @@ RECIPE_SCHEMA = {
         "source": {
             "type": "object",
             "additionalProperties": False,
-            "required": [],
+            "required": ["url", "name"],
             "properties": {
                 "url": {"type": "string"},
                 "name": {"type": "string"},
@@ -117,11 +117,11 @@ RECIPE_SCHEMA = {
                 "required": ["name_raw"],
                 "properties": {
                     "name_raw": {"type": "string"},
-                    "quantity": {"type": "number"},
-                    "quantity_text": {"type": "string"},
-                    "unit": {"type": "string"},
-                    "notes": {"type": "string"},
-                    "group": {"type": "string"},
+                    "quantity": {"type": ["number", "null"]},
+                    "quantity_text": {"type": ["string", "null"]},
+                    "unit": {"type": ["string", "null"]},
+                    "notes": {"type": ["string", "null"]},
+                    "group": {"type": ["string", "null"]},
                 },
             },
         },
@@ -137,7 +137,7 @@ RECIPE_SCHEMA = {
                 },
             },
         },
-        "recipe_notes": {"type": "string"},
+        "recipe_notes": {"type": ["string", "null"]},
     },
 }
 
