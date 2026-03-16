@@ -91,55 +91,53 @@ class CommitRequest(BaseModel):
 # ----------------------------
 
 
+RECIPE_SCHEMA_NAME = "recipe_extract_v1"
+RECIPE_SCHEMA_STRICT = True
 RECIPE_SCHEMA = {
-    "name": "recipe_extract_v1",
-    "strict": True,
-    "schema": {
-        "type": "object",
-        "additionalProperties": False,
-        "required": ["entity_type", "ingredients", "steps"],
-        "properties": {
-            "entity_type": {"type": "string", "enum": ["boisson", "nourriture"]},
-            "title": {"type": "string"},
-            "source": {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["entity_type", "ingredients", "steps"],
+    "properties": {
+        "entity_type": {"type": "string", "enum": ["boisson", "nourriture"]},
+        "title": {"type": "string"},
+        "source": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": [],
+            "properties": {
+                "url": {"type": "string"},
+                "name": {"type": "string"},
+            },
+        },
+        "ingredients": {
+            "type": "array",
+            "items": {
                 "type": "object",
                 "additionalProperties": False,
-                "required": [],
+                "required": ["name_raw"],
                 "properties": {
-                    "url": {"type": "string"},
-                    "name": {"type": "string"},
+                    "name_raw": {"type": "string"},
+                    "quantity": {"type": "number"},
+                    "quantity_text": {"type": "string"},
+                    "unit": {"type": "string"},
+                    "notes": {"type": "string"},
+                    "group": {"type": "string"},
                 },
             },
-            "ingredients": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "required": ["name_raw"],
-                    "properties": {
-                        "name_raw": {"type": "string"},
-                        "quantity": {"type": "number"},
-                        "quantity_text": {"type": "string"},
-                        "unit": {"type": "string"},
-                        "notes": {"type": "string"},
-                        "group": {"type": "string"},
-                    },
-                },
-            },
-            "steps": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "required": ["order", "text"],
-                    "properties": {
-                        "order": {"type": "integer"},
-                        "text": {"type": "string"},
-                    },
-                },
-            },
-            "recipe_notes": {"type": "string"},
         },
+        "steps": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["order", "text"],
+                "properties": {
+                    "order": {"type": "integer"},
+                    "text": {"type": "string"},
+                },
+            },
+        },
+        "recipe_notes": {"type": "string"},
     },
 }
 
@@ -240,7 +238,9 @@ def call_openai(entity_type: str, content: str, url: Optional[str]) -> Dict[str,
         "text": {
             "format": {
                 "type": "json_schema",
-                "json_schema": RECIPE_SCHEMA,
+                "name": RECIPE_SCHEMA_NAME,
+                "schema": RECIPE_SCHEMA,
+                "strict": RECIPE_SCHEMA_STRICT,
             }
         },
     }
