@@ -286,9 +286,10 @@ export default function Inventaire() {
                 {/* En-tête de catégorie cliquable */}
                 <div 
                   onClick={() => toggleCategory(category)}
+                  className="inventaire-category-header"
                   style={{
                     display: "flex",
-                    alignItems: "left",
+                    alignItems: "center",
                     gap: 8,
                     padding: "4px 16px",
                     backgroundColor: "var(--bg-tertiary)",
@@ -299,8 +300,10 @@ export default function Inventaire() {
                     whiteSpace: "nowrap"
                   }}
                 >
-                  {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
-                  <span>{category}</span>
+                  <span className="inventaire-category-icon">
+                    {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+                  </span>
+                  <span className="inventaire-category-label">{category}</span>
                 </div>
 
                 {/* Liste des items */}

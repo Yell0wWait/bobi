@@ -821,6 +821,26 @@ p {
   color: var(--text-on-light-primary);
 }
 
+.inventaire-category-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.inventaire-category-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.inventaire-category-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .search-container {
