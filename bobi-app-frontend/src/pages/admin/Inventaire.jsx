@@ -213,8 +213,8 @@ export default function Inventaire() {
   return (
     <>
       <Header title="Inventaire" showBackButton={false} />
-      {error && <div style={{ backgroundColor: "var(--secondary-100)", color: "var(--error)", padding: 12, margin: "0 16px 16px", borderRadius: 4, fontSize: 14 }}>{error}</div>}
-      <div style={{ paddingBottom: 80 }}>
+      {error && <div style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--error)", border: "1px solid var(--error)", padding: 12, margin: "0 16px 16px", borderRadius: 4, fontSize: 14 }}>{error}</div>}
+      <div className="inventaire-page" style={{ paddingBottom: 80 }}>
         <div style={{ padding: "16px" }}>
 
         {/* Barre de recherche extensible */}
@@ -291,8 +291,8 @@ export default function Inventaire() {
                     alignItems: "left",
                     gap: 8,
                     padding: "4px 16px",
-                    backgroundColor: "var(--secondary-100)",
-                    color: "var(--secondary-800)",
+                    backgroundColor: "var(--bg-tertiary)",
+                    color: "var(--text-primary)",
                     cursor: "pointer",
                     fontWeight: 'var(--font-weight-semibold)',
                     fontSize: 'var(--font-size-base)',
@@ -321,7 +321,7 @@ export default function Inventaire() {
                             style={{ 
                               padding: "8px 16px", 
                               fontSize: 'var(--font-size-lg)', 
-                              color: item.disponible ? "var(--text-primary)" : "var(--error)",
+                              color: item.disponible ? "var(--text-primary)" : "var(--text-tertiary)",
                               fontStyle: item.disponible ? "normal" : "italic",
                               cursor: "pointer"
                             }}
