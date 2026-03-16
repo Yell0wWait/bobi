@@ -770,57 +770,6 @@ p {
   border-color: var(--secondary-500);
 }
 
-/* Inventaire overrides: keep accents subtle */
-.inventaire-page .search-button {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  border-color: var(--border-color);
-}
-
-.inventaire-page .search-input {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  border-color: var(--border-color);
-}
-
-.inventaire-page .search-input::placeholder {
-  color: var(--text-tertiary);
-}
-
-.inventaire-page .search-close-button {
-  background-color: var(--bg-tertiary);
-  color: var(--text-primary);
-}
-
-.inventaire-page .filter-button {
-  background-color: transparent;
-  color: var(--text-secondary);
-  border-color: var(--border-color);
-}
-
-.inventaire-page .filter-button:hover {
-  color: var(--text-primary);
-  border-color: var(--text-secondary);
-  background-color: transparent;
-}
-
-.inventaire-page .filter-button.active {
-  background-color: var(--primary-500);
-  color: var(--text-on-light-primary);
-  border-color: var(--primary-500);
-}
-
-.inventaire-page .floating-button,
-.inventaire-page .floating-add-button {
-  background-color: var(--primary-600);
-  color: var(--text-on-light-primary);
-}
-
-.inventaire-page .floating-button svg,
-.inventaire-page .floating-add-button svg {
-  color: var(--text-on-light-primary);
-}
-
 .inventaire-category-header {
   display: flex;
   align-items: center;
