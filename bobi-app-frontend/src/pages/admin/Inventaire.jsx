@@ -208,12 +208,12 @@ export default function Inventaire() {
   );
 
   if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (error) return <p style={{ color: "var(--error)" }}>{error}</p>;
 
   return (
     <>
       <Header title="Inventaire" showBackButton={false} />
-      {error && <div style={{ backgroundColor: "#f8d7da", color: "#721c24", padding: 12, margin: "0 16px 16px", borderRadius: 4, fontSize: 14 }}>{error}</div>}
+      {error && <div style={{ backgroundColor: "var(--secondary-100)", color: "var(--error)", padding: 12, margin: "0 16px 16px", borderRadius: 4, fontSize: 14 }}>{error}</div>}
       <div style={{ paddingBottom: 80 }}>
         <div style={{ padding: "16px" }}>
 
@@ -274,7 +274,7 @@ export default function Inventaire() {
       </button>
 
       {items.length === 0 ? (
-        <p style={{ textAlign: "center", color: "#6b7280", marginTop: 40, padding: "0 16px" }}>Aucun article.</p>
+        <p style={{ textAlign: "center", color: "var(--text-tertiary)", marginTop: 40, padding: "0 16px" }}>Aucun article.</p>
       ) : (
         <div>
           {sortedCategories.map((category) => {
@@ -291,8 +291,8 @@ export default function Inventaire() {
                     alignItems: "left",
                     gap: 8,
                     padding: "4px 16px",
-                    backgroundColor: "#e3f2fd",
-                    color: "#1976d2",
+                    backgroundColor: "var(--secondary-100)",
+                    color: "var(--secondary-800)",
                     cursor: "pointer",
                     fontWeight: 'var(--font-weight-semibold)',
                     fontSize: 'var(--font-size-base)',
@@ -311,8 +311,8 @@ export default function Inventaire() {
                         <tr
                           key={item.id}
                           style={{
-                            backgroundColor: "white",
-                            borderBottom: "1px solid #e5e7eb"
+                            backgroundColor: "var(--bg-secondary)",
+                            borderBottom: "1px solid var(--border-color)"
                           }}
                         >
                           {/* Nom de l'ingrédient */}
@@ -321,7 +321,7 @@ export default function Inventaire() {
                             style={{ 
                               padding: "8px 16px", 
                               fontSize: 'var(--font-size-lg)', 
-                              color: item.disponible ? "#111827" : "var(--error)",
+                              color: item.disponible ? "var(--text-primary)" : "var(--error)",
                               fontStyle: item.disponible ? "normal" : "italic",
                               cursor: "pointer"
                             }}
@@ -367,7 +367,7 @@ export default function Inventaire() {
                                 }}
                                 title="Supprimer"
                               >
-                                <Trash2 size={20} color="#6b7280" />
+                                <Trash2 size={20} color="var(--text-tertiary)" />
                               </button>
                             </div>
                           </td>
@@ -405,13 +405,15 @@ export default function Inventaire() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
+            backgroundColor: "var(--bg-secondary)",
             padding: 24,
             borderRadius: 8,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            boxShadow: "var(--shadow-lg)",
             zIndex: 1001,
             width: "90%",
-            maxWidth: 400
+            maxWidth: 400,
+            color: "var(--text-primary)",
+            border: "1px solid var(--border-color)"
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 style={{ marginTop: 0, marginBottom: 0 }}>Modifier l'ingrédient</h2>
@@ -430,11 +432,11 @@ export default function Inventaire() {
                 }}
                 title="Fermer"
               >
-                <X size={24} color="#6b7280" />
+                <X size={24} color="var(--text-tertiary)" />
               </button>
             </div>
             
-            {error && <p style={{ color: "#dc3545", marginBottom: 16, fontSize: 14 }}>{error}</p>}
+            {error && <p style={{ color: "var(--error)", marginBottom: 16, fontSize: 14 }}>{error}</p>}
             
             <div style={{ marginBottom: 16 }}>
               <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Nom</label>
@@ -445,10 +447,12 @@ export default function Inventaire() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 4,
                   fontSize: 15,
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)"
                 }}
               />
             </div>
@@ -470,9 +474,11 @@ export default function Inventaire() {
                     style={{
                       flex: 1,
                       padding: "8px 12px",
-                      border: "1px solid #ddd",
+                      border: "1px solid var(--border-color)",
                       borderRadius: 4,
-                      fontSize: 15
+                      fontSize: 15,
+                      backgroundColor: "var(--bg-primary)",
+                      color: "var(--text-primary)"
                     }}
                   />
                   <button
@@ -482,7 +488,8 @@ export default function Inventaire() {
                     }}
                     style={{
                       padding: "8px 12px",
-                      backgroundColor: "#f0f0f0",
+                      backgroundColor: "var(--bg-tertiary)",
+                      color: "var(--text-primary)",
                       border: "none",
                       borderRadius: 4,
                       cursor: "pointer",
@@ -506,9 +513,11 @@ export default function Inventaire() {
                     style={{
                       flex: 1,
                       padding: "8px 12px",
-                      border: "1px solid #ddd",
+                      border: "1px solid var(--border-color)",
                       borderRadius: 4,
-                      fontSize: 15
+                      fontSize: 15,
+                      backgroundColor: "var(--bg-primary)",
+                      color: "var(--text-primary)"
                     }}
                   >
                     <option value="">-- Sélectionner --</option>
@@ -531,10 +540,12 @@ export default function Inventaire() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 4,
                   fontSize: 15,
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)"
                 }}
                 placeholder="0.00"
               />
@@ -549,10 +560,12 @@ export default function Inventaire() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 4,
                   fontSize: 15,
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)"
                 }}
               />
             </div>
@@ -566,10 +579,12 @@ export default function Inventaire() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 4,
                   fontSize: 15,
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)"
                 }}
               />
             </div>
@@ -632,17 +647,19 @@ export default function Inventaire() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
+            backgroundColor: "var(--bg-secondary)",
             padding: 24,
             borderRadius: 8,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            boxShadow: "var(--shadow-lg)",
             zIndex: 1001,
             width: "90%",
-            maxWidth: 400
+            maxWidth: 400,
+            color: "var(--text-primary)",
+            border: "1px solid var(--border-color)"
           }}>
             <h2 style={{ marginTop: 0, marginBottom: 20 }}>Ajouter un ingrédient</h2>
             
-            {error && <p style={{ color: "#dc3545", marginBottom: 16, fontSize: 14 }}>{error}</p>}
+            {error && <p style={{ color: "var(--error)", marginBottom: 16, fontSize: 14 }}>{error}</p>}
             
             <div style={{ marginBottom: 16 }}>
               <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Nom</label>
@@ -653,9 +670,11 @@ export default function Inventaire() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 4,
-                  fontSize: 15
+                  fontSize: 15,
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)"
                 }}
               />
             </div>
@@ -677,9 +696,11 @@ export default function Inventaire() {
                     style={{
                       flex: 1,
                       padding: "8px 12px",
-                      border: "1px solid #ddd",
+                      border: "1px solid var(--border-color)",
                       borderRadius: 4,
-                      fontSize: 15
+                      fontSize: 15,
+                      backgroundColor: "var(--bg-primary)",
+                      color: "var(--text-primary)"
                     }}
                   />
                   <button
@@ -689,7 +710,8 @@ export default function Inventaire() {
                     }}
                     style={{
                       padding: "8px 12px",
-                      backgroundColor: "#f0f0f0",
+                      backgroundColor: "var(--bg-tertiary)",
+                      color: "var(--text-primary)",
                       border: "none",
                       borderRadius: 4,
                       cursor: "pointer",
@@ -713,9 +735,11 @@ export default function Inventaire() {
                     style={{
                       flex: 1,
                       padding: "8px 12px",
-                      border: "1px solid #ddd",
+                      border: "1px solid var(--border-color)",
                       borderRadius: 4,
-                      fontSize: 15
+                      fontSize: 15,
+                      backgroundColor: "var(--bg-primary)",
+                      color: "var(--text-primary)"
                     }}
                   >
                     <option value="">-- Sélectionner --</option>
@@ -738,9 +762,11 @@ export default function Inventaire() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 4,
-                  fontSize: 15
+                  fontSize: 15,
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)"
                 }}
                 placeholder="0.00"
               />
@@ -755,9 +781,11 @@ export default function Inventaire() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 4,
-                  fontSize: 15
+                  fontSize: 15,
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)"
                 }}
               />
             </div>
@@ -771,9 +799,11 @@ export default function Inventaire() {
                 style={{
                   width: "100%",
                   padding: "8px 12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border-color)",
                   borderRadius: 4,
-                  fontSize: 15
+                  fontSize: 15,
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-primary)"
                 }}
               />
             </div>
@@ -797,7 +827,8 @@ export default function Inventaire() {
                 }}
                 style={{
                   padding: "8px 16px",
-                  backgroundColor: "#f0f0f0",
+                  backgroundColor: "var(--bg-tertiary)",
+                  color: "var(--text-primary)",
                   border: "none",
                   borderRadius: 4,
                   cursor: "pointer",
@@ -811,7 +842,7 @@ export default function Inventaire() {
                 style={{
                   padding: "8px 16px",
                   backgroundColor: "var(--primary-600)",
-                  color: "white",
+                  color: "var(--text-on-light-primary)",
                   border: "none",
                   borderRadius: 4,
                   cursor: "pointer",
