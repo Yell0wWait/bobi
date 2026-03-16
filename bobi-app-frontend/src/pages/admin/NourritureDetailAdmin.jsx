@@ -5,7 +5,8 @@ import { useNourritureImage } from "../../hooks/useImage";
 import { toPascalCase } from "../../services/imageService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
-import { Edit, X, Save, Trash2, Plus, ThumbsUp, ThumbsDown, Check } from 'lucide-react';
+import RecipeImportModal from "../../components/RecipeImportModal";
+import { Edit, X, Save, Trash2, Plus, ThumbsUp, ThumbsDown, Check, Download } from 'lucide-react';
 
 // Ajouter les animations CSS
 const style = document.createElement('style');
@@ -45,6 +46,7 @@ export default function NourritureDetailAdmin() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
   const [showBobiSuccess, setShowBobiSuccess] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   // Ingrédients
   const [ingredients, setIngredients] = useState([]);
@@ -66,107 +68,113 @@ export default function NourritureDetailAdmin() {
   const [newCategory, setNewCategory] = useState("");
   const [allNourritures, setAllNourritures] = useState([]);
   
-  useEffect(() => {
-    let isMounted = true;
+  async function fetchIngredients() {
+    const { data: ingData, error: ingErr } = await supabase
+      .from("nourritures_ingredients")
+      .select("id, ingredient_id, quantite, unite")
+      .eq("nourriture_id", id)
+      .order("id", { ascending: true });
+    if (ingErr) throw ingErr;
+    setIngredients(ingData || []);
+  }
 
-    async function fetchIngredients() {
-      const { data: ingData, error: ingErr } = await supabase
-        .from("nourritures_ingredients")
-        .select("id, ingredient_id, quantite, unite")
-        .eq("nourriture_id", id)
-        .order("id", { ascending: true });
-      if (ingErr) throw ingErr;
-      if (isMounted) setIngredients(ingData || []);
-    }
+  async function fetchPreparations() {
+    const { data: prepData, error: prepErr } = await supabase
+      .from("nourritures_preparation")
+      .select("id, ordre, description")
+      .eq("nourriture_id", id)
+      .order("ordre", { ascending: true });
+    if (prepErr) throw prepErr;
+    setPreparations(prepData || []);
+  }
 
-    async function fetchPreparations() {
-      const { data: prepData, error: prepErr } = await supabase
-        .from("nourritures_preparation")
-        .select("id, ordre, description")
-        .eq("nourriture_id", id)
-        .order("ordre", { ascending: true });
-      if (prepErr) throw prepErr;
-      if (isMounted) setPreparations(prepData || []);
-    }
-
-    async function fetchVariantes() {
-      const { data: varData, error: varErr } = await supabase
-        .from("nourritures_variantes")
-        .select(`
+  async function fetchVariantes() {
+    const { data: varData, error: varErr } = await supabase
+      .from("nourritures_variantes")
+      .select(`
+        id,
+        variante:variante_id(
           id,
-          variante:variante_id(
-            id,
-            nom,
-            categorie,
-            actif
-          )
-        `)
-        .eq("nourriture_id", id);
-      if (varErr) throw varErr;
-      if (isMounted) setVariantes(varData || []);
-    }
+          nom,
+          categorie,
+          actif
+        )
+      `)
+      .eq("nourriture_id", id);
+    if (varErr) throw varErr;
+    setVariantes(varData || []);
+  }
 
-    async function load() {
-      if (!id || id === "new") return;
-      setLoading(true);
-      try {
-        // Charger la nourriture
-        const { data, error } = await supabase.from("nourritures").select("id, nom, categorie, tags, origine, commentaire, lien_recette, recette, actif").eq("id", id).maybeSingle();
-        if (error) throw error;
-        if (!data) {
-          setError("Nourriture introuvable");
-          setLoading(false);
-          return;
-        }
-        setNom(data.nom || "");
-        setCategorie(data.categorie || "");
-        setTags(Array.isArray(data.tags) ? data.tags : []);
-        setOrigines(Array.isArray(data.origine) ? data.origine : []);
-        setCommentaire(data.commentaire || "");
-        setLienRecette(data.lien_recette || "");
-        setNomSiteRecette(data.recette || "");
-        setActif(data.actif ?? true);
-
-        // Charger les ingrédients et étapes de préparation
-        await Promise.all([fetchIngredients(), fetchPreparations(), fetchVariantes()]);
-      } catch (err) {
-        console.error(err);
-        setError(err.message || "Erreur lors du chargement");
-      } finally {
+  async function loadNourritureData() {
+    if (!id || id === "new") return;
+    setLoading(true);
+    try {
+      // Charger la nourriture
+      const { data, error } = await supabase
+        .from("nourritures")
+        .select("id, nom, categorie, tags, origine, commentaire, lien_recette, recette, actif")
+        .eq("id", id)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) {
+        setError("Nourriture introuvable");
         setLoading(false);
+        return;
       }
-    }
+      setNom(data.nom || "");
+      setCategorie(data.categorie || "");
+      setTags(Array.isArray(data.tags) ? data.tags : []);
+      setOrigines(Array.isArray(data.origine) ? data.origine : []);
+      setCommentaire(data.commentaire || "");
+      setLienRecette(data.lien_recette || "");
+      setNomSiteRecette(data.recette || "");
+      setActif(data.actif ?? true);
 
-    async function loadInventaire() {
-      try {
-        const { data, error } = await supabase
-          .from("inventaire")
-          .select("id, nom, categorie")
-          .order("nom", { ascending: true });
-        if (error) throw error;
-        setInventaire(data || []);
-      } catch (err) {
-        console.error(err);
-      }
+      // Charger les ingrédients et étapes de préparation
+      await Promise.all([fetchIngredients(), fetchPreparations(), fetchVariantes()]);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Erreur lors du chargement");
+    } finally {
+      setLoading(false);
     }
+  }
 
-    async function loadAllNourritures() {
-      try {
-        const { data, error } = await supabase
-          .from("nourritures")
-          .select("id, nom, categorie")
-          .order("nom", { ascending: true });
-        if (error) throw error;
-        setAllNourritures(data || []);
-        // Extraire catégories uniques
-        const cats = [...new Set(data.map(n => n.categorie).filter(Boolean))];
-        setUniqueCategories(cats.sort());
-      } catch (err) {
-        console.error(err);
-      }
+  async function loadInventaire() {
+    try {
+      const { data, error } = await supabase
+        .from("inventaire")
+        .select("id, nom, categorie")
+        .order("nom", { ascending: true });
+      if (error) throw error;
+      setInventaire(data || []);
+    } catch (err) {
+      console.error(err);
     }
+  }
 
-    load();
+  async function loadAllNourritures() {
+    try {
+      const { data, error } = await supabase
+        .from("nourritures")
+        .select("id, nom, categorie")
+        .order("nom", { ascending: true });
+      if (error) throw error;
+      setAllNourritures(data || []);
+      // Extraire catégories uniques
+      const cats = [...new Set(data.map(n => n.categorie).filter(Boolean))];
+      setUniqueCategories(cats.sort());
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function refreshNourritureData() {
+    await Promise.all([loadNourritureData(), loadInventaire(), loadAllNourritures()]);
+  }
+
+  useEffect(() => {
+    loadNourritureData();
     loadInventaire();
     loadAllNourritures();
 
@@ -188,7 +196,6 @@ export default function NourritureDetailAdmin() {
     }
 
     return () => {
-      isMounted = false;
       if (channel) supabase.removeChannel(channel);
     };
   }, [id]);
@@ -818,6 +825,15 @@ export default function NourritureDetailAdmin() {
             {/* Boutons flottants en mode édition */}
             {isEditing && (
               <div className="floating-action-buttons">
+                {id !== "new" && (
+                  <button
+                    onClick={() => setShowImportModal(true)}
+                    className="floating-import-button"
+                    title="Importer une recette"
+                  >
+                    <Download size={20} />
+                  </button>
+                )}
                 <button onClick={handleSave} disabled={loading} className="floating-save-button" title={loading ? "Enregistrement..." : "Enregistrer"}>
                   <Save size={20} />
                 </button>
@@ -1157,6 +1173,18 @@ export default function NourritureDetailAdmin() {
           )}
         </div>
       )}
+      <RecipeImportModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        entityType="nourriture"
+        entityId={id}
+        inventory={inventaire}
+        onImported={async () => {
+          await refreshNourritureData();
+          setShowBobiSuccess(true);
+          setTimeout(() => setShowBobiSuccess(false), 2000);
+        }}
+      />
           </div>
     </>
   );

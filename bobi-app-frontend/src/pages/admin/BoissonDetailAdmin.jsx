@@ -6,6 +6,7 @@ import { toPascalCase } from "../../services/imageService";
 import { toLocalDateYYYYMMDD, toLocalTimestamp } from "../../services/dateService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
+import RecipeImportModal from "../../components/RecipeImportModal";
 import { Edit, X, Save, Trash2, Plus, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Check, ShoppingCart, Download } from 'lucide-react';
 
 // Ajouter les animations CSS
@@ -78,142 +79,148 @@ export default function BoissonDetailAdmin() {
 
   // Import depuis URL
   const [showImportModal, setShowImportModal] = useState(false);
-  const [importUrl, setImportUrl] = useState("");
-  const [importLoading, setImportLoading] = useState(false);
-  const [importError, setImportError] = useState(null);
+
+  async function loadBoissonData() {
+    if (!id || id === "new") return;
+    setLoading(true);
+    try {
+      // Charger la boisson
+      const { data, error } = await supabase
+        .from("boissons")
+        .select("id, nom, categorie, commentaire, lien_recette, recette, profil, actif")
+        .eq("id", id)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) {
+        setError("Boisson introuvable");
+        setLoading(false);
+        return;
+      }
+      const boissonName = data.nom || "";
+      setNom(boissonName);
+      setCategorie(data.categorie || "");
+      setCommentaire(data.commentaire || "");
+      setLienRecette(data.lien_recette || "");
+      setNomSiteRecette(data.recette || "");
+      setProfil(data.profil || []);
+      setActif(data.actif ?? true);
+
+      // Charger les ingrédients
+      const { data: ingData, error: ingErr } = await supabase
+        .from("boissons_ingredients")
+        .select("id, ingredient_id, quantite, unite")
+        .eq("boisson_id", id)
+        .order("id", { ascending: true });
+      if (ingErr) throw ingErr;
+      setIngredients(ingData || []);
+
+      // Charger les étapes de préparation
+      const { data: prepData, error: prepErr } = await supabase
+        .from("boissons_preparation")
+        .select("id, ordre, description")
+        .eq("boisson_id", id)
+        .order("ordre", { ascending: true });
+      if (prepErr) throw prepErr;
+      setPreparations(prepData || []);
+
+      // Charger les variantes
+      const { data: varData, error: varErr } = await supabase
+        .from("boissons_variantes")
+        .select(`
+          id,
+          variante:variante_id(
+            id,
+            nom,
+            categorie
+          )
+        `)
+        .eq("boisson_id", id);
+      if (varErr) throw varErr;
+      setVariantes(varData || []);
+
+      // Charger les commandes avec cette boisson
+      const { data: cmdData, error: cmdErr } = await supabase
+        .from("commandes")
+        .select("id, boisson_id, degustateur_secret_token, date_commande, note, statut, commentaire")
+        .eq("boisson_id", id)
+        .order("date_commande", { ascending: false });
+      if (cmdErr) throw cmdErr;
+
+      const cmds = cmdData || [];
+      // Si des commandes existent, récupérer les pseudonymes des dégustateurs
+      let guestMap = {};
+      const tokens = Array.from(new Set(cmds.map(c => c.degustateur_secret_token).filter(Boolean)));
+      if (tokens.length > 0) {
+        const { data: guests, error: guestsErr } = await supabase
+          .from("degustateur")
+          .select("pseudo, secret_token")
+          .in("secret_token", tokens);
+        if (!guestsErr && guests) {
+          guests.forEach(g => (guestMap[g.secret_token] = g.pseudo));
+        }
+      }
+
+      setCommandes(cmds.map(c => ({
+        ...c,
+        guest_pseudo: guestMap[c.degustateur_secret_token] || "Inconnu",
+        boisson_nom: boissonName
+      })));
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Erreur lors du chargement");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function loadInventaire() {
+    try {
+      const { data, error } = await supabase
+        .from("inventaire")
+        .select("id, nom, categorie")
+        .order("nom", { ascending: true });
+      if (error) throw error;
+      setInventaire(data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function loadAllBoissons() {
+    try {
+      const { data, error } = await supabase
+        .from("boissons")
+        .select("id, nom, categorie, profil")
+        .order("nom", { ascending: true });
+      if (error) throw error;
+      setAllBoissons(data || []);
+      
+      // Extraire catégories uniques
+      const cats = [...new Set(data.map(b => b.categorie).filter(Boolean))];
+      setUniqueCategories(cats.sort());
+      
+      // Extraire profils uniques (flatten les arrays)
+      const profils = new Set();
+      data.forEach(b => {
+        if (b.profil && Array.isArray(b.profil)) {
+          b.profil.forEach(p => {
+            if (p && p.trim()) profils.add(p);
+          });
+        }
+      });
+      setUniqueProfils([...profils].sort());
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function refreshBoissonData() {
+    await Promise.all([loadBoissonData(), loadInventaire(), loadAllBoissons()]);
+  }
 
   useEffect(() => {
-    async function load() {
-      if (!id || id === "new") return;
-      setLoading(true);
-      try {
-        // Charger la boisson
-        const { data, error } = await supabase.from("boissons").select("id, nom, categorie, commentaire, lien_recette, recette, profil, actif").eq("id", id).maybeSingle();
-        if (error) throw error;
-        if (!data) {
-          setError("Boisson introuvable");
-          setLoading(false);
-          return;
-        }
-        setNom(data.nom || "");
-        setCategorie(data.categorie || "");
-        setCommentaire(data.commentaire || "");
-        setLienRecette(data.lien_recette || "");
-        setNomSiteRecette(data.recette || "");
-        setProfil(data.profil || []);
-        setActif(data.actif ?? true);
-
-        // Charger les ingrédients
-        const { data: ingData, error: ingErr } = await supabase
-          .from("boissons_ingredients")
-          .select("id, ingredient_id, quantite, unite")
-          .eq("boisson_id", id)
-          .order("id", { ascending: true });
-        if (ingErr) throw ingErr;
-        setIngredients(ingData || []);
-
-        // Charger les étapes de préparation
-        const { data: prepData, error: prepErr } = await supabase
-          .from("boissons_preparation")
-          .select("id, ordre, description")
-          .eq("boisson_id", id)
-          .order("ordre", { ascending: true });
-        if (prepErr) throw prepErr;
-        setPreparations(prepData || []);
-
-        // Charger les variantes
-        const { data: varData, error: varErr } = await supabase
-          .from("boissons_variantes")
-          .select(`
-            id,
-            variante:variante_id(
-              id,
-              nom,
-              categorie
-            )
-          `)
-          .eq("boisson_id", id);
-        if (varErr) throw varErr;
-        setVariantes(varData || []);
-
-        // Charger les commandes avec cette boisson
-        const { data: cmdData, error: cmdErr } = await supabase
-          .from("commandes")
-          .select("id, boisson_id, degustateur_secret_token, date_commande, note, statut, commentaire")
-          .eq("boisson_id", id)
-          .order("date_commande", { ascending: false });
-        if (cmdErr) throw cmdErr;
-
-        const cmds = cmdData || [];
-        // Si des commandes existent, récupérer les pseudonymes des dégustateurs
-        let guestMap = {};
-        const tokens = Array.from(new Set(cmds.map(c => c.degustateur_secret_token).filter(Boolean)));
-        if (tokens.length > 0) {
-          const { data: guests, error: guestsErr } = await supabase
-            .from("degustateur")
-            .select("pseudo, secret_token")
-            .in("secret_token", tokens);
-          if (!guestsErr && guests) {
-            guests.forEach(g => (guestMap[g.secret_token] = g.pseudo));
-          }
-        }
-
-        setCommandes(cmds.map(c => ({
-          ...c,
-          guest_pseudo: guestMap[c.degustateur_secret_token] || "Inconnu",
-          boisson_nom: nom
-        })));
-
-      } catch (err) {
-        console.error(err);
-        setError(err.message || "Erreur lors du chargement");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    async function loadInventaire() {
-      try {
-        const { data, error } = await supabase
-          .from("inventaire")
-          .select("id, nom, categorie")
-          .order("nom", { ascending: true });
-        if (error) throw error;
-        setInventaire(data || []);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    async function loadAllBoissons() {
-      try {
-        const { data, error } = await supabase
-          .from("boissons")
-          .select("id, nom, categorie, profil")
-          .order("nom", { ascending: true });
-        if (error) throw error;
-        setAllBoissons(data || []);
-        
-        // Extraire catégories uniques
-        const cats = [...new Set(data.map(b => b.categorie).filter(Boolean))];
-        setUniqueCategories(cats.sort());
-        
-        // Extraire profils uniques (flatten les arrays)
-        const profils = new Set();
-        data.forEach(b => {
-          if (b.profil && Array.isArray(b.profil)) {
-            b.profil.forEach(p => {
-              if (p && p.trim()) profils.add(p);
-            });
-          }
-        });
-        setUniqueProfils([...profils].sort());
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    load();
+    loadBoissonData();
     loadInventaire();
     loadAllBoissons();
   }, [id, adminId, nom]);
@@ -250,146 +257,6 @@ export default function BoissonDetailAdmin() {
       setTimeout(() => setError(null), 4000);
     } finally {
       setCommandLoading(false);
-    }
-  }
-
-  // Fonction pour importer depuis une URL
-  async function handleImportFromUrl() {
-    if (!importUrl.trim()) {
-      setImportError("Veuillez entrer une URL");
-      return;
-    }
-
-    setImportLoading(true);
-    setImportError(null);
-
-    try {
-      console.log("Import depuis:", importUrl);
-
-      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      if (!anonKey) {
-        throw new Error("VITE_SUPABASE_ANON_KEY manquante");
-      }
-      if (!supabaseUrl) {
-        throw new Error("VITE_SUPABASE_URL manquante");
-      }
-
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/scrape-recipe`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${anonKey}`
-          },
-          body: JSON.stringify({ url: importUrl })
-        }
-      );
-
-      console.log("Réponse reçue, status:", response.status);
-      
-      const result = await response.json();
-      console.log("Données:", result);
-
-      if (result.success && result.data) {
-        // Fill ingredients when the drink already exists
-        let missing = [];
-        if (id !== "new" && result.data.ingredients) {
-          const toInsert = [];
-          for (const ing of result.data.ingredients) {
-            // Parsing amélioré : extraire nom, quantité, unité
-            // Exemple d'ing.nom : "60 ml (2 oz) de vodka"
-            let nom = ing.nom;
-            let quantite = null;
-            let unite = null;
-            // Regex pour extraire quantité/unité/nom
-            const regex = /^(\d+\s*ml|\d+\s*oz|\d+\s*cl|\d+\s*L|\d+\s*g|\d+\s*mg|\d+\s*cuillère|\d+\s*tranche|\d+\s*\w+)?\s*(?:de|d'|du)?\s*(.*)$/i;
-            const match = nom.match(regex);
-            if (match) {
-              quantite = match[1] ? match[1].replace(/[^\d.,]/g, '').replace(',', '.') : null;
-              unite = match[1] ? match[1].replace(/\d+\s*/, '').trim() : null;
-              nom = match[2] ? match[2].trim() : nom;
-            }
-            // Chercher l'ingrédient dans l'inventaire sur le nom seul
-            const invItem = inventaire.find(i => i.nom.toLowerCase() === nom.toLowerCase());
-            if (invItem) {
-              toInsert.push({
-                boisson_id: id,
-                ingredient_id: invItem.id,
-                quantite: quantite || ing.quantite || null,
-                unite: unite || ing.unite || null
-              });
-            } else {
-              missing.push(ing.nom);
-            }
-          }
-          if (toInsert.length > 0) {
-            const { error: insertErr } = await supabase.from("boissons_ingredients").insert(toInsert);
-            if (insertErr) {
-              throw new Error(`Erreur insertion ingrédients : ${insertErr.message}`);
-            }
-          }
-          // Recharger les ingrédients
-          const { data: ingData, error: ingFetchErr } = await supabase
-            .from("boissons_ingredients")
-            .select(`ingredient_id, quantite, unite, inventaire:ingredient_id(nom)`)
-            .eq("boisson_id", id);
-          if (ingFetchErr) throw ingFetchErr;
-          setIngredients(ingData || []);
-        }
-
-        // Fill preparation steps when the drink already exists
-        if (id !== "new" && result.data.steps) {
-          const stepsToInsert = result.data.steps.map((step, idx) => ({
-            boisson_id: id,
-            ordre: step.ordre || idx + 1,
-            description: step.description,
-          }));
-          if (stepsToInsert.length > 0) {
-            const { error: stepErr } = await supabase.from("boissons_preparation").insert(stepsToInsert);
-            if (stepErr) {
-              console.error("Erreur insertion étapes :", stepErr);
-            }
-          }
-          // Recharger les préparations
-          const { data: prepData, error: prepErr } = await supabase
-            .from("boissons_preparation")
-            .select("id, ordre, description")
-            .eq("boisson_id", id)
-            .order("ordre", { ascending: true });
-          if (prepErr) throw prepErr;
-          setPreparations(prepData || []);
-        }
-
-        // Afficher le message d'import partiel si ingrédients manquants
-        if (missing.length > 0) {
-          setImportError(`Import partiel : ingrédients non trouvés dans l'inventaire: ${missing.join(", ")}`);
-        } else {
-          setImportError(null);
-        }
-        // Afficher succès si au moins les étapes ou ingrédients ont été importés
-        if ((result.data.steps && result.data.steps.length > 0) || (result.data.ingredients && result.data.ingredients.length > 0)) {
-          setShowImportModal(false);
-          setImportUrl("");
-          setShowBobiSuccess(true);
-          setTimeout(() => setShowBobiSuccess(false), 2000);
-        }
-      }
-    } catch (err) {
-      console.error("Erreur import:", err);
-      
-      // Message d'erreur plus détaillé
-      let errorMessage = err.message;
-      if (err.message === "Failed to fetch") {
-        errorMessage = "Impossible de contacter le service d'import. Vérifiez que l'Edge Function est bien déployée sur Supabase.";
-      } else if (err.message.includes("CORS")) {
-        errorMessage = "Erreur CORS. Le site cible bloque probablement les requêtes automatisées.";
-      }
-      
-      setImportError(errorMessage);
-    } finally {
-      setImportLoading(false);
     }
   }
 
@@ -1485,107 +1352,18 @@ export default function BoissonDetailAdmin() {
         </div>
       )}
 
-      {/* Modal d'import depuis URL */}
-      {showImportModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 2000,
-          padding: '20px'
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            padding: '24px',
-            maxWidth: '500px',
-            width: '100%',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
-          }}>
-            <h3 style={{ marginTop: 0, marginBottom: '16px', fontSize: '1.25rem' }}>
-              Importer depuis une URL
-            </h3>
-            
-            <p style={{ marginBottom: '16px', color: '#666', fontSize: '0.9rem' }}>
-              Entrez une URL de recette (IBA World ou SAQ) pour importer automatiquement les ingrédients et étapes de préparation.
-            </p>
-
-            <input
-              type="text"
-              value={importUrl}
-              onChange={(e) => setImportUrl(e.target.value)}
-              placeholder="https://iba-world.com/iba-cocktail/..."
-              disabled={importLoading}
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                marginBottom: '16px'
-              }}
-            />
-
-            {importError && (
-              <div style={{
-                padding: '12px',
-                backgroundColor: '#fee',
-                color: '#c00',
-                borderRadius: '8px',
-                marginBottom: '16px',
-                fontSize: '0.9rem'
-              }}>
-                {importError}
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-              <button
-                onClick={() => {
-                  setShowImportModal(false);
-                  setImportUrl('');
-                  setImportError(null);
-                }}
-                disabled={importLoading}
-                style={{
-                  padding: '10px 20px',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  backgroundColor: 'white',
-                  cursor: importLoading ? 'not-allowed' : 'pointer',
-                  fontSize: '1rem'
-                }}
-              >
-                Annuler
-              </button>
-              <button
-                onClick={handleImportFromUrl}
-                disabled={importLoading || !importUrl.trim()}
-                style={{
-                  padding: '10px 20px',
-                  border: 'none',
-                  borderRadius: '8px',
-                  backgroundColor: importLoading || !importUrl.trim() ? '#ccc' : '#9c27b0',
-                  color: 'white',
-                  cursor: importLoading || !importUrl.trim() ? 'not-allowed' : 'pointer',
-                  fontSize: '1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                {importLoading ? 'Import en cours...' : 'Importer'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <RecipeImportModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        entityType="boisson"
+        entityId={id}
+        inventory={inventaire}
+        onImported={async () => {
+          await refreshBoissonData();
+          setShowBobiSuccess(true);
+          setTimeout(() => setShowBobiSuccess(false), 2000);
+        }}
+      />
     </div>
     </>
   );
