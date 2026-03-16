@@ -96,17 +96,17 @@ RECIPE_SCHEMA_STRICT = True
 RECIPE_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["entity_type", "ingredients", "steps"],
+    "required": ["entity_type", "title", "source", "ingredients", "steps", "recipe_notes"],
     "properties": {
         "entity_type": {"type": "string", "enum": ["boisson", "nourriture"]},
-        "title": {"type": "string"},
+        "title": {"type": ["string", "null"]},
         "source": {
             "type": "object",
             "additionalProperties": False,
             "required": ["url", "name"],
             "properties": {
-                "url": {"type": "string"},
-                "name": {"type": "string"},
+                "url": {"type": ["string", "null"]},
+                "name": {"type": ["string", "null"]},
             },
         },
         "ingredients": {
@@ -114,7 +114,7 @@ RECIPE_SCHEMA = {
             "items": {
                 "type": "object",
                 "additionalProperties": False,
-                "required": ["name_raw"],
+                "required": ["name_raw", "quantity", "quantity_text", "unit", "notes", "group"],
                 "properties": {
                     "name_raw": {"type": "string"},
                     "quantity": {"type": ["number", "null"]},
