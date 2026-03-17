@@ -290,6 +290,8 @@ export default function Inventaire() {
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "flex-start",
+                    flexWrap: "nowrap",
                     gap: 8,
                     padding: "4px 16px",
                     backgroundColor: "var(--bg-tertiary)",
@@ -297,7 +299,9 @@ export default function Inventaire() {
                     cursor: "pointer",
                     fontWeight: 'var(--font-weight-semibold)',
                     fontSize: 'var(--font-size-base)',
-                    whiteSpace: "nowrap"
+                    whiteSpace: "nowrap",
+                    textAlign: "left",
+                    width: "100%"
                   }}
                 >
                   <span className="inventaire-category-icon">
@@ -324,7 +328,7 @@ export default function Inventaire() {
                             style={{ 
                               padding: "8px 16px", 
                               fontSize: 'var(--font-size-lg)', 
-                              color: item.disponible ? "var(--text-primary)" : "var(--text-tertiary)",
+                              color: item.disponible ? "var(--text-primary)" : "var(--error)",
                               fontStyle: item.disponible ? "normal" : "italic",
                               cursor: "pointer"
                             }}

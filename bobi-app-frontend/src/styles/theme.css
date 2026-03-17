@@ -775,6 +775,9 @@ p {
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
+  justify-content: flex-start;
+  text-align: left;
+  width: 100%;
 }
 
 .inventaire-category-icon {
