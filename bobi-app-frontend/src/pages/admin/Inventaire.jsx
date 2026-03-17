@@ -355,7 +355,11 @@ export default function Inventaire() {
                                 }}
                                 title={item.disponible ? "Marquer comme indisponible" : "Marquer comme disponible"}
                               >
-                                {item.disponible ? <ThumbsUp size={20} /> : <ThumbsDown size={20} />}
+                                {item.disponible ? (
+                                  <ThumbsUp size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
+                                ) : (
+                                  <ThumbsDown size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
+                                )}
                               </button>
 
                               {/* Supprimer */}
@@ -374,7 +378,7 @@ export default function Inventaire() {
                                 }}
                                 title="Supprimer"
                               >
-                                <Trash2 size={20} color="var(--text-tertiary)" />
+                                <Trash2 size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
                               </button>
                             </div>
                           </td>
