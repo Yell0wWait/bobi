@@ -770,6 +770,47 @@ p {
   border-color: var(--secondary-500);
 }
 
+.inventaire-category-list {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  position: relative;
+}
+
+.inventaire-category-button {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.inventaire-category-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+}
+
+.inventaire-category-button.active {
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+  color: var(--text-on-light-primary);
+  border-color: var(--primary-700);
+  box-shadow: 0 0 0 2px var(--primary-300), var(--shadow-md);
+}
+
+.inventaire-category-button:focus-visible {
+  outline: 2px solid var(--primary-400);
+  outline-offset: 2px;
+}
+
 .inventaire-category-header {
   display: flex;
   align-items: center;
@@ -825,6 +866,25 @@ p {
 
   .filter-dropdown-button {
     width: 100%;
+  }
+
+  .inventaire-category-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    padding-right: 24px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .inventaire-category-list::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 28px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(17, 24, 39, 0) 0%, var(--bg-primary) 100%);
+    pointer-events: none;
   }
 }
 

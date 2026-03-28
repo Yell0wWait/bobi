@@ -321,6 +321,7 @@ def commit_recipe(body: CommitRequest):
         supabase.table(preparation_table).delete().eq(entity_id_field, body.entity_id).execute()
 
     inventory_cache = {item["id"]: item for item in fetch_inventory()}
+    allowed_boisson_types = {"obligatoire", "facultatif"}
 
     ingredient_rows = []
     for ing in body.ingredients:
@@ -336,6 +337,13 @@ def commit_recipe(body: CommitRequest):
         if not ingredient_id:
             raise HTTPException(status_code=400, detail="Missing ingredient_id for one or more ingredients")
 
+        ingredient_type = ing.type or ("obligatoire" if body.entity_type == "boisson" else None)
+        if body.entity_type == "boisson" and ingredient_type not in allowed_boisson_types:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid ingredient type; expected 'obligatoire' or 'facultatif'",
+            )
+
         row = {
             entity_id_field: body.entity_id,
             "ingredient_id": ingredient_id,
@@ -344,12 +352,16 @@ def commit_recipe(body: CommitRequest):
             "alternatives": ing.alternatives or {
                 "raw": ing.name_raw,
             },
-            "type": ing.type or ("principal" if body.entity_type == "boisson" else None),
+            "type": ingredient_type,
         }
         ingredient_rows.append(row)
 
     if ingredient_rows:
-        supabase.table(ingredients_table).insert(ingredient_rows).execute()
+        try:
+            supabase.table(ingredients_table).insert(ingredient_rows).execute()
+        except Exception as exc:
+            print("Insert ingredients failed:", exc)
+            raise HTTPException(status_code=500, detail=f"Insert ingredients failed: {exc}") from exc
 
     step_rows = []
     for step in body.steps:
@@ -359,7 +371,11 @@ def commit_recipe(body: CommitRequest):
             "description": step.text,
         })
     if step_rows:
-        supabase.table(preparation_table).insert(step_rows).execute()
+        try:
+            supabase.table(preparation_table).insert(step_rows).execute()
+        except Exception as exc:
+            print("Insert steps failed:", exc)
+            raise HTTPException(status_code=500, detail=f"Insert steps failed: {exc}") from exc
 
     update_payload = {}
     if body.source and body.source.url:
@@ -367,6 +383,10 @@ def commit_recipe(body: CommitRequest):
     if body.source and body.source.name:
         update_payload["recette"] = body.source.name
     if update_payload:
-        supabase.table(entity_table).update(update_payload).eq("id", body.entity_id).execute()
+        try:
+            supabase.table(entity_table).update(update_payload).eq("id", body.entity_id).execute()
+        except Exception as exc:
+            print("Update entity failed:", exc)
+            raise HTTPException(status_code=500, detail=f"Update entity failed: {exc}") from exc
 
     return {"ok": True, "ingredients": len(ingredient_rows), "steps": len(step_rows)}

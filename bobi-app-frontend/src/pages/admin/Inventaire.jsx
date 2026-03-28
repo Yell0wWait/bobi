@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
-import { RefreshCw, Trash2, ThumbsUp, ThumbsDown, ChevronDown, ChevronRight, Plus, Search, X, Check } from 'lucide-react';
+import { RefreshCw, Trash2, ThumbsUp, ThumbsDown, Plus, Search, X, Check } from 'lucide-react';
 
 export default function Inventaire() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function Inventaire() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeFilters, setActiveFilters] = useState(["Disponible", "Indisponible"]);
-  const [collapsedCategories, setCollapsedCategories] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [editingItem, setEditingItem] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ nom: "", categorie: "", disponible: true, prix: "", marque_pref: "", magasin_pref: "" });
@@ -53,11 +53,6 @@ export default function Inventaire() {
 
       setAllItems(data || []);
       
-      // Fermer toutes les catégories par défaut
-      const categories = [...new Set((data || []).map(i => i.categorie || "Sans catégorie"))];
-      const collapsed = {};
-      categories.forEach(cat => { collapsed[cat] = true; });
-      setCollapsedCategories(collapsed);
     } catch (err) {
       console.error(err);
       setError(err.message || "Erreur lors du chargement");
@@ -169,13 +164,6 @@ export default function Inventaire() {
     }
   }
 
-  function toggleCategory(category) {
-    setCollapsedCategories(prev => ({
-      ...prev,
-      [category]: !prev[category]
-    }));
-  }
-
   function toggleFilter(status) {
     if (activeFilters.includes(status)) {
       setActiveFilters(activeFilters.filter(s => s !== status));
@@ -202,10 +190,22 @@ export default function Inventaire() {
     normalizeString(a).localeCompare(normalizeString(b))
   );
 
+  const selectedItems = selectedCategory ? (itemsByCategory[selectedCategory] || []) : [];
+
   // Obtenir toutes les catégories uniques pour le dropdown
   const uniqueCategories = [...new Set(allItems.map(i => i.categorie).filter(Boolean))].sort((a, b) => 
     normalizeString(a).localeCompare(normalizeString(b))
   );
+
+  useEffect(() => {
+    if (sortedCategories.length === 0) {
+      if (selectedCategory) setSelectedCategory("");
+      return;
+    }
+    if (!selectedCategory || !sortedCategories.includes(selectedCategory)) {
+      setSelectedCategory(sortedCategories[0]);
+    }
+  }, [sortedCategories, selectedCategory]);
 
   if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;
   if (error) return <p style={{ color: "var(--error)" }}>{error}</p>;
@@ -262,6 +262,20 @@ export default function Inventaire() {
             </button>
           ))}
         </div>
+
+        {sortedCategories.length > 0 && (
+          <div className="inventaire-category-list">
+            {sortedCategories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`inventaire-category-button ${selectedCategory === category ? "active" : ""}`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Bouton rafraîchir flottant */}
@@ -277,119 +291,115 @@ export default function Inventaire() {
         <p style={{ textAlign: "center", color: "var(--text-tertiary)", marginTop: 40, padding: "0 16px" }}>Aucun article.</p>
       ) : (
         <div>
-          {sortedCategories.map((category) => {
-            const isCollapsed = collapsedCategories[category];
-            const categoryItems = itemsByCategory[category];
+          {selectedCategory ? (
+            <>
+              <div
+                className="inventaire-category-header"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  gap: 8,
+                  padding: "6px 16px",
+                  backgroundColor: "var(--bg-tertiary)",
+                  color: "var(--text-primary)",
+                  fontWeight: "var(--font-weight-semibold)",
+                  fontSize: "var(--font-size-base)",
+                  whiteSpace: "nowrap"
+                }}
+              >
+                <span className="inventaire-category-label">{selectedCategory}</span>
+                <span style={{ color: "var(--text-tertiary)", fontSize: "var(--font-size-sm)" }}>
+                  {selectedItems.length}
+                </span>
+              </div>
 
-            return (
-              <div key={category}>
-                {/* En-tête de catégorie cliquable */}
-                <div 
-                  onClick={() => toggleCategory(category)}
-                  className="inventaire-category-header"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                    flexWrap: "nowrap",
-                    gap: 8,
-                    padding: "4px 16px",
-                    backgroundColor: "var(--bg-tertiary)",
-                    color: "var(--text-primary)",
-                    cursor: "pointer",
-                    fontWeight: 'var(--font-weight-semibold)',
-                    fontSize: 'var(--font-size-base)',
-                    whiteSpace: "nowrap",
-                    textAlign: "left",
-                    width: "100%"
-                  }}
-                >
-                  <span className="inventaire-category-icon">
-                    {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
-                  </span>
-                  <span className="inventaire-category-label">{category}</span>
-                </div>
-
-                {/* Liste des items */}
-                {!isCollapsed && (
-                  <table style={{ width: "100%", borderCollapse: "collapse", display: "table" }}>
-                    <tbody>
-                      {categoryItems.map((item) => (
-                        <tr
-                          key={item.id}
-                          style={{
-                            backgroundColor: "var(--bg-secondary)",
-                            borderBottom: "1px solid var(--border-color)"
+              {selectedItems.length === 0 ? (
+                <p style={{ textAlign: "center", color: "var(--text-tertiary)", marginTop: 24, padding: "0 16px" }}>
+                  Aucun ingrédient dans cette catégorie.
+                </p>
+              ) : (
+                <table style={{ width: "100%", borderCollapse: "collapse", display: "table" }}>
+                  <tbody>
+                    {selectedItems.map((item) => (
+                      <tr
+                        key={item.id}
+                        style={{
+                          backgroundColor: "var(--bg-secondary)",
+                          borderBottom: "1px solid var(--border-color)"
+                        }}
+                      >
+                        {/* Nom de l'ingrédient */}
+                        <td 
+                          onClick={() => navigate(`/admin/inventaire/${item.id}`)}
+                          style={{ 
+                            padding: "8px 16px", 
+                            fontSize: 'var(--font-size-lg)', 
+                            color: item.disponible ? "var(--text-primary)" : "var(--error)",
+                            fontStyle: item.disponible ? "normal" : "italic",
+                            cursor: "pointer"
                           }}
                         >
-                          {/* Nom de l'ingrédient */}
-                          <td 
-                            onClick={() => navigate(`/admin/inventaire/${item.id}`)}
-                            style={{ 
-                              padding: "8px 16px", 
-                              fontSize: 'var(--font-size-lg)', 
-                              color: item.disponible ? "var(--text-primary)" : "var(--error)",
-                              fontStyle: item.disponible ? "normal" : "italic",
-                              cursor: "pointer"
-                            }}
-                          >
-                            {item.nom}
-                          </td>
+                          {item.nom}
+                        </td>
 
-                          {/* Icônes d'action */}
-                          <td style={{ padding: "8px 16px", textAlign: "right", width: 110 }}>
-                            <div style={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
-                              {/* Toggle disponibilité */}
-                              <button
-                                onClick={() => toggleDisponible(item.id, item.disponible)}
-                                style={{
-                                  width: 28,
-                                  height: 28,
-                                  padding: 0,
-                                  backgroundColor: "transparent",
-                                  border: "none",
-                                  cursor: "pointer",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center"
-                                }}
-                                title={item.disponible ? "Marquer comme indisponible" : "Marquer comme disponible"}
-                              >
-                                {item.disponible ? (
-                                  <ThumbsUp size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
-                                ) : (
-                                  <ThumbsDown size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
-                                )}
-                              </button>
+                        {/* Icônes d'action */}
+                        <td style={{ padding: "8px 16px", textAlign: "right", width: 110 }}>
+                          <div style={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
+                            {/* Toggle disponibilité */}
+                            <button
+                              onClick={() => toggleDisponible(item.id, item.disponible)}
+                              style={{
+                                width: 28,
+                                height: 28,
+                                padding: 0,
+                                backgroundColor: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center"
+                              }}
+                              title={item.disponible ? "Marquer comme indisponible" : "Marquer comme disponible"}
+                            >
+                              {item.disponible ? (
+                                <ThumbsUp size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
+                              ) : (
+                                <ThumbsDown size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
+                              )}
+                            </button>
 
-                              {/* Supprimer */}
-                              <button
-                                onClick={() => handleDelete(item.id)}
-                                style={{
-                                  width: 28,
-                                  height: 28,
-                                  padding: 0,
-                                  backgroundColor: "transparent",
-                                  border: "none",
-                                  cursor: "pointer",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center"
-                                }}
-                                title="Supprimer"
-                              >
-                                <Trash2 size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-            );
-          })}
+                            {/* Supprimer */}
+                            <button
+                              onClick={() => handleDelete(item.id)}
+                              style={{
+                                width: 28,
+                                height: 28,
+                                padding: 0,
+                                backgroundColor: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center"
+                              }}
+                              title="Supprimer"
+                            >
+                              <Trash2 size={20} color={item.disponible ? "var(--text-tertiary)" : "var(--error)"} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </>
+          ) : (
+            <p style={{ textAlign: "center", color: "var(--text-tertiary)", marginTop: 24, padding: "0 16px" }}>
+              Choisis une catégorie pour afficher ses ingrédients.
+            </p>
+          )}
         </div>
       )}
 
