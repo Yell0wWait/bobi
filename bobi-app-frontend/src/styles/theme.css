@@ -712,9 +712,16 @@ p {
   flex-wrap: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
+  min-height: 44px;
+  padding: 2px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
 }
 
+.filter-container::-webkit-scrollbar {
+  display: none;
+}
 .filter-button {
   padding: 6px 14px;
   background-color: var(--secondary-500);
@@ -784,9 +791,16 @@ p {
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
+  min-height: 44px;
+  padding: 2px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
 }
 
+.inventaire-category-list::-webkit-scrollbar {
+  display: none;
+}
 .inventaire-category-button {
   flex: 0 0 auto;
   padding: 8px 14px;
@@ -878,21 +892,6 @@ p {
 
   .inventaire-category-list {
     flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 6px;
-    padding-right: 24px;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .inventaire-category-list::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 28px;
-    height: 100%;
-    background: linear-gradient(90deg, rgba(17, 24, 39, 0) 0%, var(--bg-primary) 100%);
-    pointer-events: none;
   }
 }
 
