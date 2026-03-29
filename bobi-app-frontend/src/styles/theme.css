@@ -825,7 +825,7 @@ p {
   background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
   color: var(--text-on-light-primary);
   border-color: var(--primary-700);
-  box-shadow: 0 0 0 2px var(--primary-300), var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .inventaire-category-button:focus-visible {
