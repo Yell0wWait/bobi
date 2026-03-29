@@ -709,7 +709,10 @@ p {
   display: flex;
   gap: 10px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .filter-button {
@@ -725,6 +728,8 @@ p {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .filter-button:hover {
@@ -773,10 +778,13 @@ p {
 .inventaire-category-list {
   margin-bottom: 20px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   align-items: center;
   position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .inventaire-category-button {
@@ -861,7 +869,7 @@ p {
   }
 
   .filter-button {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
   }
 
   .filter-dropdown-button {

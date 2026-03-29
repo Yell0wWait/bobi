@@ -293,27 +293,6 @@ export default function Inventaire() {
         <div>
           {selectedCategory ? (
             <>
-              <div
-                className="inventaire-category-header"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: 8,
-                  padding: "6px 16px",
-                  backgroundColor: "var(--bg-tertiary)",
-                  color: "var(--text-primary)",
-                  fontWeight: "var(--font-weight-semibold)",
-                  fontSize: "var(--font-size-base)",
-                  whiteSpace: "nowrap"
-                }}
-              >
-                <span className="inventaire-category-label">{selectedCategory}</span>
-                <span style={{ color: "var(--text-tertiary)", fontSize: "var(--font-size-sm)" }}>
-                  {selectedItems.length}
-                </span>
-              </div>
-
               {selectedItems.length === 0 ? (
                 <p style={{ textAlign: "center", color: "var(--text-tertiary)", marginTop: 24, padding: "0 16px" }}>
                   Aucun ingrédient dans cette catégorie.
