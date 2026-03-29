@@ -826,6 +826,11 @@ p {
   color: var(--text-on-light-primary);
   border-color: var(--primary-700);
   box-shadow: var(--shadow-sm);
+  transform: none;
+}
+
+.inventaire-category-button.active:hover {
+  transform: none;
 }
 
 .inventaire-category-button:focus-visible {
