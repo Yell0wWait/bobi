@@ -927,7 +927,7 @@ export default function NourritureDetailAdmin() {
                               ...editingIngredient,
                               alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
                             })}
-                            style={{ width: "100%", minHeight: 80, padding: 6, boxSizing: "border-box" }}
+                            style={{ flex: 1, padding: 6, boxSizing: "border-box", minHeight: 80 }}
                           >
                             {inventaire.map((inv) => (
                               <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
