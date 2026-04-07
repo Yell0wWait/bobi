@@ -53,7 +53,7 @@ export default function BoissonDetailAdmin() {
   // Ingrédients
   const [ingredients, setIngredients] = useState([]);
   const [inventaire, setInventaire] = useState([]);
-  const [newIngredient, setNewIngredient] = useState({ ingredient_id: "", quantite: "", unite: "" });
+  const [newIngredient, setNewIngredient] = useState({ ingredient_id: "", quantite: "", unite: "", alternatives: [] });
   const [editingIngredient, setEditingIngredient] = useState(null);
 
   // Préparation
@@ -108,11 +108,14 @@ export default function BoissonDetailAdmin() {
       // Charger les ingrédients
       const { data: ingData, error: ingErr } = await supabase
         .from("boissons_ingredients")
-        .select("id, ingredient_id, quantite, unite")
+        .select("id, ingredient_id, quantite, unite, alternatives")
         .eq("boisson_id", id)
         .order("id", { ascending: true });
       if (ingErr) throw ingErr;
-      setIngredients(ingData || []);
+      setIngredients((ingData || []).map((ing) => ({
+        ...ing,
+        alternatives: normalizeAlternatives(ing.alternatives),
+      })));
 
       // Charger les étapes de préparation
       const { data: prepData, error: prepErr } = await supabase
@@ -375,12 +378,12 @@ export default function BoissonDetailAdmin() {
     try {
       const { data, error } = await supabase
         .from("boissons_ingredients")
-        .insert([{ boisson_id: id, ingredient_id: newIngredient.ingredient_id, quantite: newIngredient.quantite, unite: newIngredient.unite }])
+        .insert([{ boisson_id: id, ingredient_id: newIngredient.ingredient_id, quantite: newIngredient.quantite, unite: newIngredient.unite, alternatives: newIngredient.alternatives || [] }])
         .select()
         .maybeSingle();
       if (error) throw error;
-      setIngredients([...ingredients, data]);
-      setNewIngredient({ ingredient_id: "", quantite: "", unite: "" });
+      setIngredients([...ingredients, { ...data, alternatives: normalizeAlternatives(data.alternatives) }]);
+      setNewIngredient({ ingredient_id: "", quantite: "", unite: "", alternatives: [] });
     } catch (err) {
       console.error(err);
       alert("Erreur lors de l'ajout : " + err.message);
@@ -399,7 +402,8 @@ export default function BoissonDetailAdmin() {
         .update({ 
           ingredient_id: editingIngredient.ingredient_id,
           quantite: editingIngredient.quantite, 
-          unite: editingIngredient.unite 
+          unite: editingIngredient.unite,
+          alternatives: editingIngredient.alternatives || []
         })
         .eq("id", ingId);
       if (error) throw error;
@@ -519,9 +523,38 @@ export default function BoissonDetailAdmin() {
     }
   }
 
+  const normalizeAlternatives = (alternatives) => {
+    if (Array.isArray(alternatives)) {
+      return alternatives.map((value) => String(value).trim()).filter(Boolean);
+    }
+    if (alternatives && typeof alternatives === "object") {
+      if (Array.isArray(alternatives.ids)) {
+        return alternatives.ids.map((value) => String(value).trim()).filter(Boolean);
+      }
+      return [];
+    }
+    return [];
+  };
+
   function getIngredientName(ingredientId) {
     const inv = inventaire.find(i => i.id === ingredientId);
     return inv ? inv.nom : `ID: ${ingredientId}`;
+  }
+
+  function getAlternativeNames(alternatives) {
+    const ids = normalizeAlternatives(alternatives);
+    if (ids.length > 0) {
+      return ids
+        .map((altId) => {
+          const inv = inventaire.find((i) => i.id === altId);
+          return inv ? inv.nom : `ID: ${altId}`;
+        })
+        .filter(Boolean);
+    }
+    if (alternatives && typeof alternatives === "object" && typeof alternatives.raw === "string") {
+      return [alternatives.raw];
+    }
+    return [];
   }
 
   function getCommandeImageUrl(commande, dateCreated) {
@@ -949,6 +982,22 @@ export default function BoissonDetailAdmin() {
                             <option key={inv.id} value={inv.id}>{inv.nom}</option>
                           ))}
                         </select>
+                        <div style={{ minWidth: 240 }}>
+                          <label style={{ display: "block", fontSize: "0.8rem", marginBottom: 4 }}>Alternatives</label>
+                          <select
+                            multiple
+                            value={editingIngredient.alternatives || []}
+                            onChange={(e) => setEditingIngredient({
+                              ...editingIngredient,
+                              alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
+                            })}
+                            style={{ width: "100%", minHeight: 80, padding: 6, boxSizing: "border-box" }}
+                          >
+                            {inventaire.map((inv) => (
+                              <option key={inv.id} value={inv.id}>{inv.nom}</option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
                     ) : (
                       <>
@@ -956,10 +1005,15 @@ export default function BoissonDetailAdmin() {
                           {ing.quantite && `${ing.quantite} `}
                           {ing.unite && `${ing.unite} `}
                           {getIngredientName(ing.ingredient_id)}
+                          {ing.alternatives && ing.alternatives.length > 0 && (
+                            <span style={{ display: "block", fontSize: "0.9rem", color: "#555", marginTop: 2 }}>
+                              Alternatives : {getAlternativeNames(ing.alternatives).join(", ")}
+                            </span>
+                          )}
                         </span>
                         {isEditing && (
                           <div style={{ display: "flex", gap: 5 }}>
-                            <button onClick={() => setEditingIngredient(ing)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Éditer">
+                            <button onClick={() => setEditingIngredient({ ...ing, alternatives: normalizeAlternatives(ing.alternatives) })} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Éditer">
                               <Edit size={14} />
                             </button>
                             <button onClick={() => removeIngredient(ing.id)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Supprimer">
@@ -1012,6 +1066,22 @@ export default function BoissonDetailAdmin() {
                     placeholder="ml, g, etc."
                     style={{ width: "100%", padding: 8 }}
                   />
+                </div>
+                <div style={{ flex: 1, minWidth: 240 }}>
+                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Alternatives</label>
+                  <select
+                    multiple
+                    value={newIngredient.alternatives}
+                    onChange={(e) => setNewIngredient({
+                      ...newIngredient,
+                      alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
+                    })}
+                    style={{ width: "100%", minHeight: 90, padding: 8, boxSizing: "border-box" }}
+                  >
+                    {inventaire.map((inv) => (
+                      <option key={inv.id} value={inv.id}>{inv.nom}</option>
+                    ))}
+                  </select>
                 </div>
                 <button onClick={addIngredient} style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer" }}>
                   +

@@ -14,6 +14,7 @@ export default function BoissonDetailInvite() {
   const imageUrl = useBoissonImage(boisson?.nom);
   const [commandes, setCommandes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const [inventory, setInventory] = useState([]);
   const [variantes, setVariantes] = useState([]);
   const [expandedCommande, setExpandedCommande] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,12 +54,24 @@ export default function BoissonDetailInvite() {
             ingredient_id,
             quantite,
             unite,
+            alternatives,
             inventaire:ingredient_id(id, nom, categorie)
           `)
           .eq("boisson_id", id)
           .order("id", { ascending: true });
         if (ingErr) throw ingErr;
-        setIngredients(ingData || []);
+        setIngredients((ingData || []).map((ing) => ({
+          ...ing,
+          alternatives: normalizeAlternatives(ing.alternatives),
+        })));
+
+        // Charger l'inventaire pour résoudre les alternatives
+        const { data: invData, error: invErr } = await supabase
+          .from("inventaire")
+          .select("id, nom")
+          .order("nom", { ascending: true });
+        if (invErr) throw invErr;
+        setInventory(invData || []);
 
         // Charger les variantes
         const { data: varData, error: varErr } = await supabase
@@ -143,6 +156,35 @@ export default function BoissonDetailInvite() {
 
     return data?.publicUrl || null;
   }
+
+  const normalizeAlternatives = (alternatives) => {
+    if (Array.isArray(alternatives)) {
+      return alternatives.map((value) => String(value).trim()).filter(Boolean);
+    }
+    if (alternatives && typeof alternatives === "object") {
+      if (Array.isArray(alternatives.ids)) {
+        return alternatives.ids.map((value) => String(value).trim()).filter(Boolean);
+      }
+      return [];
+    }
+    return [];
+  };
+
+  const getAlternativeNames = (alternatives) => {
+    const ids = normalizeAlternatives(alternatives);
+    if (ids.length > 0) {
+      return ids
+        .map((altId) => {
+          const inv = inventory.find((item) => item.id === altId);
+          return inv ? inv.nom : `ID: ${altId}`;
+        })
+        .filter(Boolean);
+    }
+    if (alternatives && typeof alternatives === "object" && typeof alternatives.raw === "string") {
+      return [alternatives.raw];
+    }
+    return [];
+  };
 
   const handleCommander = async () => {
     if (!secretToken) return;
@@ -273,6 +315,11 @@ export default function BoissonDetailInvite() {
                       {ing.unite && `${ing.unite} `}
                       <strong>{ing.inventaire?.nom || 'Ingrédient'}</strong>
                     </span>
+                    {ing.alternatives && ing.alternatives.length > 0 && (
+                      <div style={{ marginTop: 4, fontSize: '0.9rem', color: '#555' }}>
+                        <strong>Alternatives:</strong> {getAlternativeNames(ing.alternatives).join(', ')}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
