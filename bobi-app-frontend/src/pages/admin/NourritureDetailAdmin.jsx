@@ -915,7 +915,7 @@ export default function NourritureDetailAdmin() {
                           style={{ flex: 1, padding: 6 }}
                         >
                           {inventaire.map(inv => (
-                            <option key={inv.id} value={inv.id}>{inv.nom}</option>
+                            <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                           ))}
                         </select>
                         <div style={{ minWidth: 240 }}>
@@ -930,7 +930,7 @@ export default function NourritureDetailAdmin() {
                             style={{ width: "100%", minHeight: 80, padding: 6, boxSizing: "border-box" }}
                           >
                             {inventaire.map((inv) => (
-                              <option key={inv.id} value={inv.id}>{inv.nom}</option>
+                              <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                             ))}
                           </select>
                         </div>
@@ -948,7 +948,7 @@ export default function NourritureDetailAdmin() {
                           {ing.unite && `${ing.unite} `}
                           {getIngredientName(ing.ingredient_id)}
                           {ing.alternatives && ing.alternatives.length > 0 && (
-                            <span style={{ display: "block", fontSize: "0.9rem", color: "#555", marginTop: 2 }}>
+                            <span style={{ display: "block", fontSize: "0.9rem", color: "#777", marginTop: 2, fontStyle: "italic" }}>
                               Alternatives : {getAlternativeNames(ing.alternatives).join(", ")}
                             </span>
                           )}
@@ -1021,7 +1021,7 @@ export default function NourritureDetailAdmin() {
                     style={{ width: "100%", minHeight: 90, padding: 8, boxSizing: "border-box" }}
                   >
                     {inventaire.map((inv) => (
-                      <option key={inv.id} value={inv.id}>{inv.nom}</option>
+                      <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                     ))}
                   </select>
                 </div>

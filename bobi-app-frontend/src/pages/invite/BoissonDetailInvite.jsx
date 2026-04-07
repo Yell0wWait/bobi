@@ -316,7 +316,7 @@ export default function BoissonDetailInvite() {
                       <strong>{ing.inventaire?.nom || 'Ingrédient'}</strong>
                     </span>
                     {ing.alternatives && ing.alternatives.length > 0 && (
-                      <div style={{ marginTop: 4, fontSize: '0.9rem', color: '#555' }}>
+                      <div style={{ marginTop: 4, fontSize: '0.9rem', color: '#777', fontStyle: 'italic' }}>
                         <strong>Alternatives:</strong> {getAlternativeNames(ing.alternatives).join(', ')}
                       </div>
                     )}

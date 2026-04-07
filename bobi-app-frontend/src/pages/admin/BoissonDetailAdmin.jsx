@@ -979,7 +979,7 @@ export default function BoissonDetailAdmin() {
                           style={{ flex: 1, minWidth: 120, padding: 6, boxSizing: "border-box" }}
                         >
                           {inventaire.map(inv => (
-                            <option key={inv.id} value={inv.id}>{inv.nom}</option>
+                            <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                           ))}
                         </select>
                         <div style={{ minWidth: 240 }}>
@@ -994,7 +994,7 @@ export default function BoissonDetailAdmin() {
                             style={{ width: "100%", minHeight: 80, padding: 6, boxSizing: "border-box" }}
                           >
                             {inventaire.map((inv) => (
-                              <option key={inv.id} value={inv.id}>{inv.nom}</option>
+                              <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                             ))}
                           </select>
                         </div>
@@ -1006,7 +1006,7 @@ export default function BoissonDetailAdmin() {
                           {ing.unite && `${ing.unite} `}
                           {getIngredientName(ing.ingredient_id)}
                           {ing.alternatives && ing.alternatives.length > 0 && (
-                            <span style={{ display: "block", fontSize: "0.9rem", color: "#555", marginTop: 2 }}>
+                            <span style={{ display: "block", fontSize: "0.9rem", color: "#777", marginTop: 2, fontStyle: "italic" }}>
                               Alternatives : {getAlternativeNames(ing.alternatives).join(", ")}
                             </span>
                           )}
@@ -1079,7 +1079,7 @@ export default function BoissonDetailAdmin() {
                     style={{ width: "100%", minHeight: 90, padding: 8, boxSizing: "border-box" }}
                   >
                     {inventaire.map((inv) => (
-                      <option key={inv.id} value={inv.id}>{inv.nom}</option>
+                      <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                     ))}
                   </select>
                 </div>
