@@ -15,14 +15,16 @@ from supabase import create_client, Client
 # Config
 # ----------------------------
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-OPENAI_API_URL = os.getenv("OPENAI_API_URL", "https://api.openai.com/v1/responses")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY").strip('"') if os.getenv("OPENAI_API_KEY") else None
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip('"')
+OPENAI_API_URL = os.getenv("OPENAI_API_URL", "https://api.openai.com/v1/responses").strip('"')
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_URL = os.getenv("SUPABASE_URL").strip('"') if os.getenv("SUPABASE_URL") else None
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+if SUPABASE_KEY:
+    SUPABASE_KEY = SUPABASE_KEY.strip('"')
 
-MAX_TEXT_CHARS = int(os.getenv("RECIPE_MAX_TEXT_CHARS", "12000"))
+MAX_TEXT_CHARS = int(os.getenv("RECIPE_MAX_TEXT_CHARS", "12000").strip('"'))
 
 if not OPENAI_API_KEY:
     raise RuntimeError("Missing OPENAI_API_KEY environment variable")

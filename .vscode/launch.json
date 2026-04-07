@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Run Backend",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/Bobi_app_backend/agent_api.py",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/Bobi_app_backend/.env.local"
+    },
+    {
+      "name": "Frontend: Vite dev",
+      "type": "pwa-node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/bobi-app-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "console": "integratedTerminal"
+    }
+  ]
+}
