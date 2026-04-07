@@ -991,7 +991,7 @@ export default function BoissonDetailAdmin() {
                               ...editingIngredient,
                               alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
                             })}
-                            style={{ flex: 1, minWidth: 120, padding: 6, boxSizing: "border-box", minHeight: 80 }}
+                            style={{ flex: 1, minWidth: 120, padding: 6, boxSizing: "border-box" }}
                           >
                             {inventaire.map((inv) => (
                               <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
@@ -1076,7 +1076,7 @@ export default function BoissonDetailAdmin() {
                       ...newIngredient,
                       alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
                     })}
-                    style={{ width: "100%", minHeight: 90, padding: 8, boxSizing: "border-box" }}
+                    style={{ width: "100%", padding: 8, boxSizing: "border-box" }}
                   >
                     {inventaire.map((inv) => (
                       <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>

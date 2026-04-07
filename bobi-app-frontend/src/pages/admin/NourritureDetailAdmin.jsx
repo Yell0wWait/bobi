@@ -912,7 +912,7 @@ export default function NourritureDetailAdmin() {
                         <select
                           value={editingIngredient.ingredient_id}
                           onChange={(e) => setEditingIngredient({ ...editingIngredient, ingredient_id: e.target.value })}
-                          style={{ flex: 1, padding: 6 }}
+                          style={{ flex: 1, padding: 6, boxSizing: "border-box" }}
                         >
                           {inventaire.map(inv => (
                             <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
@@ -927,7 +927,7 @@ export default function NourritureDetailAdmin() {
                               ...editingIngredient,
                               alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
                             })}
-                            style={{ flex: 1, padding: 6, boxSizing: "border-box", minHeight: 80 }}
+                            style={{ flex: 1, padding: 6, boxSizing: "border-box" }}
                           >
                             {inventaire.map((inv) => (
                               <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
@@ -1018,7 +1018,7 @@ export default function NourritureDetailAdmin() {
                       ...newIngredient,
                       alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
                     })}
-                    style={{ width: "100%", minHeight: 90, padding: 8, boxSizing: "border-box" }}
+                    style={{ width: "100%", padding: 8, boxSizing: "border-box" }}
                   >
                     {inventaire.map((inv) => (
                       <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
