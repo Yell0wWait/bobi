@@ -51,7 +51,7 @@ export default function NourritureDetailAdmin() {
   // Ingrédients
   const [ingredients, setIngredients] = useState([]);
   const [inventaire, setInventaire] = useState([]);
-  const [newIngredient, setNewIngredient] = useState({ ingredient_id: "", quantite: "", unite: "", alternatives: [] });
+  const [newIngredient, setNewIngredient] = useState({ ingredient_id: "", quantite: "", unite: "", alternatives: "" });
   const [editingIngredient, setEditingIngredient] = useState(null);
 
   // Préparation
@@ -90,7 +90,7 @@ export default function NourritureDetailAdmin() {
     if (ingErr) throw ingErr;
     setIngredients((ingData || []).map((ing) => ({
       ...ing,
-      alternatives: normalizeAlternatives(ing.alternatives),
+      alternatives: normalizeAlternatives(ing.alternatives)[0] || "",
     })));
   }
 
@@ -354,12 +354,12 @@ export default function NourritureDetailAdmin() {
     try {
       const { data, error } = await supabase
         .from("nourritures_ingredients")
-        .insert([{ nourriture_id: id, ingredient_id: newIngredient.ingredient_id, quantite: newIngredient.quantite, unite: newIngredient.unite, alternatives: newIngredient.alternatives || [] }])
+        .insert([{ nourriture_id: id, ingredient_id: newIngredient.ingredient_id, quantite: newIngredient.quantite, unite: newIngredient.unite, alternatives: newIngredient.alternatives ? [newIngredient.alternatives] : [] }])
         .select()
         .maybeSingle();
       if (error) throw error;
-      setIngredients([...ingredients, { ...data, alternatives: normalizeAlternatives(data.alternatives) }]);
-      setNewIngredient({ ingredient_id: "", quantite: "", unite: "", alternatives: [] });
+      setIngredients([...ingredients, { ...data, alternatives: normalizeAlternatives(data.alternatives)[0] || "" }]);
+      setNewIngredient({ ingredient_id: "", quantite: "", unite: "", alternatives: "" });
     } catch (err) {
       console.error(err);
       alert("Erreur lors de l'ajout : " + err.message);
@@ -379,7 +379,7 @@ export default function NourritureDetailAdmin() {
           ingredient_id: editingIngredient.ingredient_id,
           quantite: editingIngredient.quantite, 
           unite: editingIngredient.unite,
-          alternatives: editingIngredient.alternatives || []
+          alternatives: editingIngredient.alternatives ? [editingIngredient.alternatives] : []
         })
         .eq("id", ingId);
       if (error) throw error;
@@ -918,23 +918,15 @@ export default function NourritureDetailAdmin() {
                             <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                           ))}
                         </select>
-                        <div style={{ minWidth: 240 }}>
-                          <label style={{ display: "block", fontSize: "0.8rem", marginBottom: 4 }}>Alternatives</label>
-                          <select
-                            multiple
-                            value={editingIngredient.alternatives || []}
-                            onChange={(e) => setEditingIngredient({
-                              ...editingIngredient,
-                              alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
-                            })}
-                            style={{ flex: 1, padding: 6, boxSizing: "border-box" }}
-                          >
-                            <option value="" disabled>-- Sélectionner --</option>
-                            {inventaire.map((inv) => (
-                              <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
-                            ))}
-                          </select>
-                        </div>
+                        <select
+                          value={editingIngredient.alternatives}
+                          onChange={(e) => setEditingIngredient({ ...editingIngredient, alternatives: e.target.value })}
+                          style={{ flex: 1, padding: 6, boxSizing: "border-box" }}
+                        >
+                          {inventaire.map((inv) => (
+                            <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
+                          ))}
+                        </select>
                         <button onClick={() => updateIngredient(ing.id)} style={{ padding: "4px 8px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Sauvegarder">
                           <Check size={14} />
                         </button>
@@ -948,15 +940,15 @@ export default function NourritureDetailAdmin() {
                           {ing.quantite && `${ing.quantite} `}
                           {ing.unite && `${ing.unite} `}
                           {getIngredientName(ing.ingredient_id)}
-                          {ing.alternatives && ing.alternatives.length > 0 && (
+                          {ing.alternatives && (
                             <span style={{ display: "block", fontSize: "0.9rem", color: "#777", marginTop: 2, fontStyle: "italic" }}>
-                              Alternatives : {getAlternativeNames(ing.alternatives).join(", ")}
+                              Alternatives : {getAlternativeNames([ing.alternatives]).join(", ")}
                             </span>
                           )}
                         </span>
                         {isEditing && (
                           <div style={{ display: "flex", gap: 5 }}>
-                            <button onClick={() => setEditingIngredient({ ...ing, alternatives: normalizeAlternatives(ing.alternatives) })} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Éditer">
+                            <button onClick={() => setEditingIngredient({ ...ing, alternatives: normalizeAlternatives(ing.alternatives)[0] || "" })} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Éditer">
                               <Edit size={14} />
                             </button>
                             <button onClick={() => removeIngredient(ing.id)} style={{ padding: "4px 8px", backgroundColor: "#6b7280", color: "white", border: "none", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Supprimer">
@@ -1013,15 +1005,11 @@ export default function NourritureDetailAdmin() {
                 <div style={{ flex: 1, minWidth: 240 }}>
                   <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Alternatives</label>
                   <select
-                    multiple
                     value={newIngredient.alternatives}
-                    onChange={(e) => setNewIngredient({
-                      ...newIngredient,
-                      alternatives: Array.from(e.target.selectedOptions, (option) => option.value),
-                    })}
+                    onChange={(e) => setNewIngredient({ ...newIngredient, alternatives: e.target.value })}
                     style={{ width: "100%", padding: 8, boxSizing: "border-box" }}
                   >
-                    <option value="" disabled>-- Sélectionner --</option>
+                    <option value="">-- Sélectionner --</option>
                     {inventaire.map((inv) => (
                       <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                     ))}
