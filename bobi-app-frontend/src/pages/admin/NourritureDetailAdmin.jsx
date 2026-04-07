@@ -929,6 +929,7 @@ export default function NourritureDetailAdmin() {
                             })}
                             style={{ flex: 1, padding: 6, boxSizing: "border-box" }}
                           >
+                            <option value="" disabled>-- Sélectionner --</option>
                             {inventaire.map((inv) => (
                               <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                             ))}
@@ -1020,6 +1021,7 @@ export default function NourritureDetailAdmin() {
                     })}
                     style={{ width: "100%", padding: 8, boxSizing: "border-box" }}
                   >
+                    <option value="" disabled>-- Sélectionner --</option>
                     {inventaire.map((inv) => (
                       <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                     ))}

@@ -993,6 +993,7 @@ export default function BoissonDetailAdmin() {
                             })}
                             style={{ flex: 1, minWidth: 120, padding: 6, boxSizing: "border-box" }}
                           >
+                            <option value="" disabled>-- Sélectionner --</option>
                             {inventaire.map((inv) => (
                               <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                             ))}
@@ -1078,6 +1079,7 @@ export default function BoissonDetailAdmin() {
                     })}
                     style={{ width: "100%", padding: 8, boxSizing: "border-box" }}
                   >
+                    <option value="" disabled>-- Sélectionner --</option>
                     {inventaire.map((inv) => (
                       <option key={inv.id} value={inv.id}>{inv.nom} {inv.categorie ? `(${inv.categorie})` : ""}</option>
                     ))}
