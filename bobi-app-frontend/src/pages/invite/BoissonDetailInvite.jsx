@@ -192,9 +192,6 @@ export default function BoissonDetailInvite() {
     if (normalizedType.startsWith("facult")) {
       return <Flower size={16} color="#2f855a" style={{ display: 'inline-flex' }} />;
     }
-    if (normalizedType.startsWith("oblig")) {
-      return <AlertTriangle size={16} color="#d53f25" style={{ display: 'inline-flex' }} />;
-    }
     return null;
   };
 
@@ -323,10 +320,10 @@ export default function BoissonDetailInvite() {
                 {ingredients.map(ing => (
                   <li key={ing.id} style={{ marginBottom: 8, padding: "6px 0" }}>
                     <span>
-                      {ing.quantite && `${ing.quantite} `}
-                      {ing.unite && `${ing.unite} `}
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                         {renderIngredientTypeIcon(ing.type)}
+                        {ing.quantite && `${ing.quantite} `}
+                        {ing.unite && `${ing.unite} `}
                         <strong>{ing.inventaire?.nom || 'Ingrédient'}</strong>
                       </span>
                     </span>

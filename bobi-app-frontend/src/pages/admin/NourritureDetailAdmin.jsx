@@ -526,9 +526,6 @@ export default function NourritureDetailAdmin() {
     if (normalizedType.startsWith("facult")) {
       return <Flower size={16} color="#2f855a" style={{ display: 'inline-flex' }} />;
     }
-    if (normalizedType.startsWith("oblig")) {
-      return <AlertTriangle size={16} color="#d53f25" style={{ display: 'inline-flex' }} />;
-    }
     return null;
   }
 
@@ -959,10 +956,10 @@ export default function NourritureDetailAdmin() {
                     ) : (
                       <>
                         <span style={{ flex: 1 }}>
-                          {ing.quantite && `${ing.quantite} `}
-                          {ing.unite && `${ing.unite} `}
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                             {renderIngredientTypeIcon(ing.type)}
+                            {ing.quantite && `${ing.quantite} `}
+                            {ing.unite && `${ing.unite} `}
                             {getIngredientName(ing.ingredient_id)}
                           </span>
                           {ing.alternatives && (
