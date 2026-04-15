@@ -6,7 +6,7 @@ import { toPascalCase } from "../../services/imageService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import RecipeImportModal from "../../components/RecipeImportModal";
-import { Edit, X, Save, Trash2, Plus, ThumbsUp, ThumbsDown, Check, Download } from 'lucide-react';
+import { Edit, X, Save, Trash2, Plus, ThumbsUp, ThumbsDown, Check, Download, Flower, AlertTriangle } from 'lucide-react';
 
 // Ajouter les animations CSS
 const style = document.createElement('style');
@@ -84,7 +84,7 @@ export default function NourritureDetailAdmin() {
   async function fetchIngredients() {
     const { data: ingData, error: ingErr } = await supabase
       .from("nourritures_ingredients")
-      .select("id, ingredient_id, quantite, unite, alternatives")
+      .select("id, ingredient_id, quantite, unite, alternatives, type")
       .eq("nourriture_id", id)
       .order("id", { ascending: true });
     if (ingErr) throw ingErr;
@@ -520,6 +520,17 @@ export default function NourritureDetailAdmin() {
     return [];
   }
 
+  function renderIngredientTypeIcon(type) {
+    const normalizedType = String(type || "").toLowerCase();
+    if (normalizedType === "facultatif") {
+      return <Flower size={16} color="#2f855a" style={{ display: 'inline-flex' }} />;
+    }
+    if (normalizedType === "obligatoire") {
+      return <AlertTriangle size={16} color="#d53f25" style={{ display: 'inline-flex' }} />;
+    }
+    return null;
+  }
+
   const pageTitle = id === "new" ? "Nouvelle nourriture" : nom || "Détail nourriture";
 
   return (
@@ -940,7 +951,10 @@ export default function NourritureDetailAdmin() {
                         <span style={{ flex: 1 }}>
                           {ing.quantite && `${ing.quantite} `}
                           {ing.unite && `${ing.unite} `}
-                          {getIngredientName(ing.ingredient_id)}
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                            {renderIngredientTypeIcon(ing.type)}
+                            {getIngredientName(ing.ingredient_id)}
+                          </span>
                           {ing.alternatives && (
                             <span style={{ display: "block", fontSize: "0.9rem", color: "#777", marginTop: 2, fontStyle: "italic" }}>
                               Alternatives : {getAlternativeNames([ing.alternatives]).join(", ")}

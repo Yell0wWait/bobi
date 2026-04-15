@@ -6,7 +6,7 @@ import { toPascalCase } from "../../services/imageService";
 import { toLocalDateYYYYMMDD, toLocalTimestamp } from "../../services/dateService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
-import { ShoppingCart, Star, StarHalf, Wine, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { ShoppingCart, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Flower, AlertTriangle } from 'lucide-react';
 
 export default function BoissonDetailInvite() {
   const { id } = useParams();
@@ -55,6 +55,7 @@ export default function BoissonDetailInvite() {
             quantite,
             unite,
             alternatives,
+            type,
             inventaire:ingredient_id(id, nom, categorie)
           `)
           .eq("boisson_id", id)
@@ -186,6 +187,28 @@ export default function BoissonDetailInvite() {
     return [];
   };
 
+  const renderIngredientTypeIcon = (type) => {
+    const normalizedType = String(type || "").toLowerCase();
+    if (normalizedType === "facultatif") {
+      return <Flower size={16} color="#2f855a" style={{ display: 'inline-flex' }} />;
+    }
+    if (normalizedType === "obligatoire") {
+      return <AlertTriangle size={16} color="#d53f25" style={{ display: 'inline-flex' }} />;
+    }
+    return null;
+  };
+
+  const renderIngredientTypeIcon = (type) => {
+    const normalizedType = String(type || "").toLowerCase();
+    if (normalizedType === "facultatif") {
+      return <Flower size={16} color="#2f855a" style={{ display: 'inline-flex' }} />;
+    }
+    if (normalizedType === "obligatoire") {
+      return <AlertTriangle size={16} color="#d53f25" style={{ display: 'inline-flex' }} />;
+    }
+    return null;
+  };
+
   const handleCommander = async () => {
     if (!secretToken) return;
     setCommandLoading(true);
@@ -313,7 +336,10 @@ export default function BoissonDetailInvite() {
                     <span>
                       {ing.quantite && `${ing.quantite} `}
                       {ing.unite && `${ing.unite} `}
-                      <strong>{ing.inventaire?.nom || 'Ingrédient'}</strong>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        {renderIngredientTypeIcon(ing.type)}
+                        <strong>{ing.inventaire?.nom || 'Ingrédient'}</strong>
+                      </span>
                     </span>
                     {ing.alternatives && ing.alternatives.length > 0 && (
                       <div style={{ marginTop: 4, fontSize: '0.9rem', color: '#777', fontStyle: 'italic' }}>

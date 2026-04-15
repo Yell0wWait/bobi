@@ -7,7 +7,7 @@ import { toLocalDateYYYYMMDD, toLocalTimestamp } from "../../services/dateServic
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import RecipeImportModal from "../../components/RecipeImportModal";
-import { Edit, X, Save, Trash2, Plus, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Check, ShoppingCart, Download } from 'lucide-react';
+import { Edit, X, Save, Trash2, Plus, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Check, ShoppingCart, Download, Flower, AlertTriangle } from 'lucide-react';
 
 // Ajouter les animations CSS
 const style = document.createElement('style');
@@ -108,7 +108,7 @@ export default function BoissonDetailAdmin() {
       // Charger les ingrédients
       const { data: ingData, error: ingErr } = await supabase
         .from("boissons_ingredients")
-        .select("id, ingredient_id, quantite, unite, alternatives")
+        .select("id, ingredient_id, quantite, unite, alternatives, type")
         .eq("boisson_id", id)
         .order("id", { ascending: true });
       if (ingErr) throw ingErr;
@@ -557,6 +557,17 @@ export default function BoissonDetailAdmin() {
     return [];
   }
 
+  function renderIngredientTypeIcon(type) {
+    const normalizedType = String(type || "").toLowerCase();
+    if (normalizedType === "facultatif") {
+      return <Flower size={16} color="#2f855a" style={{ display: 'inline-flex' }} />;
+    }
+    if (normalizedType === "obligatoire") {
+      return <AlertTriangle size={16} color="#d53f25" style={{ display: 'inline-flex' }} />;
+    }
+    return null;
+  }
+
   function getCommandeImageUrl(commande, dateCreated) {
     if (!commande.boisson_nom || !commande.guest_pseudo || !dateCreated) return null;
     
@@ -998,7 +1009,10 @@ export default function BoissonDetailAdmin() {
                         <span style={{ flex: 1 }}>
                           {ing.quantite && `${ing.quantite} `}
                           {ing.unite && `${ing.unite} `}
-                          {getIngredientName(ing.ingredient_id)}
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                            {renderIngredientTypeIcon(ing.type)}
+                            {getIngredientName(ing.ingredient_id)}
+                          </span>
                           {ing.alternatives && (
                             <span style={{ display: "block", fontSize: "0.9rem", color: "#777", marginTop: 2, fontStyle: "italic" }}>
                               Alternatives : {getAlternativeNames([ing.alternatives]).join(", ")}
