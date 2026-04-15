@@ -53,7 +53,7 @@ export default function BoissonDetailAdmin() {
   // Ingrédients
   const [ingredients, setIngredients] = useState([]);
   const [inventaire, setInventaire] = useState([]);
-  const [newIngredient, setNewIngredient] = useState({ ingredient_id: "", quantite: "", unite: "", alternatives: "" });
+  const [newIngredient, setNewIngredient] = useState({ ingredient_id: "", quantite: "", unite: "", alternatives: "", type: "" });
   const [editingIngredient, setEditingIngredient] = useState(null);
 
   // Préparation
@@ -378,12 +378,12 @@ export default function BoissonDetailAdmin() {
     try {
       const { data, error } = await supabase
         .from("boissons_ingredients")
-        .insert([{ boisson_id: id, ingredient_id: newIngredient.ingredient_id, quantite: newIngredient.quantite, unite: newIngredient.unite, alternatives: newIngredient.alternatives ? [newIngredient.alternatives] : [] }])
+        .insert([{ boisson_id: id, ingredient_id: newIngredient.ingredient_id, quantite: newIngredient.quantite, unite: newIngredient.unite, alternatives: newIngredient.alternatives ? [newIngredient.alternatives] : [], type: newIngredient.type }])
         .select()
         .maybeSingle();
       if (error) throw error;
       setIngredients([...ingredients, { ...data, alternatives: normalizeAlternatives(data.alternatives)[0] || "" }]);
-      setNewIngredient({ ingredient_id: "", quantite: "", unite: "", alternatives: "" });
+      setNewIngredient({ ingredient_id: "", quantite: "", unite: "", alternatives: "", type: "" });
     } catch (err) {
       console.error(err);
       alert("Erreur lors de l'ajout : " + err.message);
@@ -403,7 +403,8 @@ export default function BoissonDetailAdmin() {
           ingredient_id: editingIngredient.ingredient_id,
           quantite: editingIngredient.quantite, 
           unite: editingIngredient.unite,
-          alternatives: editingIngredient.alternatives ? [editingIngredient.alternatives] : []
+          alternatives: editingIngredient.alternatives ? [editingIngredient.alternatives] : [],
+          type: editingIngredient.type
         })
         .eq("id", ingId);
       if (error) throw error;
@@ -994,6 +995,15 @@ export default function BoissonDetailAdmin() {
                           ))}
                         </select>
                         <select
+                          value={editingIngredient.type || ""}
+                          onChange={(e) => setEditingIngredient({ ...editingIngredient, type: e.target.value })}
+                          style={{ minWidth: 140, padding: 6, boxSizing: "border-box" }}
+                        >
+                          <option value="">-- Type --</option>
+                          <option value="obligatoire">Obligatoire</option>
+                          <option value="facultatif">Facultatif</option>
+                        </select>
+                        <select
                           value={editingIngredient.alternatives}
                           onChange={(e) => setEditingIngredient({ ...editingIngredient, alternatives: e.target.value })}
                           style={{ flex: 1, minWidth: 120, padding: 6, boxSizing: "border-box" }}
@@ -1074,6 +1084,18 @@ export default function BoissonDetailAdmin() {
                     placeholder="ml, g, etc."
                     style={{ width: "100%", padding: 8 }}
                   />
+                </div>
+                <div style={{ width: 140 }}>
+                  <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Type</label>
+                  <select
+                    value={newIngredient.type}
+                    onChange={(e) => setNewIngredient({ ...newIngredient, type: e.target.value })}
+                    style={{ width: "100%", padding: 8, boxSizing: "border-box" }}
+                  >
+                    <option value="">-- Type --</option>
+                    <option value="obligatoire">Obligatoire</option>
+                    <option value="facultatif">Facultatif</option>
+                  </select>
                 </div>
                 <div style={{ flex: 1, minWidth: 240 }}>
                   <label style={{ display: "block", marginBottom: 4, fontSize: 'var(--font-size-base)' }}>Alternatives</label>
