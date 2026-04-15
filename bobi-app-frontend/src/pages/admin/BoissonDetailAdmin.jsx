@@ -559,11 +559,11 @@ export default function BoissonDetailAdmin() {
   }
 
   function renderIngredientTypeIcon(type) {
-    const normalizedType = String(type || "").toLowerCase();
-    if (normalizedType === "facultatif") {
+    const normalizedType = String(type || "").trim().toLowerCase();
+    if (normalizedType.startsWith("facult")) {
       return <Flower size={16} color="#2f855a" style={{ display: 'inline-flex' }} />;
     }
-    if (normalizedType === "obligatoire") {
+    if (normalizedType.startsWith("oblig")) {
       return <AlertTriangle size={16} color="#d53f25" style={{ display: 'inline-flex' }} />;
     }
     return null;
