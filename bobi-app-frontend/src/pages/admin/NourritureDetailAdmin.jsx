@@ -529,7 +529,22 @@ export default function NourritureDetailAdmin() {
     return null;
   }
 
+  function getSortedIngredients(list) {
+    return list
+      .map((ing, idx) => ({
+        ing,
+        idx,
+        facultatif: String(ing.type || "").trim().toLowerCase().startsWith("facult"),
+      }))
+      .sort((a, b) => {
+        if (a.facultatif !== b.facultatif) return a.facultatif ? 1 : -1;
+        return a.idx - b.idx;
+      })
+      .map(({ ing }) => ing);
+  }
+
   const pageTitle = id === "new" ? "Nouvelle nourriture" : nom || "Détail nourriture";
+  const sortedIngredients = getSortedIngredients(ingredients);
 
   return (
     <>
@@ -898,7 +913,7 @@ export default function NourritureDetailAdmin() {
             <p style={{ fontStyle: "italic", color: "#888" }}>Aucun ingrédient défini.</p>
           ) : (
             <ul style={{ listStyle: "none", padding: 0, marginBottom: 20 }}>
-              {ingredients.map(ing => {
+              {sortedIngredients.map(ing => {
                 const isEditingIng = editingIngredient && editingIngredient.id === ing.id;
                 return (
                   <li key={ing.id} style={{ marginBottom: 8, padding: "6px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>

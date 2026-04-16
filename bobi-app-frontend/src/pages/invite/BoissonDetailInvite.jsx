@@ -195,6 +195,29 @@ export default function BoissonDetailInvite() {
     return null;
   };
 
+  const isAlcoholIngredient = (ingredient) => {
+    const category = String(ingredient?.inventaire?.categorie || "").toLowerCase();
+    return category.includes("alcool");
+  };
+
+  const getSortedIngredients = (list, prioritizeAlcohol = false) => {
+    return list
+      .map((ing, idx) => ({
+        ing,
+        idx,
+        facultatif: String(ing.type || "").trim().toLowerCase().startsWith("facult"),
+        alcohol: prioritizeAlcohol && !String(ing.type || "").trim().toLowerCase().startsWith("facult") ? isAlcoholIngredient(ing) : false,
+      }))
+      .sort((a, b) => {
+        if (a.facultatif !== b.facultatif) return a.facultatif ? 1 : -1;
+        if (prioritizeAlcohol && !a.facultatif && !b.facultatif && a.alcohol !== b.alcohol) {
+          return a.alcohol ? -1 : 1;
+        }
+        return a.idx - b.idx;
+      })
+      .map(({ ing }) => ing);
+  };
+
   const handleCommander = async () => {
     if (!secretToken) return;
     setCommandLoading(true);
@@ -238,6 +261,8 @@ export default function BoissonDetailInvite() {
       setCommandLoading(false);
     }
   };
+
+  const sortedIngredients = getSortedIngredients(ingredients, true);
 
   if (loading) return <BobiAnimation type="loading" message="Bobi vérifie les stocks..." duration={0} />;
   if (!boisson) return <p style={{ padding: 16 }}>Boisson introuvable.</p>;
@@ -317,7 +342,7 @@ export default function BoissonDetailInvite() {
             <div style={{ marginTop: 40 }}>
               <h2>Ingrédients</h2>
               <ul style={{ listStyle: "none", padding: 0, marginBottom: 20 }}>
-                {ingredients.map(ing => (
+                {sortedIngredients.map(ing => (
                   <li key={ing.id} style={{ marginBottom: 8, padding: "6px 0" }}>
                     <span>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>

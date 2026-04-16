@@ -566,6 +566,34 @@ export default function BoissonDetailAdmin() {
     return null;
   }
 
+  function getIngredientCategory(ingredientId) {
+    const inv = inventaire.find(i => i.id === ingredientId);
+    return inv?.categorie || "";
+  }
+
+  function isAlcoholIngredient(ingredient) {
+    const category = String(ingredient?.inventaire?.categorie || getIngredientCategory(ingredient.ingredient_id)).toLowerCase();
+    return category.includes("alcool");
+  }
+
+  function getSortedIngredients(list, prioritizeAlcohol = false) {
+    return list
+      .map((ing, idx) => ({
+        ing,
+        idx,
+        facultatif: String(ing.type || "").trim().toLowerCase().startsWith("facult"),
+        alcohol: prioritizeAlcohol && !String(ing.type || "").trim().toLowerCase().startsWith("facult") ? isAlcoholIngredient(ing) : false,
+      }))
+      .sort((a, b) => {
+        if (a.facultatif !== b.facultatif) return a.facultatif ? 1 : -1;
+        if (prioritizeAlcohol && !a.facultatif && !b.facultatif && a.alcohol !== b.alcohol) {
+          return a.alcohol ? -1 : 1;
+        }
+        return a.idx - b.idx;
+      })
+      .map(({ ing }) => ing);
+  }
+
   function getCommandeImageUrl(commande, dateCreated) {
     if (!commande.boisson_nom || !commande.guest_pseudo || !dateCreated) return null;
     
@@ -629,6 +657,7 @@ export default function BoissonDetailAdmin() {
   }
 
   const pageTitle = id === "new" ? "Nouvelle boisson" : nom || "Détail boisson";
+  const sortedIngredients = getSortedIngredients(ingredients, true);
 
   return (
     <>
@@ -962,7 +991,7 @@ export default function BoissonDetailAdmin() {
             <p style={{ fontStyle: "italic", color: "#888" }}>Aucun ingrédient défini.</p>
           ) : (
             <ul style={{ listStyle: "none", padding: 0, marginBottom: 20 }}>
-              {ingredients.map(ing => {
+              {sortedIngredients.map(ing => {
                 const isEditingIng = editingIngredient && editingIngredient.id === ing.id;
                 return (
                   <li key={ing.id} style={{ marginBottom: 8, padding: "6px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
