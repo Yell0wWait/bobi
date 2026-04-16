@@ -7,7 +7,7 @@ import { toLocalDateYYYYMMDD, toLocalTimestamp } from "../../services/dateServic
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
 import RecipeImportModal from "../../components/RecipeImportModal";
-import { Edit, X, Save, Trash2, Plus, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Check, ShoppingCart, Download, Flower, AlertTriangle } from 'lucide-react';
+import { Edit, X, Save, Trash2, Plus, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Check, ShoppingCart, Download, Flower, Shuffle, AlertTriangle } from 'lucide-react';
 
 // Ajouter les animations CSS
 const style = document.createElement('style');
@@ -1021,8 +1021,9 @@ export default function BoissonDetailAdmin() {
                             {getIngredientName(ing.ingredient_id)}
                           </span>
                           {ing.alternatives && (
-                            <span style={{ display: "block", fontSize: "0.9rem", color: "#777", marginTop: 2, fontStyle: "italic" }}>
-                              Alternatives : {getAlternativeNames([ing.alternatives]).join(", ")}
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: "0.9rem", color: "#777", marginTop: 2, fontStyle: "italic" }}>
+                              <Shuffle size={14} color="currentColor" />
+                              {getAlternativeNames([ing.alternatives]).join(", ")}
                             </span>
                           )}
                         </span>

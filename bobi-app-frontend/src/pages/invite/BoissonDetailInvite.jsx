@@ -6,7 +6,7 @@ import { toPascalCase } from "../../services/imageService";
 import { toLocalDateYYYYMMDD, toLocalTimestamp } from "../../services/dateService";
 import Header from "../../components/Header";
 import BobiAnimation from "../../components/BobiAnimation";
-import { ShoppingCart, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Flower, AlertTriangle } from 'lucide-react';
+import { ShoppingCart, Star, StarHalf, Wine, ThumbsUp, ThumbsDown, Flower, Shuffle, AlertTriangle } from 'lucide-react';
 
 export default function BoissonDetailInvite() {
   const { id } = useParams();
@@ -328,8 +328,9 @@ export default function BoissonDetailInvite() {
                       </span>
                     </span>
                     {ing.alternatives && ing.alternatives.length > 0 && (
-                      <div style={{ marginTop: 4, fontSize: '0.9rem', color: '#777', fontStyle: 'italic' }}>
-                        <strong>Alternatives:</strong> {getAlternativeNames(ing.alternatives).join(', ')}
+                      <div style={{ marginTop: 4, fontSize: '0.9rem', color: '#777', fontStyle: 'italic', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        <Shuffle size={14} color="currentColor" />
+                        {getAlternativeNames(ing.alternatives).join(', ')}
                       </div>
                     )}
                   </li>
