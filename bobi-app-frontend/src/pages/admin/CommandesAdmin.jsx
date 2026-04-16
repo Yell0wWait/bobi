@@ -231,9 +231,11 @@ export default function CommandesAdmin() {
     setEditingCommande({
       id: commande.id,
       boisson_id: commande.boisson_id,
-      // degustateur_secret_token: commande.degustateur_secret_token, // colonne supprimée
+      degustateur_secret_token: commande.degustateur_secret_token,
       date_commande: toLocalDateInputValue(commande.date_commande),
-      note: commande.note || 0
+      note: commande.note ?? 0,
+      statut: commande.statut || "Commandé",
+      commentaire: commande.commentaire || ""
     });
   }
 
@@ -244,9 +246,11 @@ export default function CommandesAdmin() {
         .from("commandes")
         .update({
           boisson_id: editingCommande.boisson_id,
-          // degustateur_secret_token: editingCommande.degustateur_secret_token, // colonne supprimée
+          degustateur_secret_token: editingCommande.degustateur_secret_token,
           date_commande: editingCommande.date_commande,
-          note: editingCommande.note
+          note: editingCommande.note,
+          statut: editingCommande.statut,
+          commentaire: editingCommande.commentaire
         })
         .eq("id", editingCommande.id);
       
@@ -411,15 +415,38 @@ export default function CommandesAdmin() {
               />
             </div>
 
-            <div style={{ marginBottom: 20 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--font-size-base)' }}>Note (0-5)</label>
-              <input
-                type="number"
-                min="0"
-                max="5"
-                value={editingCommande.note}
-                onChange={(e) => setEditingCommande({ ...editingCommande, note: parseInt(e.target.value) || 0 })}
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--font-size-base)' }}>Statut</label>
+              <select
+                value={editingCommande.statut}
+                onChange={(e) => setEditingCommande({ ...editingCommande, statut: e.target.value })}
                 style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid var(--border-color)" }}
+              >
+                <option value="Commandé">Commandé</option>
+                <option value="Servi">Servi</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--font-size-base)' }}>Note</label>
+              <select
+                value={editingCommande.note}
+                onChange={(e) => setEditingCommande({ ...editingCommande, note: parseFloat(e.target.value) || 0 })}
+                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid var(--border-color)" }}
+              >
+                {[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            </div>
+
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--font-size-base)' }}>Commentaire</label>
+              <textarea
+                value={editingCommande.commentaire}
+                onChange={(e) => setEditingCommande({ ...editingCommande, commentaire: e.target.value })}
+                rows={4}
+                style={{ width: "100%", padding: 8, fontSize: 'var(--font-size-base)', borderRadius: 4, border: "1px solid var(--border-color)", resize: 'vertical' }}
               />
             </div>
 
