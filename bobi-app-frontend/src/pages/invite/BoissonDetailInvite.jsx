@@ -328,7 +328,7 @@ export default function BoissonDetailInvite() {
                       </span>
                     </span>
                     {ing.alternatives && ing.alternatives.length > 0 && (
-                      <div style={{ marginTop: 4, fontSize: '0.9rem', color: '#777', fontStyle: 'italic', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <div style={{ marginTop: 4, fontSize: '0.9rem', color: '#777', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: 6 }}>
                         <Shuffle size={14} color="currentColor" />
                         {getAlternativeNames(ing.alternatives).join(', ')}
                       </div>

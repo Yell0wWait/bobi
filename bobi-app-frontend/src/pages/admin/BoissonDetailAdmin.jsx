@@ -1021,7 +1021,7 @@ export default function BoissonDetailAdmin() {
                             {getIngredientName(ing.ingredient_id)}
                           </span>
                           {ing.alternatives && (
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: "0.9rem", color: "#777", marginTop: 2, fontStyle: "italic" }}>
+                            <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.9rem", color: "#777", marginTop: 4, fontStyle: "italic" }}>
                               <Shuffle size={14} color="currentColor" />
                               {getAlternativeNames([ing.alternatives]).join(", ")}
                             </span>
