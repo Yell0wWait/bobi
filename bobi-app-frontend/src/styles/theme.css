@@ -93,10 +93,10 @@
   --font-size-sm: 0.75rem;
   --font-size-base: 0.875rem;
   --font-size-lg: 1rem;
-  --font-size-xl: 1.125rem;
-  --font-size-2xl: 1.35rem;
-  --font-size-3xl: 1.65rem;
-  --font-size-4xl: 2rem;
+  --font-size-xl: 1rem;
+  --font-size-2xl: 1.2rem;
+  --font-size-3xl: 1.45rem;
+  --font-size-4xl: 1.8rem;
 }
 
 /* Reset et styles globaux */

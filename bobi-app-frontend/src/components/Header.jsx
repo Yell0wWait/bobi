@@ -51,7 +51,7 @@ export default function Header({ title, showBackButton = false }) {
         
         <h1 style={{
           margin: 0,
-          fontSize: 18,
+          fontSize: 16,
           fontFamily: "var(--font-display)",
           fontWeight: "var(--font-weight-bold)",
           color: "var(--text-primary)",
