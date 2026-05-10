@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Recipe Importer: Preparer prompt pour Codex",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\prepare-recipe-importer-prompt.ps1",
+        "-InputSource",
+        "${input:inputSource}",
+        "-RecipeUrl",
+        "${input:recipeUrl}",
+        "-RecipeTextPath",
+        "${input:recipeTextPath}",
+        "-RecipeType",
+        "${input:recipeType}"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "inputSource",
+      "type": "pickString",
+      "description": "Source de la recette",
+      "default": "url",
+      "options": [
+        "url",
+        "texte"
+      ]
+    },
+    {
+      "id": "recipeUrl",
+      "type": "promptString",
+      "description": "URL de la recette a importer (laisser __EMPTY__ si tu utilises le mode texte)",
+      "default": "__EMPTY__"
+    },
+    {
+      "id": "recipeTextPath",
+      "type": "promptString",
+      "description": "Chemin du fichier texte de recette a lire en mode texte",
+      "default": "${workspaceFolder}\\.vscode\\recipe-import-input.txt"
+    },
+    {
+      "id": "recipeType",
+      "type": "pickString",
+      "description": "Type de recette",
+      "default": "auto",
+      "options": [
+        "auto",
+        "boissons",
+        "nourritures"
+      ]
+    }
+  ]
+}

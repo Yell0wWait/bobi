@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "matches": [
+    {
+      "source_name": "soda club",
+      "normalized_name": "soda club",
+      "inventory_id": "df29eee1-37e9-46c0-b6b0-e0615e5e194e",
+      "inventory_name": "Club Soda",
+      "note": "Mapping valide par l'utilisateur"
+    },
+    {
+      "source_name": "menthe fraiche",
+      "normalized_name": "menthe fraiche",
+      "inventory_id": "3e175c94-91e0-4d5a-a88e-32588919637d",
+      "inventory_name": "Menthe",
+      "note": "Mapping valide par l'utilisateur"
+    },
+    {
+      "source_name": "brin de menthe fraiche",
+      "normalized_name": "brin de menthe fraiche",
+      "inventory_id": "3e175c94-91e0-4d5a-a88e-32588919637d",
+      "inventory_name": "Menthe",
+      "note": "Garniture; mapping valide par l'utilisateur"
+    },
+    {
+      "source_name": "lime",
+      "normalized_name": "lime",
+      "inventory_id": "9f6a9b2c-ed33-4fbd-955c-c73c8e12e628",
+      "inventory_name": "Lime",
+      "note": "Mapping valide par l'utilisateur"
+    },
+    {
+      "source_name": "sucre",
+      "normalized_name": "sucre",
+      "inventory_id": "b14dd701-c93c-4de6-86d6-23129d5352f7",
+      "inventory_name": "Sucre",
+      "note": "Si le type de sucre n'est pas precise, utiliser Sucre"
+    }
+  ]
+}
