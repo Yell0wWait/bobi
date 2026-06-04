@@ -14,7 +14,7 @@ export default function Inventaire() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [editingItem, setEditingItem] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [formData, setFormData] = useState({ nom: "", categorie: "", disponible: true, prix: "", marque_pref: "", magasin_pref: "" });
+  const [formData, setFormData] = useState({ nom: "", categorie: "", sous_categorie: "", disponible: true, prix: "" });
   const [newCategory, setNewCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchExpanded, setSearchExpanded] = useState(false);
@@ -46,7 +46,7 @@ export default function Inventaire() {
     try {
       const { data, error } = await supabase
         .from("inventaire")
-        .select("id, nom, categorie, disponible")
+        .select("id, nom, categorie, disponible, prix, sous_categorie")
         .order("nom", { ascending: true });
 
       if (error) throw error;
@@ -110,10 +110,9 @@ export default function Inventaire() {
         .update({ 
           nom: formData.nom.trim(), 
           categorie: formData.categorie || null, 
+          sous_categorie: formData.sous_categorie || null,
           disponible: formData.disponible,
-          prix: formData.prix || null,
-          marque_pref: formData.marque_pref || null,
-          magasin_pref: formData.magasin_pref || null
+          prix: formData.prix || null
         })
         .eq("id", editingItem.id);
 
@@ -143,10 +142,9 @@ export default function Inventaire() {
         .insert([{ 
           nom: formData.nom.trim(), 
           categorie: formData.categorie || null, 
+          sous_categorie: formData.sous_categorie || null,
           disponible: formData.disponible,
-          prix: formData.prix || null,
-          marque_pref: formData.marque_pref || null,
-          magasin_pref: formData.magasin_pref || null
+          prix: formData.prix || null
         }])
         .select()
         .single();
@@ -155,7 +153,7 @@ export default function Inventaire() {
       
       setAllItems((i) => [...i, data]);
       setShowAddForm(false);
-      setFormData({ nom: "", categorie: "", disponible: true, prix: "", marque_pref: "", magasin_pref: "" });
+      setFormData({ nom: "", categorie: "", sous_categorie: "", disponible: true, prix: "" });
       setNewCategory("");
       setError(null);
     } catch (err) {
@@ -531,32 +529,11 @@ export default function Inventaire() {
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Prix (optionnel)</label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.prix}
-                onChange={(e) => setFormData({ ...formData, prix: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid var(--border-color)",
-                  borderRadius: 4,
-                  fontSize: 15,
-                  boxSizing: "border-box",
-                  backgroundColor: "var(--bg-primary)",
-                  color: "var(--text-primary)"
-                }}
-                placeholder="0.00"
-              />
-            </div>
-
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Marque préférée (optionnel)</label>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Sous-catégorie (optionnel)</label>
               <input
                 type="text"
-                value={formData.marque_pref}
-                onChange={(e) => setFormData({ ...formData, marque_pref: e.target.value })}
+                value={formData.sous_categorie}
+                onChange={(e) => setFormData({ ...formData, sous_categorie: e.target.value })}
                 style={{
                   width: "100%",
                   padding: "8px 12px",
@@ -567,25 +544,7 @@ export default function Inventaire() {
                   backgroundColor: "var(--bg-primary)",
                   color: "var(--text-primary)"
                 }}
-              />
-            </div>
-
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Magasin préféré (optionnel)</label>
-              <input
-                type="text"
-                value={formData.magasin_pref}
-                onChange={(e) => setFormData({ ...formData, magasin_pref: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid var(--border-color)",
-                  borderRadius: 4,
-                  fontSize: 15,
-                  boxSizing: "border-box",
-                  backgroundColor: "var(--bg-primary)",
-                  color: "var(--text-primary)"
-                }}
+                placeholder="Ex: Sirop, Alcool, Garniture"
               />
             </div>
 
@@ -627,7 +586,7 @@ export default function Inventaire() {
           <div
             onClick={() => {
               setShowAddForm(false);
-              setFormData({ nom: "", categorie: "", disponible: true });
+              setFormData({ nom: "", categorie: "", sous_categorie: "", disponible: true, prix: "" });
               setNewCategory("");
             }}
             style={{
@@ -753,31 +712,11 @@ export default function Inventaire() {
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Prix (optionnel)</label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.prix}
-                onChange={(e) => setFormData({ ...formData, prix: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid var(--border-color)",
-                  borderRadius: 4,
-                  fontSize: 15,
-                  backgroundColor: "var(--bg-primary)",
-                  color: "var(--text-primary)"
-                }}
-                placeholder="0.00"
-              />
-            </div>
-
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Marque préférée (optionnel)</label>
+              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Sous-catégorie (optionnel)</label>
               <input
                 type="text"
-                value={formData.marque_pref}
-                onChange={(e) => setFormData({ ...formData, marque_pref: e.target.value })}
+                value={formData.sous_categorie}
+                onChange={(e) => setFormData({ ...formData, sous_categorie: e.target.value })}
                 style={{
                   width: "100%",
                   padding: "8px 12px",
@@ -787,24 +726,7 @@ export default function Inventaire() {
                   backgroundColor: "var(--bg-primary)",
                   color: "var(--text-primary)"
                 }}
-              />
-            </div>
-
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>Magasin préféré (optionnel)</label>
-              <input
-                type="text"
-                value={formData.magasin_pref}
-                onChange={(e) => setFormData({ ...formData, magasin_pref: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid var(--border-color)",
-                  borderRadius: 4,
-                  fontSize: 15,
-                  backgroundColor: "var(--bg-primary)",
-                  color: "var(--text-primary)"
-                }}
+                placeholder="Ex: Sirop, Alcool, Garniture"
               />
             </div>
 
@@ -822,7 +744,7 @@ export default function Inventaire() {
               <button
                 onClick={() => {
                   setShowAddForm(false);
-                  setFormData({ nom: "", categorie: "", disponible: true, prix: "", marque_pref: "", magasin_pref: "" });
+                  setFormData({ nom: "", categorie: "", sous_categorie: "", disponible: true, prix: "" });
                   setNewCategory("");
                 }}
                 style={{
@@ -860,7 +782,7 @@ export default function Inventaire() {
       <button
         onClick={() => {
           setShowAddForm(true);
-          setFormData({ nom: "", categorie: "", disponible: true, prix: "", marque_pref: "", magasin_pref: "" });
+          setFormData({ nom: "", categorie: "", sous_categorie: "", disponible: true, prix: "" });
           setNewCategory("");
         }}
         className="floating-add-button"

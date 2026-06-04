@@ -20,8 +20,7 @@ export default function IngredientDetailAdmin() {
     nom: "",
     categorie: "",
     prix: "",
-    marque_pref: "",
-    magasin_pref: "",
+    sous_categorie: "",
     disponible: true
   });
   
@@ -51,8 +50,7 @@ export default function IngredientDetailAdmin() {
         nom: ingData.nom || "",
         categorie: ingData.categorie || "",
         prix: ingData.prix || "",
-        marque_pref: ingData.marque_pref || "",
-        magasin_pref: ingData.magasin_pref || "",
+        sous_categorie: ingData.sous_categorie || "",
         disponible: ingData.disponible ?? true
       });
 
@@ -119,8 +117,7 @@ export default function IngredientDetailAdmin() {
           nom: formData.nom,
           categorie: formData.categorie,
           prix: formData.prix || null,
-          marque_pref: formData.marque_pref || null,
-          magasin_pref: formData.magasin_pref || null,
+          sous_categorie: formData.sous_categorie || null,
           disponible: formData.disponible
         })
         .eq("id", id);
@@ -260,17 +257,17 @@ export default function IngredientDetailAdmin() {
             )}
           </div>
 
-          {/* Marque préférée */}
+          {/* Sous-catégorie */}
           <div>
             <label style={{ display: "block", fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
-              Marque préférée
+              Sous-catégorie
             </label>
             {isEditing ? (
               <input
                 type="text"
-                value={formData.marque_pref}
-                onChange={(e) => setFormData({ ...formData, marque_pref: e.target.value })}
-                placeholder="Ex: Heinz"
+                value={formData.sous_categorie}
+                onChange={(e) => setFormData({ ...formData, sous_categorie: e.target.value })}
+                placeholder="Ex: Sirop, Alcool, Garniture"
                 style={{
                   width: "100%",
                   padding: "8px 12px",
@@ -283,34 +280,7 @@ export default function IngredientDetailAdmin() {
                 }}
               />
             ) : (
-              <div style={{ fontSize: 'var(--font-size-lg)', color: "var(--text-on-light-primary)" }}>{ingredient.marque_pref || "-"}</div>
-            )}
-          </div>
-
-          {/* Magasin préféré */}
-          <div>
-            <label style={{ display: "block", fontSize: 'var(--font-size-base)', color: "var(--text-on-light-secondary)", marginBottom: 4 }}>
-              Magasin préféré (optionnel)
-            </label>
-            {isEditing ? (
-              <input
-                type="text"
-                value={formData.magasin_pref}
-                onChange={(e) => setFormData({ ...formData, magasin_pref: e.target.value })}
-                placeholder="Ex: IGA"
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid var(--secondary-200)",
-                  borderRadius: 6,
-                  fontSize: 'var(--font-size-base)',
-                  backgroundColor: "white",
-                  color: "var(--text-on-light-primary)",
-                  outline: "none"
-                }}
-              />
-            ) : (
-              <div style={{ fontSize: 'var(--font-size-lg)', color: "var(--text-on-light-primary)" }}>{ingredient.magasin_pref || "-"}</div>
+              <div style={{ fontSize: 'var(--font-size-lg)', color: "var(--text-on-light-primary)" }}>{ingredient.sous_categorie || "-"}</div>
             )}
           </div>
 
