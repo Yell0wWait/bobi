@@ -2,6 +2,7 @@ import json
 import os
 import re
 import unicodedata
+from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional
 
 import requests
@@ -14,6 +15,25 @@ from supabase import create_client, Client
 # ----------------------------
 # Config
 # ----------------------------
+
+
+def load_local_env() -> None:
+    """Load local env files for development without overriding real env vars."""
+    base_dir = Path(__file__).resolve().parent
+    for env_path in (base_dir / ".env.local", base_dir / ".env"):
+        if not env_path.exists():
+            continue
+        for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            if key and key not in os.environ:
+                os.environ[key] = value.strip().strip('"').strip("'")
+
+
+load_local_env()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY").strip('"') if os.getenv("OPENAI_API_KEY") else None
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip('"')
@@ -145,9 +165,9 @@ RECIPE_SCHEMA = {
 
 SYSTEM_PROMPT = (
     "Tu es un agent d'extraction de recettes.\n"
-    "Retourne UNIQUEMENT un JSON conforme au schéma fourni.\n"
-    "N'invente rien. Si une quantité/unité manque, omets le champ.\n"
-    "Garde l'ordre des étapes. Mets entity_type tel que demandé.\n"
+    "Retourne UNIQUEMENT un JSON conforme au schema fourni.\n"
+    "N'invente rien. Si une quantite/unite manque, laisse la valeur a null.\n"
+    "Garde l'ordre des etapes. Mets entity_type tel que demande.\n"
 )
 
 

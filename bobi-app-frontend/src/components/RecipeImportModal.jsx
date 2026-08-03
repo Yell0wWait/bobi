@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { X, Check, Download } from "lucide-react";
 
-const TYPE_OPTIONS = ["principal", "garniture", "optionnel"];
+const TYPE_OPTIONS = [
+  { value: "obligatoire", label: "Obligatoire" },
+  { value: "facultatif", label: "Facultatif" },
+];
 
 export default function RecipeImportModal({
   isOpen,
@@ -79,7 +82,7 @@ export default function RecipeImportModal({
         ...ing,
         quantity: ing.quantity ?? "",
         unit: ing.unit ?? "",
-        type: entityType === "boisson" ? (ing.type || "principal") : (ing.type || ""),
+        type: entityType === "boisson" ? (ing.type || "obligatoire") : (ing.type || ""),
         selectedInventoryId: ing.match?.selected_inventory_id || "",
         createNewName: "",
       }));
@@ -133,7 +136,7 @@ export default function RecipeImportModal({
           create_new_name: ing.createNewName?.trim() || null,
           quantity: ing.quantity === "" ? null : Number(ing.quantity),
           unit: ing.unit || null,
-          type: entityType === "boisson" ? ing.type || "principal" : ing.type || null,
+          type: entityType === "boisson" ? ing.type || "obligatoire" : ing.type || null,
           name_raw: ing.name_raw || null,
           alternatives: {
             raw: ing.name_raw || null,
@@ -335,7 +338,7 @@ export default function RecipeImportModal({
                         }}
                       >
                         {TYPE_OPTIONS.map((opt) => (
-                          <option key={opt} value={opt}>{opt}</option>
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
                       </select>
                     )}
