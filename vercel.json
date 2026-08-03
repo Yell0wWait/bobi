@@ -1,0 +1,8 @@
+{
+  "builds": [
+    { "src": "Bobi_app_backend/agent_api.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "Bobi_app_backend/agent_api.py" }
+  ]
+}
